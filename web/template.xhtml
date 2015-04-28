@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title><ui:insert name="title">ConTax</ui:insert></title>
+        </f:facet>
+
+        <h:outputStylesheet library="css" name="default.css"/>
+        <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <h:outputScript library="js" name="jsfcrud.js"/>
+
+        <style type="text/css">
+            *{
+                margin:0;padding:0;
+            }
+            html,body,.container, .sideBar, .content
+            {
+                height: 100%;
+
+            }
+
+            .header
+            {
+                height: 45px;
+                line-height: 45px;
+                background: rgb(125,126,125); /* Old browsers */
+                background: -moz-linear-gradient(top,  rgba(125,126,125,1) 0%, rgba(14,14,14,1) 100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(125,126,125,1)), color-stop(100%,rgba(14,14,14,1))); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top,  rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top,  rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* Opera 11.10+ */
+                background: -ms-linear-gradient(top,  rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* IE10+ */
+                background: linear-gradient(to bottom,  rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
+
+
+            }
+            .container
+            {
+                margin-top: -45px;
+                padding-top: 45px;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+           
+            .content
+            {
+                overflow:auto;
+                background-image: url("#{resource['img/dimension.png']}");
+                background-repeat: repeat;
+
+            }
+
+            .program{
+                color: #fff;
+                font-weight: bold;
+                padding-right:  0px
+            }
+
+            .program div span{
+                color: #33ccFF !important;
+            }
+
+
+            .ui-menu.ui-menu-dynamic {
+                position: absolute;
+                display: none;
+                top: 10px;
+                left: calc(90% + 30px);
+                //z-index: 100000!important;
+            }
+
+            div[id="formMenuUsuario:growl_container"] {
+                position:absolute;
+                top:calc(40% - 180px);
+                left:calc(50% - 170px);
+            }
+        </style>
+    </h:head>
+
+    <body style="padding: 0;margin: 0;">
+
+
+        <div class="header">
+            <h:form id="formMenuUsuario">
+
+
+                <p:growl  id="growl"/>
+
+                <div  style="font-size: 12pt;
+                      position: absolute;
+                      left: 89%;
+                      width: 200px;">
+
+
+                    <p:splitButton value="#{request.userPrincipal.name}"  icon="ui-icon-home" immediate="true">
+
+
+                        <p:menuitem value="Cambiar Contraseña"   icon="ui-icon-pencil"
+                                    action="#{usuariosController.preparaCambiarPass()}" oncomplete="PF('DialogCambiaPass').show()"
+                                    update="@(.panelDialogCambiaPass)" />
+
+                        <p:separator />
+                        <p:menuitem value="Salir" action="#{autenticador.logout()}" icon="ui-icon-extlink"   immediate="true"/>
+                    </p:splitButton>
+
+                </div>
+
+
+                <p:dialog widgetVar="DialogCambiaPass" header="Cambiar Mi Contraseña"  resizable="false">
+                    <p:panel id="panelDialogCambiaPass" styleClass="panelDialogCambiaPass">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel for="pwd1" value="Clave:" />
+                            <p:password id="pwd1" value="#{usuariosController.selected.usuariosseguridad}" match="pwd2" />
+                            <p:outputLabel for="pwd2" value="Confirmar Clave:" />
+                            <p:password id="pwd2" value="#{usuariosController.selected.usuariosseguridad}" />
+                        </p:panelGrid>
+                        
+                        <p:commandButton id="btnGuardaClave" actionListener="#{usuariosController.update}" value="Guardar" update="panelDialogCambiaPass,formMenuUsuario:growl" oncomplete="handleSubmit(args, 'DialogCambiaPass');"/>
+                        <p:commandButton value="Cancelar" onclick="DialogCambiaPass.hide()"/>
+                    </p:panel>
+                </p:dialog>
+            </h:form>
+        </div>
+
+
+        <div class="container">    
+
+            
+            <div class="content">
+                <ui:include src="idleMonitor.xhtml"/>
+                <ui:insert name="body"/>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+            PrimeFaces.locales['es'] = {
+                closeText: 'Cerrar',
+                prevText: 'Anterior',
+                nextText: 'Siguiente',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Sólo hora',
+                timeText: 'Tiempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                currentText: 'Fecha actual',
+                ampm: false,
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                allDayText: 'Todo el día'
+            };
+
+        </script>
+
+    </body>
+
+</html>

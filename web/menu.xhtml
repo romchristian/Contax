@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:outputText value="Proyectos" style="font-size: 10pt; position: relative;left: 15px;font-weight: bold;margin-bottom: 20px"/>
+    <br/>
+    <br/>
+    <h:panelGrid columns="1" style="margin-top: 10px;margin-left: 30px;font-size: 9pt">
+        <p:link  value="Inicio" outcome="/main/home"/>
+
+<!--        <p:link  value="Nuevo Proyecto" outcome="/main/proyecto/Create" 
+                 rendered="{(request.isUserInRole('admin') or request.isUserInRole('editar_proyecto'))}"/>-->
+
+    
+
+
+    </h:panelGrid>
+    
+
+</ui:composition>
+
