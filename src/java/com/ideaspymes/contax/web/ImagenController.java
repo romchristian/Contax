@@ -23,27 +23,11 @@ import javax.inject.Named;
 @ApplicationScoped
 public class ImagenController implements Serializable {
 
-    private String nombreArchivoSiguiente;
-
-    public String getNombreArchivoSiguiente() {
-        return nombreArchivoSiguiente;
-    }
-
-    public void setNombreArchivoSiguiente(String nombreArchivoSiguiente) {
-        this.nombreArchivoSiguiente = nombreArchivoSiguiente;
-    }
-
-    public InputStream obtNextImage() {
+    public InputStream obtNextImage(String nombreArchivoSiguiente) {
         InputStream R = null;
         String path = "C:\\Users\\cromero\\Desktop\\facturas";
         try {
-            final File folder = new File(path);
-            
-
-            for (final File fileEntry : folder.listFiles()) {
-                System.out.println("File Entry: " + fileEntry.getName());
-                nombreArchivoSiguiente = fileEntry.getName();
-            }
+           
             
             System.out.println("Archivo: " + nombreArchivoSiguiente);
             R = new FileInputStream(new File(path, nombreArchivoSiguiente));

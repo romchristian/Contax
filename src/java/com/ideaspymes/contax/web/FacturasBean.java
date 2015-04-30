@@ -20,9 +20,28 @@ import javax.inject.Named;
 public class FacturasBean implements Serializable {
 
     private String ruc;
-    @Inject
-    private ImagenController imagenController; 
-    
+    private String nombreArchivoSiguiente;
+
+    public String getNombreArchivoSiguiente() {
+        if (nombreArchivoSiguiente == null) {
+
+            String path = "C:\\Users\\cromero\\Desktop\\facturas";
+            final File folder = new File(path);
+
+            for (final File fileEntry : folder.listFiles()) {
+                if (!fileEntry.isDirectory()) {
+                    System.out.println("File Entry: " + fileEntry.getName());
+                    nombreArchivoSiguiente = fileEntry.getName();
+                }
+            }
+
+        }
+        return nombreArchivoSiguiente;
+    }
+
+    public void setNombreArchivoSiguiente(String nombreArchivoSiguiente) {
+        this.nombreArchivoSiguiente = nombreArchivoSiguiente;
+    }
 
     public String getRuc() {
         return ruc;
@@ -35,8 +54,6 @@ public class FacturasBean implements Serializable {
     public void mover() {
         String path = "C:\\Users\\cromero\\Desktop\\facturas";
         File theDir = new File(path + "\\" + ruc);
-
-        
 
 // if the directory does not exist, create it
         if (!theDir.exists()) {
@@ -55,12 +72,13 @@ public class FacturasBean implements Serializable {
         }
 
         try {
-            String archivoActual = imagenController.getNombreArchivoSiguiente();
-            
+            String archivoActual = nombreArchivoSiguiente;
+
             File afile = new File(path + "\\" + archivoActual);
 
             if (afile.renameTo(new File(theDir + "\\" + afile.getName()))) {
                 System.out.println("File is moved successful!");
+                nombreArchivoSiguiente = null;
             } else {
                 System.out.println("File is failed to move!");
             }
