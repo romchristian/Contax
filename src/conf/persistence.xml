@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="ContaxPU" transaction-type="JTA">
+    <jta-data-source>CONTAXDS</jta-data-source>
+    <class>com.ideaspymes.contax.modelo.Factura</class>
+    <class>com.ideaspymes.contax.modelo.SubTipoGasto</class>
+    <class>com.ideaspymes.contax.modelo.SubTipoIngreso</class>
+    <class>com.ideaspymes.contax.modelo.SubTipoInversion</class>
+    <class>com.ideaspymes.contax.modelo.TipoGasto</class>
+    <class>com.ideaspymes.contax.modelo.TipoIngreso</class>
+    <class>com.ideaspymes.contax.modelo.TipoInversion</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    
+    <properties>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="RucsPU" transaction-type="JTA">
+    <jta-data-source>RUCDS</jta-data-source>
+    <class>com.ideaspymes.contax.modelo.Contribuyente</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>
+</persistence>

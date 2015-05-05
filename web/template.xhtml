@@ -6,6 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
 
+
     <h:head>
         <f:facet name="first">
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -40,7 +41,7 @@
                 background: -ms-linear-gradient(top,  rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* IE10+ */
                 background: linear-gradient(to bottom,  rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* W3C */
                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
-
+                overflow: hidden;
 
             }
             .container
@@ -49,8 +50,9 @@
                 padding-top: 45px;
                 -moz-box-sizing: border-box;
                 box-sizing: border-box;
+
             }
-           
+
             .content
             {
                 overflow:auto;
@@ -123,7 +125,7 @@
                             <p:outputLabel for="pwd2" value="Confirmar Clave:" />
                             <p:password id="pwd2" value="#{usuariosController.selected.usuariosseguridad}" />
                         </p:panelGrid>
-                        
+
                         <p:commandButton id="btnGuardaClave" actionListener="#{usuariosController.update}" value="Guardar" update="panelDialogCambiaPass,formMenuUsuario:growl" oncomplete="handleSubmit(args, 'DialogCambiaPass');"/>
                         <p:commandButton value="Cancelar" onclick="DialogCambiaPass.hide()"/>
                     </p:panel>
@@ -134,7 +136,7 @@
 
         <div class="container">    
 
-            
+
             <div class="content">
                 <ui:include src="idleMonitor.xhtml"/>
                 <ui:insert name="body"/>

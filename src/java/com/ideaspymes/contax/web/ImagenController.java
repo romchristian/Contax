@@ -23,16 +23,28 @@ import javax.inject.Named;
 @ApplicationScoped
 public class ImagenController implements Serializable {
 
+    private boolean mostrarPorDefecto;
+
+    public boolean isMostrarPorDefecto() {
+        return mostrarPorDefecto;
+    }
+
+    public void setMostrarPorDefecto(boolean mostrarPorDefecto) {
+        this.mostrarPorDefecto = mostrarPorDefecto;
+    }
+    
+    
     public InputStream obtNextImage(String nombreArchivoSiguiente) {
         InputStream R = null;
-        String path = "C:\\Users\\cromero\\Desktop\\facturas";
+        String path = "C:\\facturas";
         try {
            
             
             System.out.println("Archivo: " + nombreArchivoSiguiente);
             R = new FileInputStream(new File(path, nombreArchivoSiguiente));
-        } catch (FileNotFoundException ex) {
+        } catch ( Exception ex ) {
             Logger.getLogger(FacturasBean.class.getName()).log(Level.SEVERE, null, ex);
+           
         }
         return R;
     }
