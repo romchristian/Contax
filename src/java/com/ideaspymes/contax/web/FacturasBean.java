@@ -7,12 +7,15 @@ package com.ideaspymes.contax.web;
 
 import com.ideaspymes.contax.facade.ContribuyenteDAO;
 import com.ideaspymes.contax.facade.FacturaFacade;
+import com.ideaspymes.contax.modelo.Clasificacion;
 import com.ideaspymes.contax.modelo.Contribuyente;
 import com.ideaspymes.contax.modelo.Factura;
 import com.ideaspymes.contax.modelo.SubTipoGasto;
 import com.ideaspymes.contax.modelo.SubTipoIngreso;
 import com.ideaspymes.contax.modelo.SubTipoInversion;
+import com.ideaspymes.contax.modelo.TipoFactura;
 import com.ideaspymes.contax.modelo.TipoGasto;
+import com.ideaspymes.contax.modelo.TipoImpuesto;
 import com.ideaspymes.contax.modelo.TipoIngreso;
 import com.ideaspymes.contax.modelo.TipoInversion;
 import com.ideaspymes.contax.utils.JsfUtil;
@@ -53,6 +56,37 @@ public class FacturasBean implements Serializable {
     private TipoInversion tipoInversionSeleccionado;
     private SubTipoInversion subTipoInversionSeleccionado;
 
+    
+    public boolean isMuestraTipoFactura(){
+        boolean R = false;
+        if(getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL ||getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO){
+            R = true;
+        }else{
+            R = false;
+        }
+        return R;
+    }
+    
+    
+    public boolean isMuestraClasificacionIRP(){
+        boolean R = false;
+        if(getActual().getTipoImpuesto() == TipoImpuesto.IRP ||getActual().getTipoImpuesto() == TipoImpuesto.IRPC){
+            R = true;
+        }
+        return R;
+    }
+    
+    public boolean isMuestraIngresos(){
+        boolean R;
+        if((getActual().getTipoFactura() != null && getActual().getTipoFactura() == TipoFactura.VENTA) ||
+                (getActual().getClasificacion() != null && getActual().getClasificacion() == Clasificacion.INGRESOS)){
+            R = true;
+        }else{
+            R = false;
+        }
+        return R;
+    }
+    
     public List<SubTipoIngreso> getItemsSubTipoIngreso() {
         List<SubTipoIngreso> R = new ArrayList<>();
         if (tipoIngresoSeleccionado != null) {

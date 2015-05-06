@@ -9,15 +9,18 @@
     <class>com.ideaspymes.contax.modelo.TipoGasto</class>
     <class>com.ideaspymes.contax.modelo.TipoIngreso</class>
     <class>com.ideaspymes.contax.modelo.TipoInversion</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes> 
     
     <properties>
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="RucsPU" transaction-type="JTA">
     <jta-data-source>RUCDS</jta-data-source>
     <class>com.ideaspymes.contax.modelo.Contribuyente</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
-    <properties/>
+    <properties>
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+    </properties>
   </persistence-unit>
 </persistence>
