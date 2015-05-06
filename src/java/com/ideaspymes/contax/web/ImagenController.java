@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 /**
@@ -32,22 +33,28 @@ public class ImagenController implements Serializable {
     public void setMostrarPorDefecto(boolean mostrarPorDefecto) {
         this.mostrarPorDefecto = mostrarPorDefecto;
     }
-    
-    
+
     public InputStream obtNextImage(String nombreArchivoSiguiente) {
         InputStream R = null;
         String path = "C:\\facturas";
         try {
-           
-            
+
             System.out.println("Archivo: " + nombreArchivoSiguiente);
             R = new FileInputStream(new File(path, nombreArchivoSiguiente));
-        } catch ( Exception ex ) {
+        } catch (Exception ex) {
+            String defaultpath = FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getRealPath("resources/img");
+            try {
+                R = new FileInputStream(new File(defaultpath, "nodisponible.png"));
+            } catch (FileNotFoundException ex1) {
+                Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+
             Logger.getLogger(FacturasBean.class.getName()).log(Level.SEVERE, null, ex);
-           
+
         }
         return R;
     }
 
-   
 }
