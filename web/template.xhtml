@@ -16,7 +16,14 @@
 
         <h:outputStylesheet library="css" name="default.css"/>
         <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <!--        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>-->
+        <h:outputStylesheet library="css" name="font-awesome.min.css"/>
+        <h:outputStylesheet library="css" name="jquery.guillotine.css"/>
+        <h:outputScript library="js" name="jquery.guillotine.min.js"/>
+        <h:outputStylesheet library="css" name="demo.css"/>
         <h:outputScript library="js" name="jsfcrud.js"/>
+
+
 
         <style type="text/css">
             *{
@@ -101,18 +108,9 @@
                       left: 89%;
                       width: 200px;">
 
-
-                    <p:splitButton value="#{request.userPrincipal.name}"  icon="ui-icon-home" immediate="true">
-
-
-                        <p:menuitem value="Cambiar Contraseña"   icon="ui-icon-pencil"
-                                    action="#{usuariosController.preparaCambiarPass()}" oncomplete="PF('DialogCambiaPass').show()"
-                                    update="@(.panelDialogCambiaPass)" />
-
-                        <p:separator />
+                    <p:splitButton value="#{request.userPrincipal.name}"  icon="ui-icon-home" immediate="true" action="/main/home">
                         <p:menuitem value="Salir" action="#{autenticador.logout()}" icon="ui-icon-extlink"   immediate="true"/>
                     </p:splitButton>
-
                 </div>
 
 

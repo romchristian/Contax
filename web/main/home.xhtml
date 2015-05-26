@@ -20,473 +20,162 @@
         </ui:define>
 
         <ui:define name="body">
-
             <style type="text/css">
-                .sideBar
-                {
 
+                .ca-menu{
+
+                    position: relative;
+                    left: 150px;
+                    width: 900px;
+                }
+                .ca-menu li{
+                    width: 230px;
+                    height: 230px;
+                    border: 10px solid #dddddd;
+                    overflow: hidden;
+                    position: relative;
+                    float:left;
+                    background: #fff;
+                    margin-left:-48px;
+                    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+                    -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+                    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+                    -webkit-border-radius: 125px;
+                    -moz-border-radius: 125px;
+                    border-radius: 125px;
+                    -webkit-transition: all 400ms linear;
+                    -moz-transition: all 400ms linear;
+                    -o-transition: all 400ms linear;
+                    -ms-transition: all 400ms linear;
+                    transition: all 400ms linear;
+                }
+                .ca-menu li:last-child{
+                    margin-right: 0px;
+                }
+                .ca-menu li a{
+                    text-align: left;
+                    width: 100%;
                     height: 100%;
-                    background: rgba(254,254,254,1);
-                    background: -moz-linear-gradient(left, rgba(254,254,254,1) 0%, rgba(219,219,219,0.9) 72%, rgba(209,209,209,0.86) 99%, rgba(226,226,226,0.86) 100%);
-                    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(254,254,254,1)), color-stop(72%, rgba(219,219,219,0.9)), color-stop(99%, rgba(209,209,209,0.86)), color-stop(100%, rgba(226,226,226,0.86)));
-                    background: -webkit-linear-gradient(left, rgba(254,254,254,1) 0%, rgba(219,219,219,0.9) 72%, rgba(209,209,209,0.86) 99%, rgba(226,226,226,0.86) 100%);
-                    background: -o-linear-gradient(left, rgba(254,254,254,1) 0%, rgba(219,219,219,0.9) 72%, rgba(209,209,209,0.86) 99%, rgba(226,226,226,0.86) 100%);
-                    background: -ms-linear-gradient(left, rgba(254,254,254,1) 0%, rgba(219,219,219,0.9) 72%, rgba(209,209,209,0.86) 99%, rgba(226,226,226,0.86) 100%);
-                    background: linear-gradient(to right, rgba(254,254,254,1) 0%, rgba(219,219,219,0.9) 72%, rgba(209,209,209,0.86) 99%, rgba(226,226,226,0.86) 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#e2e2e2', GradientType=1 );
-                    border-right: 1px solid #aaa;
-                    overflow:hidden;
-                    -webkit-box-shadow: -4px 0px 21px 0px rgba(50, 50, 50, 0.75);
-                    -moz-box-shadow:    -4px 0px 21px 0px rgba(50, 50, 50, 0.75);
-                    box-shadow:         -4px 0px 21px 0px rgba(50, 50, 50, 0.75);
-
+                    display: block;
+                    color: #333;
+                    position: relative;
+                }
+                .ca-icon{
+                    font-family: 'WebSymbolsRegular', cursive;
+                    font-size: 40px;
+                    color: #f6f6f6;;
+                    line-height: 60px;
+                    position: absolute;
+                    width: 100%;
+                    height: 60px;
+                    left: 0px;
+                    top: 30px;
+                    text-align: center;
+                    -webkit-transition: all 400ms linear;
+                    -moz-transition: all 400ms linear;
+                    -o-transition: all 400ms linear;
+                    -ms-transition: all 400ms linear;
+                    transition: all 400ms linear;
+                }
+                .ca-main{
+                    font-size: 24px;
+                    position: absolute;
+                    top: 125px;
+                    height: 80px;
+                    width: 170px;
+                    left: 50%;
+                    margin-left: -85px;
+                    opacity: 0.8;
+                    text-align: center;
+                    color: #555;
+                }
+                .ca-sub{
+                    display: none;
+                }
+                .ca-menu li:hover{
+                    border-color: #0099c5;
+                    z-index: 999;
+                    -webkit-transform: scale(1.1);
+                    -moz-transform: scale(1.1);
+                    -o-transform: scale(1.1);
+                    -ms-transform: scale(1.1);
+                    transform: scale(1.1);
+                }
+                .ca-menu li:hover .ca-icon{
+                    color: #000;
+                    font-size: 60px;
+                    text-shadow: 0px 0px 1px #000;
+                    -webkit-animation: moveFromBottom 300ms ease;
+                    -moz-animation: moveFromBottom 300ms ease;
+                    -ms-animation: moveFromBottom 300ms ease;
+                }
+                .ca-menu li:hover .ca-main{
+                    color: #000;
+                    -webkit-animation: moveFromBottom 500ms ease;
+                    -moz-animation: moveFromBottom 500ms ease;
+                    -ms-animation: moveFromBottom 500ms ease;
                 }
 
-
-
-
-                .fila{
-                    display: table-row;width: 100%;
+                @-webkit-keyframes moveFromBottom {
+                    from {
+                        -webkit-transform: translateY(200%) scale(0.5);
+                        opacity: 0;
+                    }
+                    to {
+                        -webkit-transform: translateY(0%) scale(1);
+                        opacity: 1;        
+                    }
+                }
+                @-moz-keyframes moveFromBottom {
+                    from {
+                        -moz-transform: translateY(200%) scale(0.5);
+                        opacity: 0;
+                    }
+                    to {
+                        -moz-transform: translateY(0%) scale(1);
+                        opacity: 1;        
+                    }
+                }
+                @-ms-keyframes moveFromBottom {
+                    from {
+                        -ms-transform: translateY(200%) scale(0.5);
+                        opacity: 0;
+                    }
+                    to {
+                        -ms-transform: translateY(0%) scale(1);
+                        opacity: 1;        
+                    }
                 }
             </style>
-            <div class="ui-grid ui-grid-responsive" style="height: 100%">
-
-                <div class="ui-grid-row" style="height: 100%">
-                    <div class="ui-grid-col-8">
-                        <div class="ui-grid ui-grid-responsive" style="height: 100%">
-                            <div class="ui-grid-row" style="height: 95%;">
-                                <div class="ui-grid-col-12" style="height: 100%;">
-                                    <div style="text-align: center;overflow: auto;">
-
-
-                                        <o:graphicImage id="myImage" styleClass="myImage" value="#{imagenController.obtNextImage(facturasBean.nombreArchivoSiguiente)}"
-                                                        style="max-width:100%;max-height:100%;vertical-align: middle;"/>
 
 
 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ui-grid-row" style="height: 5%;">
-                                <div class="ui-grid-col-12">
-
-                                    <h:form style="margin: 0 auto 0 auto">
-                                        <div style="width: 30%;margin: 0 auto 0 auto">
-                                            <pe:imageRotateAndResize id="rotateAndResize" for="@(.myImage)" widgetVar="rotateAndResizeWidget"/>
-                                            <p:commandButton icon="ui-icon-arrowreturnthick-1-w" value="Girar "  
-                                                             onclick="PF('rotateAndResizeWidget').rotateLeft(90);
-                                                                     return false;"/>  
-                                            <p:commandButton icon="ui-icon-arrowreturnthick-1-e" value="Girar"  
-                                                             onclick="PF('rotateAndResizeWidget').rotateRight(90);
-                                                                     return false;"/>  
-                                            <p:commandButton icon="ui-icon-zoomin" value="Zoom +"  
-                                                             onclick="PF('rotateAndResizeWidget').scale(1.05);
-                                                                     return false;"/>  
-                                            <p:commandButton icon="ui-icon-zoomout" value="Zoom -"  
-                                                             onclick="PF('rotateAndResizeWidget').scale(0.95);
-                                                                     return false;"/> 
-                                        </div>
-
-                                    </h:form>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
+            <ul class="ca-menu" style="position: absolute; top: calc(50% - 150px);left: calc(50% - 150px)">
+                <li>
+                    <div class="ca-icon">
+                        <p:graphicImage library="img" name="listado.png"/>
                     </div>
+                    <a href="/Contax/main/listado.xhtml">
 
-                    <div class="ui-grid-col-4" style="height: 100%">
-                        <div class="sideBar">
-                            <div style="padding: 20px;width: 100%">
-                                <h:form>
 
-                                    <div style="display: table;width: 100%">
+                        <h2 class="ca-main">Listado</h2>
 
-                                        <div class="fila">
-                                            <h:outputText value="Cliente:" style="font-weight: bold"/>
-                                            <p:inputText placeholder="RUC del Cliente" value="#{facturasBean.ruc}"
-                                                         style="width: 50%;margin-top: 5px;">
-                                                <p:ajax event="blur" update="cvCliente razonSocialCliente"
-                                                        process="@this cvCliente razonSocialCliente" 
-                                                        listener="#{facturasBean.buscarContribuyenteCliente()}"/>
-                                            </p:inputText>
-                                            <p:inputText placeholder="CV" value="#{facturasBean.cvCliente}"
-                                                         id="cvCliente" size="1"
-                                                         style="width: 5%;margin-top: 5px;"/>
-
-                                            <br/>
-                                        </div>
-                                        <div class="fila">
-
-                                            <p:inputText id="razonSocialCliente"
-                                                         style="margin-top: 5px;width: 90%"
-                                                         placeholder="RAZON SOCIAL CLIENTE" value="#{facturasBean.actual.razonSocialCliente}"/>
-
-                                            <br/>
-                                        </div>
-
-                                        <div class="fila">
-
-                                            <p:separator style="margin-top: 5px;margin-bottom: 10px;"/>
-
-                                        </div>
-
-                                        <div class="fila">
-                                            <div style="display: table;width: 100%">
-                                                <div style="display: table-row;width: 100%">
-                                                    <div style="display: table-cell;width:25%; vertical-align: middle;margin-top: 5px;margin-bottom: 5px">
-                                                        <h:outputText value="Tipo Impuesto: " style="font-weight: bold"
-                                                                      />
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle;width:25%; ">
-                                                        <p:selectOneMenu value="#{facturasBean.actual.tipoImpuesto}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP" />
-                                                            <f:selectItem itemLabel="--" itemValue=""/>
-                                                            <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
-                                                                           var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
-                                                        </p:selectOneMenu>
-
-                                                    </div>
-
-                                                    <p:outputPanel id="tipoFacturaIRP">
-                                                        <div style="display: table-cell;width:20%; vertical-align: middle;margin-top: 5px;margin-bottom: 5px">
-                                                            <h:outputText value="Tipo Factura:" style="font-weight: bold" rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP"/>
-                                                            <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{facturasBean.muestraClasificacionIRP}" styleClass="tipoFacturaIRP"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width:30%; ">
-                                                            <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                             rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
-                                                                <p:ajax event="change" process="@this tipos" update="tipos"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{productorEnums.obtTiposFactura()}"
-                                                                               var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                             rendered="#{facturasBean.muestraClasificacionIRP}" styleClass="tipoFacturaIRP">
-                                                                <p:ajax event="change" process="@this tipos" update="tipos"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{productorEnums.obtClasificacionesIRP()}"/>
-                                                            </p:selectOneMenu>
-
-                                                        </div>
-                                                    </p:outputPanel>
-
-                                                </div>
-
-
-
-
-                                            </div>
-
-
-                                        </div>
-
-
-
-                                        <div class="fila">
-                                            <p:outputPanel id="tipos">
-                                                <div style="display: table;width: 100%">
-                                                    <div style="display: table-row;width: 100%">
-                                                        <div style="display: table-cell;vertical-align: middle;width: 20%">
-                                                            <h:outputText value="Tipo Ingreso:" style="font-weight: bold"
-                                                                          rendered="#{facturasBean.muestraIngresos}"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width: 90%">
-                                                            <p:selectOneMenu value="#{facturasBean.tipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
-                                                                             rendered="#{facturasBean.muestraIngresos}">
-                                                                <p:ajax process="@this" event="change" update="subTipoIngreso"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{tipoIngresoController.itemsAvailableSelectOne}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu 
-                                                                rendered="#{facturasBean.muestraIngresos}"
-                                                                id="subTipoIngreso"
-                                                                value="#{facturasBean.subTipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{facturasBean.itemsSubTipoIngreso}"/>
-                                                            </p:selectOneMenu>
-                                                        </div>
-                                                    </div>
-
-                                                    <div style="display: table-row;width: 100%">
-                                                        <div style="display: table-cell;vertical-align: middle;width: 20%">
-                                                            <h:outputText value="Tipo Gastos:" style="font-weight: bold"
-                                                                          rendered="#{not facturasBean.muestraIngresos}"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width: 90%">
-                                                            <p:selectOneMenu value="#{facturasBean.tipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
-                                                                             rendered="#{not facturasBean.muestraIngresos}">
-                                                                <p:ajax process="@this" event="change" update="subTipoGasto"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{tipoGastoController.itemsAvailableSelectOne}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu 
-                                                                rendered="#{not facturasBean.muestraIngresos}"
-                                                                id="subTipoGasto"
-                                                                value="#{facturasBean.subTipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{facturasBean.itemsSubTipoGasto}"/>
-                                                            </p:selectOneMenu>
-                                                        </div>
-                                                    </div>
-
-                                                    <div style="display: table-row;width: 100%">
-                                                        <div style="display: table-cell;vertical-align: middle;width: 20%">
-                                                            <h:outputText value="Tipo Inversión:" style="font-weight: bold"
-                                                                          rendered="#{not facturasBean.muestraIngresos}"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width: 90%">
-                                                            <p:selectOneMenu value="#{facturasBean.tipoInversionSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
-                                                                             rendered="#{not facturasBean.muestraIngresos}">
-                                                                <p:ajax process="@this" event="change" update="subTipoInversion"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{tipoInversionController.itemsAvailableSelectOne}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu 
-                                                                rendered="#{not facturasBean.muestraIngresos}"
-                                                                id="subTipoInversion"
-                                                                value="#{facturasBean.subTipoInversionSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{facturasBean.itemsSubTipoInversion}"/>
-                                                            </p:selectOneMenu>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </p:outputPanel>
-
-
-
-
-                                        </div>
-
-
-
-
-
-                                        <div class="fila">
-
-                                            <p:separator style="margin-top: 5px;margin-bottom: 10px;"/>
-
-                                        </div>
-
-                                        <div class="fila">
-                                            <div style="display: table">
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell;vertical-align: middle">
-                                                        <h:outputText value="Fecha:" style="font-weight: bold"/>
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle">
-                                                        <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy" style="margin-left: 15px;"/>
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle">
-                                                        <h:outputText value="Periodo:" style="font-weight: bold;margin-left: 15px;"/>
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle">
-                                                        <p:selectOneMenu value="#{facturasBean.actual.periodo}" style="width: 75px;margin-left: 15px;">
-                                                            <f:selectItem itemLabel="Ene" itemValue="Ene"/>
-                                                            <f:selectItem itemLabel="Feb" itemValue="Feb"/>
-                                                            <f:selectItem itemLabel="Mar" itemValue="Mar"/>
-                                                            <f:selectItem itemLabel="Abr" itemValue="Abr"/>
-                                                            <f:selectItem itemLabel="May" itemValue="May"/>
-                                                            <f:selectItem itemLabel="Jun" itemValue="Jun"/>
-                                                            <f:selectItem itemLabel="Jul" itemValue="Jul"/>
-                                                            <f:selectItem itemLabel="Ago" itemValue="Ago"/>
-                                                            <f:selectItem itemLabel="Sep" itemValue="Sep"/>
-                                                            <f:selectItem itemLabel="Oct" itemValue="Oct"/>
-                                                            <f:selectItem itemLabel="Nov" itemValue="Nov"/>
-                                                            <f:selectItem itemLabel="Dic" itemValue="Dic"/>
-                                                        </p:selectOneMenu>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <br/>
-                                        </div>
-
-
-                                        <div class="fila">
-                                            <h:outputText value="Proveedor:" style="font-weight: bold"/>
-                                            <p:inputText placeholder="RUC del Proveedor" value="#{facturasBean.rucProveedor}"
-                                                         style="width: 50%;margin-top: 5px;">
-                                                <p:ajax event="blur" update="cvProveedor razonSocialProveedor"
-                                                        process="@this cvProveedor razonSocialProveedor" 
-                                                        listener="#{facturasBean.buscarContribuyenteProveedor()}"/>
-                                            </p:inputText>
-                                            <p:inputText placeholder="CV" value="#{facturasBean.cvProveedor}"
-                                                         id="cvProveedor" size="1"
-                                                         style="width: 5%;margin-top: 5px;"/>
-
-                                            <br/>
-                                        </div>
-                                        <div class="fila">
-
-                                            <p:inputText id="razonSocialProveedor"
-                                                         style="margin-top: 5px;width: 90%"
-                                                         placeholder="RAZON SOCIAL CLIENTE" value="#{facturasBean.actual.razonSocialProveedor}"/>
-
-                                            <br/>
-                                        </div>
-
-                                        <div class="fila">
-
-                                            <p:separator style="margin-top: 5px;margin-bottom: 10px;"/>
-
-                                        </div>
-
-                                        <div class="fila">
-                                            <div style="display: table;width: 100%">
-
-                                                <div style="display: table-cell;width: 15%;vertical-align: middle">
-
-                                                    <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px"/>
-                                                </div>
-                                                <div style="display: table-cell;width: 85%;vertical-align: middle">
-
-                                                    <p:inputText style="margin-bottom: 10px;width: 50%;"
-                                                                 value="#{facturasBean.actual.numero}"/>
-                                                </div>
-                                            </div>
-
-
-
-                                        </div>
-
-                                        <div class="fila">
-
-                                            <div style="display: table; margin-top: 10px;float: right;margin-right: 40px">
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Exento:" style="font-weight: bold;margin-top: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 05:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 10:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;"
-                                                                     value="#{facturasBean.actual.exento}"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada05}"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada10}"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="IVA 05:" style="font-weight: bold;margin-top: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="IVA 10:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="TOTAL IVA:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;"
-                                                                     value="#{facturasBean.actual.iva05}"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.iva10}"/> 
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.totalIva}"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 05 Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 10 Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada05Neto}"/> 
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada10Neto}"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Total (Neto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Total (Bruto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.totalNeto}"/> 
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.totalBruto}"/>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <br/>
-                                        </div>
-                                    </div>
-
-
-
-                                    <p:commandButton value="Guardar" action="#{facturasBean.guardar()}" ajax="false"/>
-                                    <p:commandButton value="Cancelar" action="#{facturasBean.limpiar()}" ajax="false" style="float: right; margin-right: 50px;"/>
-                                </h:form>
-                            </div>
-
-                        </div>
+                    </a>
+                </li>
+                <li>
+                    <div class="ca-icon">
+                        <p:graphicImage library="img" name="nuevo.png"/>
                     </div>
-                </div>
+                    <a href="/Contax/main/nuevo.xhtml">
 
-            </div>
+
+                        <h2 class="ca-main">Nuevo</h2>
+
+                    </a>
+                </li>
+
+
+            </ul>
         </ui:define>
     </ui:composition>
 

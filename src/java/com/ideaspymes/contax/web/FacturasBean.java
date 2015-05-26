@@ -55,6 +55,7 @@ public class FacturasBean implements Serializable {
 
     private TipoInversion tipoInversionSeleccionado;
     private SubTipoInversion subTipoInversionSeleccionado;
+    
 
     
     public boolean isMuestraTipoFactura(){
@@ -194,6 +195,7 @@ public class FacturasBean implements Serializable {
             String path = "C:\\facturas";
             final File folder = new File(path);
 
+            nombreArchivoSiguiente = "";
             for (final File fileEntry : folder.listFiles()) {
                 if (!fileEntry.isDirectory()) {
                     System.out.println("File Entry: " + fileEntry.getName());
