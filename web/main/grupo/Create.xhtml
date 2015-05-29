@@ -15,6 +15,7 @@
                         <p:outputLabel value="#{bundle.CreateGrupoLabel_groupid}" for="groupid" />
                         <p:inputText id="groupid" value="#{grupoController.selected.groupid}" title="#{bundle.CreateGrupoTitle_groupid}" />
                         <p:outputLabel value="#{bundle.CreateGrupoLabel_usuario}" for="usuario" />
+                        
                         <p:selectOneMenu id="usuario" value="#{grupoController.selected.usuario}" >
                             <f:selectItems value="#{usuarioController.itemsAvailableSelectOne}"
                                            var="usuarioItem"

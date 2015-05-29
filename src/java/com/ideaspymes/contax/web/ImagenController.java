@@ -40,6 +40,9 @@ public class ImagenController implements Serializable {
         try {
 
             System.out.println("Archivo: " + nombreArchivoSiguiente);
+            if (nombreArchivoSiguiente == null) {
+                throw new Exception();
+            }
             R = new FileInputStream(new File(path, nombreArchivoSiguiente));
         } catch (Exception ex) {
             String defaultpath = FacesContext.getCurrentInstance()

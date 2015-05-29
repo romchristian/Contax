@@ -13,7 +13,6 @@ import com.ideaspymes.contax.modelo.Factura;
 import com.ideaspymes.contax.modelo.SubTipoGasto;
 import com.ideaspymes.contax.modelo.SubTipoIngreso;
 import com.ideaspymes.contax.modelo.SubTipoInversion;
-import com.ideaspymes.contax.modelo.TipoFactura;
 import com.ideaspymes.contax.modelo.TipoGasto;
 import com.ideaspymes.contax.modelo.TipoImpuesto;
 import com.ideaspymes.contax.modelo.TipoIngreso;
@@ -24,6 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.view.ViewScoped;
 
 import javax.inject.Named;
 
@@ -32,7 +32,7 @@ import javax.inject.Named;
  * @author cromero
  */
 @Named
-@javax.faces.view.ViewScoped
+@ViewScoped
 public class FacturasBean implements Serializable {
 
     @EJB
@@ -55,39 +55,88 @@ public class FacturasBean implements Serializable {
 
     private TipoInversion tipoInversionSeleccionado;
     private SubTipoInversion subTipoInversionSeleccionado;
-    
+    private boolean conIRP;
+    private long id;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
     
-    public boolean isMuestraTipoFactura(){
+   
+
+    public void cargaDatos() {
+        if (id > 0) {
+            actual = ejb.find(id);
+        }
+    }
+
+    public List<Factura> findAll() {
+        return ejb.findAll();
+    }
+
+    public boolean isConIRP() {
+        return conIRP;
+    }
+
+    public void setConIRP(boolean conIRP) {
+        this.conIRP = conIRP;
+    }
+
+    public boolean isMuestraTipoFactura() {
         boolean R = false;
-        if(getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL ||getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO){
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL || getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
             R = true;
-        }else{
+        } else {
             R = false;
         }
         return R;
     }
-    
-    
-    public boolean isMuestraClasificacionIRP(){
+
+    public boolean isMuestraClasificacionIRP() {
         boolean R = false;
-        if(getActual().getTipoImpuesto() == TipoImpuesto.IRP ||getActual().getTipoImpuesto() == TipoImpuesto.IRPC){
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IRP || getActual().getTipoImpuesto() == TipoImpuesto.IRPC || getActual().isConIRP()) {
             R = true;
         }
         return R;
     }
-    
-    public boolean isMuestraIngresos(){
+
+    public boolean isMuestraIngresos() {
         boolean R;
-        if((getActual().getTipoFactura() != null && getActual().getTipoFactura() == TipoFactura.VENTA) ||
-                (getActual().getClasificacion() != null && getActual().getClasificacion() == Clasificacion.INGRESOS)){
+        if ((getActual().isConIRP())
+                && (getActual().getClasificacion() != null && getActual().getClasificacion() == Clasificacion.INGRESOS)) {
             R = true;
-        }else{
+        } else {
             R = false;
         }
         return R;
     }
-    
+
+    public boolean isMuestraGastos() {
+        boolean R;
+        if ((getActual().isConIRP())
+                && (getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.GASTOS))) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+
+    public boolean isMuestraInversion() {
+        boolean R;
+        if ((getActual().isConIRP())
+                && (getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.INVERSION))) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+
     public List<SubTipoIngreso> getItemsSubTipoIngreso() {
         List<SubTipoIngreso> R = new ArrayList<>();
         if (tipoIngresoSeleccionado != null) {
@@ -235,8 +284,6 @@ public class FacturasBean implements Serializable {
         this.rucProveedor = rucProveedor;
     }
 
-   
-
     public int getCvProveedor() {
         return cvProveedor;
     }
@@ -256,13 +303,13 @@ public class FacturasBean implements Serializable {
     public void guardar() {
         try {
             if (actual != null) {
-                actual.setTipoIngreso(tipoIngresoSeleccionado == null?null:tipoIngresoSeleccionado.getNombre());
-                actual.setTipoGasto(tipoGastoSeleccionado == null?null:tipoGastoSeleccionado.getNombre());
-                actual.setTipoInversion(tipoInversionSeleccionado == null?null:tipoInversionSeleccionado.getNombre());
+                actual.setTipoIngreso(tipoIngresoSeleccionado == null ? null : tipoIngresoSeleccionado.getNombre());
+                actual.setTipoGasto(tipoGastoSeleccionado == null ? null : tipoGastoSeleccionado.getNombre());
+                actual.setTipoInversion(tipoInversionSeleccionado == null ? null : tipoInversionSeleccionado.getNombre());
 
-                actual.setSubTipoIngreso(subTipoIngresoSeleccionado == null?null:subTipoIngresoSeleccionado.getNombre());
-                actual.setSubTipoGasto(subTipoGastoSeleccionado == null?null:subTipoGastoSeleccionado.getNombre());
-                actual.setSubTipoInversion(subTipoInversionSeleccionado == null?null:subTipoInversionSeleccionado.getNombre());
+                actual.setSubTipoIngreso(subTipoIngresoSeleccionado == null ? null : subTipoIngresoSeleccionado.getNombre());
+                actual.setSubTipoGasto(subTipoGastoSeleccionado == null ? null : subTipoGastoSeleccionado.getNombre());
+                actual.setSubTipoInversion(subTipoInversionSeleccionado == null ? null : subTipoInversionSeleccionado.getNombre());
 
                 ejb.edit(actual);
 
@@ -327,5 +374,73 @@ public class FacturasBean implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void siCambiaTipoImpuesto() {
+        actual.setTipoFactura(null);
+        actual.setConIRP(false);
+        actual.setClasificacion(null);
+        actual.setTipoIngreso(null);
+        actual.setTipoGasto(null);
+        actual.setTipoInversion(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
+
+    }
+
+    public void siCambiaLibro() {
+        actual.setClasificacion(null);
+        actual.setTipoIngreso(null);
+        actual.setTipoGasto(null);
+        actual.setTipoInversion(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
+
+    }
+
+    public void siCambiaConIRP() {
+        actual.setClasificacion(null);
+        actual.setTipoIngreso(null);
+        actual.setTipoGasto(null);
+        actual.setTipoInversion(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
+
+    }
+
+    public void siCambiaClasificionIRP() {
+        actual.setTipoIngreso(null);
+        actual.setTipoGasto(null);
+        actual.setTipoInversion(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
+    }
+
+    public void siCambiaTipoIngreso() {
+        actual.setTipoGasto(null);
+        actual.setTipoInversion(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
+    }
+
+    public void siCambiaTipoGasto() {
+        actual.setTipoIngreso(null);
+        actual.setTipoInversion(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
+    }
+
+    public void siCambiaTipoInversion() {
+        actual.setTipoIngreso(null);
+        actual.setTipoGasto(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
     }
 }

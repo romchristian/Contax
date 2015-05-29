@@ -14,7 +14,8 @@ public enum TipoImpuesto {
     IVA_GENERAL("IVA GENERAL"),
     IRP("IRP"),
     IRPC("IRPC"),
-    IVA_SIMPLIFICADO("IVA SIMPLIFICADO");
+    IVA_SIMPLIFICADO("IVA SIMPLIFICADO"),
+    IRAGRO("IRAGR0");
 
     private final String value;
 

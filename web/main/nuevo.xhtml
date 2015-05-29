@@ -6,13 +6,19 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:o="http://omnifaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
       xmlns:of="http://omnifaces.org/functions">
 
 
 
 
     <ui:composition template="/template.xhtml">
+
+
+        <f:metadata>
+            <f:viewParam name="id" value="#{facturasBean.id}"/>
+            <f:viewAction action="#{facturasBean.cargaDatos()}"/>
+        </f:metadata>
+
         <p:idleMonitor timeout="1"></p:idleMonitor>
 
         <ui:define name="title">
@@ -48,8 +54,68 @@
                 .fila{
                     display: table-row;width: 100%;
                 }
+
+
+                .column10{
+                    width: 10%;
+                    text-align: left;
+                }
+
+                .column15{
+                    width: 17%;
+                    text-align: left;
+                }
+                .column20{
+                    width: 20%;
+                    text-align: left;
+                }
+                .column30{
+                    width: 30%;
+                    text-align: left;
+                }
+                .column40{
+                    width: 40%;
+                    text-align: left;
+                }
+
+                .column50{
+                    width: 50%;
+                    text-align: left;
+                }
+                .column60{
+                    width: 60%;
+                    text-align: left;
+                }
+                .column70{
+                    width: 70%;
+                    text-align: left;
+                }
+                .column80{
+                    width: 80%;
+                    text-align: left;
+                }
+
+                .column85{
+                    width: 88%;
+                    text-align: left;
+                }
+
+                .column90{
+                    width: 90%;
+                    text-align: left;
+                }
+
+                .column100{
+                    width: 100%;
+                    text-align: left;
+                }
             </style>
 
+
+
+            <o:importConstants type="com.ideaspymes.contax.modelo.TipoImpuesto"/>
+            <o:importConstants type="com.ideaspymes.contax.modelo.TipoFactura"/>
+            <o:importConstants type="com.ideaspymes.contax.modelo.Clasificacion"/>
 
             <div class="ui-grid ui-grid-responsive" style="height: 100%">
 
@@ -77,10 +143,10 @@
 
                                     </div>
                                     <script type='text/javascript'>
-
+                                        
                                         jQuery(function () {
                                             var picture = jQuery('.myImage')
-
+                                            
                                             var camelize = function () {
                                                 var regex = /[\W_]+(.)/g
                                                 var replacer = function (match, submatch) {
@@ -90,45 +156,23 @@
                                                     return str.replace(regex, replacer)
                                                 }
                                             }()
-                                           
+                                            
                                             picture.guillotine({eventOnChange: 'guillotinechange'})
                                             picture.guillotine('fit')
                                             jQuery('#controls a').click(function (e) {
                                                 e.preventDefault()
-
+                                                
                                                 action = camelize(this.id);
                                                 
                                                 picture.guillotine(action);
                                             })
-
+                                            
 //                                           
                                         })
                                     </script>
                                 </div>
                             </div>
-                            <!--                            <div class="ui-grid-row" style="height: 5%;">
-                                                            <div class="ui-grid-col-12">
-                            
-                                                                <h:form style="margin: 0 auto 0 auto">
-                                                                    <div style="width: 30%;margin: 0 auto 0 auto">
-                                                                        <pe:imageRotateAndResize id="rotateAndResize" for="@(.myImage)" widgetVar="rotateAndResizeWidget"/>
-                                                                        <p:commandButton icon="ui-icon-arrowreturnthick-1-w" value="Girar "  
-                                                                                         onclick="PF('rotateAndResizeWidget').rotateLeft(90);
-                                                                                                         return false;"/>  
-                                                                        <p:commandButton icon="ui-icon-arrowreturnthick-1-e" value="Girar"  
-                                                                                         onclick="PF('rotateAndResizeWidget').rotateRight(90);
-                                                                                                 return false;"/>  
-                                                                        <p:commandButton icon="ui-icon-zoomin" value="Zoom +"  
-                                                                                         onclick="PF('rotateAndResizeWidget').scale(1.05);
-                                                                                                 return false;"/>  
-                                                                        <p:commandButton icon="ui-icon-zoomout" value="Zoom -"  
-                                                                                         onclick="PF('rotateAndResizeWidget').scale(0.95);
-                                                                                                 return false;"/> 
-                                                                    </div>
-                            
-                                                                </h:form>
-                                                            </div>
-                                                        </div>-->
+
                         </div>
 
 
@@ -144,27 +188,30 @@
                                     <div style="display: table;width: 100%">
 
                                         <div class="fila">
-                                            <h:outputText value="Cliente:" style="font-weight: bold"/>
-                                            <p:inputText placeholder="RUC del Cliente" value="#{facturasBean.ruc}"
-                                                         style="width: 50%;margin-top: 5px;">
-                                                <p:ajax event="blur" update="cvCliente razonSocialCliente"
-                                                        process="@this cvCliente razonSocialCliente" 
-                                                        listener="#{facturasBean.buscarContribuyenteCliente()}"/>
-                                            </p:inputText>
-                                            <p:inputText placeholder="CV" value="#{facturasBean.cvCliente}"
-                                                         id="cvCliente" size="1"
-                                                         style="width: 5%;margin-top: 5px;"/>
+
+                                            <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
+                                                <h:outputText value="Cliente:" style="font-weight: bold"/>
+                                                <p:outputPanel>
+                                                    <p:inputText placeholder="RUC del Cliente" value="#{facturasBean.ruc}"
+                                                                 style="width: 50%;margin-top: 5px;">
+                                                        <p:ajax event="blur" update="cvCliente razonSocialCliente"
+                                                                process="@this cvCliente razonSocialCliente" 
+                                                                listener="#{facturasBean.buscarContribuyenteCliente()}"/>
+                                                    </p:inputText>
+                                                    <p:inputText placeholder="CV" value="#{facturasBean.cvCliente}"
+                                                                 id="cvCliente" size="1"
+                                                                 style="width: 5%;margin-top: 5px;"/>    
+                                                </p:outputPanel>
+                                                <p:spacer/>
+                                                <p:inputText id="razonSocialCliente"
+                                                             style="margin-top: 5px;width: 90%"
+                                                             placeholder="RAZON SOCIAL CLIENTE" value="#{facturasBean.actual.razonSocialCliente}"/>
+                                            </h:panelGrid>
+
 
                                             <br/>
                                         </div>
-                                        <div class="fila">
 
-                                            <p:inputText id="razonSocialCliente"
-                                                         style="margin-top: 5px;width: 90%"
-                                                         placeholder="RAZON SOCIAL CLIENTE" value="#{facturasBean.actual.razonSocialCliente}"/>
-
-                                            <br/>
-                                        </div>
 
                                         <div class="fila">
 
@@ -173,126 +220,70 @@
                                         </div>
 
                                         <div class="fila">
-                                            <div style="display: table;width: 100%">
-                                                <div style="display: table-row;width: 100%">
-                                                    <div style="display: table-cell;width:25%; vertical-align: middle;margin-top: 5px;margin-bottom: 5px">
-                                                        <h:outputText value="Tipo Impuesto: " style="font-weight: bold"
-                                                                      />
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle;width:25%; ">
-                                                        <p:selectOneMenu value="#{facturasBean.actual.tipoImpuesto}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP" />
+
+                                            <p:outputPanel id="tipoFacturaIRP">
+                                                <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
+                                                    <h:outputText value="Tipo Impuesto: " style="font-weight: bold"/>
+                                                    <p:selectOneMenu value="#{facturasBean.actual.tipoImpuesto}" style="margin-top: 5px;margin-bottom: 5px;">
+                                                        <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaTipoImpuesto()}"/>
+                                                        <f:selectItem itemLabel="--" itemValue=""/>
+                                                        <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
+                                                                       var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
+                                                    </p:selectOneMenu>
+
+                                                    <h:outputText value="Libro:" style="font-weight: bold" rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP"/>
+
+                                                    <h:panelGrid columns="2" styleClass="column100" columnClasses="column50,column50" style="margin: 0; padding: 0;"
+                                                                 rendered="#{facturasBean.muestraTipoFactura}">
+                                                        <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                         rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor)"
+                                                                    listener="#{facturasBean.siCambiaLibro()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
-                                                            <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
+                                                            <f:selectItems value="#{productorEnums.obtTiposFactura()}"
                                                                            var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
                                                         </p:selectOneMenu>
-
-                                                    </div>
-
-                                                    <p:outputPanel id="tipoFacturaIRP">
-                                                        <div style="display: table-cell;width:20%; vertical-align: middle;margin-top: 5px;margin-bottom: 5px">
-                                                            <h:outputText value="Tipo Factura:" style="font-weight: bold" rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP"/>
-                                                            <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{facturasBean.muestraClasificacionIRP}" styleClass="tipoFacturaIRP"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width:30%; ">
-                                                            <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                             rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
-                                                                <p:ajax event="change" process="@this tipos" update="tipos"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{productorEnums.obtTiposFactura()}"
-                                                                               var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                             rendered="#{facturasBean.muestraClasificacionIRP}" styleClass="tipoFacturaIRP">
-                                                                <p:ajax event="change" process="@this tipos" update="tipos"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{productorEnums.obtClasificacionesIRP()}"/>
-                                                            </p:selectOneMenu>
-
-                                                        </div>
-                                                    </p:outputPanel>
-
-                                                </div>
+                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRP}" itemLabel="Con IRP?"
+                                                                                 rendered="#{facturasBean.muestraTipoFactura}">
+                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaConIRP()}"/>
+                                                        </p:selectBooleanCheckbox>
+                                                    </h:panelGrid>
 
 
+                                                    <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{facturasBean.muestraClasificacionIRP}" styleClass="tipoFacturaIRP"/>
 
+                                                    <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == null)}" styleClass="tipoFacturaIRP">
+                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"
+                                                                listener="#{facturasBean.siCambiaClasificionIRP()}"/>
+                                                        <f:selectItem itemLabel="--" itemValue=""/>
+                                                        <f:selectItem itemLabel="INGRESOS" itemValue="INGRESOS"/>
+                                                        <f:selectItem itemLabel="GASTOS" itemValue="GASTOS"/>
+                                                        <f:selectItem itemLabel="INVERSION" itemValue="INVERSION"/>
+                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                    </p:selectOneMenu>
 
-                                            </div>
+                                                    <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == TipoFactura.VENTA ))}" styleClass="tipoFacturaIRP">
+                                                        <p:ajax event="change" process="@this " update="tipoFacturaIRP tipos"
+                                                                listener="#{facturasBean.siCambiaClasificionIRP()}"/>
+                                                        <f:selectItem itemLabel="--" itemValue=""/>
+                                                        <f:selectItem itemLabel="INGRESOS" itemValue="INGRESOS"/>
 
+                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                    </p:selectOneMenu>
 
-                                        </div>
+                                                    <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == TipoFactura.COMPRA ))}" styleClass="tipoFacturaIRP">
+                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos"
+                                                                listener="#{facturasBean.siCambiaClasificionIRP()}"/>
+                                                        <f:selectItem itemLabel="--" itemValue=""/>
+                                                        <f:selectItem itemLabel="GASTOS" itemValue="GASTOS"/>
+                                                        <f:selectItem itemLabel="INVERSION" itemValue="INVERSION"/>
+                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                    </p:selectOneMenu>
+                                                </h:panelGrid>
 
-
-
-                                        <div class="fila">
-                                            <p:outputPanel id="tipos">
-                                                <div style="display: table;width: 100%">
-                                                    <div style="display: table-row;width: 100%">
-                                                        <div style="display: table-cell;vertical-align: middle;width: 20%">
-                                                            <h:outputText value="Tipo Ingreso:" style="font-weight: bold"
-                                                                          rendered="#{facturasBean.muestraIngresos}"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width: 90%">
-                                                            <p:selectOneMenu value="#{facturasBean.tipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
-                                                                             rendered="#{facturasBean.muestraIngresos}">
-                                                                <p:ajax process="@this" event="change" update="subTipoIngreso"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{tipoIngresoController.itemsAvailableSelectOne}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu 
-                                                                rendered="#{facturasBean.muestraIngresos}"
-                                                                id="subTipoIngreso"
-                                                                value="#{facturasBean.subTipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{facturasBean.itemsSubTipoIngreso}"/>
-                                                            </p:selectOneMenu>
-                                                        </div>
-                                                    </div>
-
-                                                    <div style="display: table-row;width: 100%">
-                                                        <div style="display: table-cell;vertical-align: middle;width: 20%">
-                                                            <h:outputText value="Tipo Gastos:" style="font-weight: bold"
-                                                                          rendered="#{not facturasBean.muestraIngresos}"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width: 90%">
-                                                            <p:selectOneMenu value="#{facturasBean.tipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
-                                                                             rendered="#{not facturasBean.muestraIngresos}">
-                                                                <p:ajax process="@this" event="change" update="subTipoGasto"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{tipoGastoController.itemsAvailableSelectOne}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu 
-                                                                rendered="#{not facturasBean.muestraIngresos}"
-                                                                id="subTipoGasto"
-                                                                value="#{facturasBean.subTipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{facturasBean.itemsSubTipoGasto}"/>
-                                                            </p:selectOneMenu>
-                                                        </div>
-                                                    </div>
-
-                                                    <div style="display: table-row;width: 100%">
-                                                        <div style="display: table-cell;vertical-align: middle;width: 20%">
-                                                            <h:outputText value="Tipo Inversión:" style="font-weight: bold"
-                                                                          rendered="#{not facturasBean.muestraIngresos}"/>
-                                                        </div>
-                                                        <div style="display: table-cell;vertical-align: middle;width: 90%">
-                                                            <p:selectOneMenu value="#{facturasBean.tipoInversionSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
-                                                                             rendered="#{not facturasBean.muestraIngresos}">
-                                                                <p:ajax process="@this" event="change" update="subTipoInversion"/>
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{tipoInversionController.itemsAvailableSelectOne}"/>
-                                                            </p:selectOneMenu>
-                                                            <p:selectOneMenu 
-                                                                rendered="#{not facturasBean.muestraIngresos}"
-                                                                id="subTipoInversion"
-                                                                value="#{facturasBean.subTipoInversionSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                                <f:selectItem itemLabel="--" itemValue=""/>
-                                                                <f:selectItems value="#{facturasBean.itemsSubTipoInversion}"/>
-                                                            </p:selectOneMenu>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </p:outputPanel>
 
 
@@ -302,6 +293,75 @@
 
 
 
+                                        <div class="fila">
+                                            <p:outputPanel id="tipos">
+
+                                                <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
+                                                    <h:outputText value="Tipo Ingreso:" style="font-weight: bold"
+                                                                  rendered="#{facturasBean.muestraIngresos}"/>
+                                                    <p:outputPanel rendered="#{facturasBean.muestraIngresos}">
+                                                        <p:selectOneMenu value="#{facturasBean.tipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
+                                                                         rendered="#{facturasBean.muestraIngresos}">
+                                                            <p:ajax process="@this" event="change" update="subTipoIngreso tipos"
+                                                                    listener="#{facturasBean.siCambiaTipoIngreso()}"/>
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItems value="#{tipoIngresoController.itemsAvailableSelectOne}"/>
+                                                        </p:selectOneMenu>
+                                                        <p:selectOneMenu 
+                                                            rendered="#{facturasBean.muestraIngresos}"
+                                                            id="subTipoIngreso"
+                                                            value="#{facturasBean.subTipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItems value="#{facturasBean.itemsSubTipoIngreso}"/>
+                                                        </p:selectOneMenu>
+                                                    </p:outputPanel>
+
+                                                    <h:outputText value="Tipo Gastos:" style="font-weight: bold"
+                                                                  rendered="#{facturasBean.muestraGastos}"/>
+
+                                                    <p:outputPanel rendered="#{facturasBean.muestraGastos}">
+                                                        <p:selectOneMenu value="#{facturasBean.tipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
+                                                                         rendered="#{facturasBean.muestraGastos}">
+                                                            <p:ajax process="@this" event="change" update="subTipoGasto tipos"
+                                                                    listener="#{facturasBean.siCambiaTipoGasto()}"/>
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItems value="#{tipoGastoController.itemsAvailableSelectOne}"/>
+                                                        </p:selectOneMenu>
+                                                        <p:selectOneMenu 
+                                                            rendered="#{facturasBean.muestraGastos}"
+                                                            id="subTipoGasto"
+                                                            value="#{facturasBean.subTipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItems value="#{facturasBean.itemsSubTipoGasto}"/>
+                                                        </p:selectOneMenu>
+                                                    </p:outputPanel>
+
+                                                    <h:outputText value="Tipo Inversión:" style="font-weight: bold"
+                                                                  rendered="#{facturasBean.muestraInversion}"/>
+
+                                                    <p:outputPanel rendered="#{facturasBean.muestraInversion}">
+                                                        <p:selectOneMenu value="#{facturasBean.tipoInversionSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
+                                                                         rendered="#{facturasBean.muestraInversion}">
+                                                            <p:ajax process="@this" event="change" update="subTipoInversion tipos"
+                                                                    listener="#{facturasBean.siCambiaTipoInversion()}"/>
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItems value="#{tipoInversionController.itemsAvailableSelectOne}"/>
+                                                        </p:selectOneMenu>
+                                                        <p:selectOneMenu 
+                                                            rendered="#{facturasBean.muestraInversion}"
+                                                            id="subTipoInversion"
+                                                            value="#{facturasBean.subTipoInversionSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItems value="#{facturasBean.itemsSubTipoInversion}"/>
+                                                        </p:selectOneMenu>
+                                                    </p:outputPanel>
+                                                </h:panelGrid>
+
+                                            </p:outputPanel>
+                                        </div>
+
+
+
 
 
                                         <div class="fila">
@@ -311,20 +371,22 @@
                                         </div>
 
                                         <div class="fila">
-                                            <div style="display: table">
 
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell;vertical-align: middle">
-                                                        <h:outputText value="Fecha:" style="font-weight: bold"/>
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle">
-                                                        <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy" style="margin-left: 15px;"/>
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle">
+
+                                            <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
+                                                <h:outputText value="Fecha:" style="font-weight: bold"/>
+
+                                                <p:outputPanel id="periodos" style="text-align: left;margin: 0px;padding: 0px;"> 
+
+                                                    <h:panelGrid columns="3">
+                                                        <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy"/>
                                                         <h:outputText value="Periodo:" style="font-weight: bold;margin-left: 15px;"/>
-                                                    </div>
-                                                    <div style="display: table-cell;vertical-align: middle">
-                                                        <p:selectOneMenu value="#{facturasBean.actual.periodo}" style="width: 75px;margin-left: 15px;">
+                                                        <p:inputText value="#{facturasBean.actual.periodo}"
+                                                                     rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRP or facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}"/>
+
+                                                        <p:selectOneMenu value="#{facturasBean.actual.periodo}" style="width: 75px;margin-left: 15px;"
+                                                                         rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_GENERAL or facturasBean.actual.tipoImpuesto == TipoImpuesto.IRAGRO)}">
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="Ene" itemValue="Ene"/>
                                                             <f:selectItem itemLabel="Feb" itemValue="Feb"/>
                                                             <f:selectItem itemLabel="Mar" itemValue="Mar"/>
@@ -338,186 +400,155 @@
                                                             <f:selectItem itemLabel="Nov" itemValue="Nov"/>
                                                             <f:selectItem itemLabel="Dic" itemValue="Dic"/>
                                                         </p:selectOneMenu>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <br/>
+
+                                                        <p:selectOneMenu styleClass="campos" value="#{facturasBean.actual.periodo}" style="width: 110px;margin-left: 15px;" rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO)}">
+                                                            <f:selectItem itemLabel="1er Trimestre" itemValue="1er Trimestre"/>
+                                                            <f:selectItem itemLabel="2do Trimestre" itemValue="2do Trimestre"/>
+                                                            <f:selectItem itemLabel="3er Trimestre" itemValue="3er Trimestre"/>
+                                                            <f:selectItem itemLabel="4to Trimestre" itemValue="4to Trimestre"/>
+                                                        </p:selectOneMenu>
+                                                    </h:panelGrid>
+
+
+
+                                                </p:outputPanel>
+
+                                                <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px"/>
+                                                <p:inputText style="margin-bottom: 10px;width: 50%;"
+                                                             value="#{facturasBean.actual.numero}"/>
+
+
+                                                <p:outputPanel styleClass="proveedor">
+                                                    <h:outputText value="Proveedor:" style="font-weight: bold"
+                                                                  rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"/>
+                                                </p:outputPanel>
+
+
+
+                                                <p:outputPanel styleClass="proveedor">
+                                                    <p:inputText placeholder="RUC del Proveedor" value="#{facturasBean.rucProveedor}"
+                                                                 style="width: 50%;margin-top: 5px;"
+                                                                 rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}">
+                                                        <p:ajax event="blur" update="cvProveedor razonSocialProveedor"
+                                                                process="@this cvProveedor razonSocialProveedor" 
+                                                                listener="#{facturasBean.buscarContribuyenteProveedor()}"/>
+                                                    </p:inputText>
+                                                    <p:inputText placeholder="CV" value="#{facturasBean.cvProveedor}"
+                                                                 id="cvProveedor" size="1"
+                                                                 style="width: 5%;margin-top: 5px;"
+                                                                 rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"/>
+                                                </p:outputPanel>
+
+                                                <p:outputPanel styleClass="proveedor">
+                                                    <p:spacer/>
+                                                </p:outputPanel>
+                                                <p:outputPanel styleClass="proveedor">
+                                                    <p:inputText id="razonSocialProveedor"
+                                                                 style="margin-top: 5px;width: 90%"
+                                                                 placeholder="RAZON SOCIAL PROVEEDOR" value="#{facturasBean.actual.razonSocialProveedor}"
+                                                                 rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"/>
+                                                </p:outputPanel>
+
+                                            </h:panelGrid>
+
+
                                         </div>
 
 
-                                        <div class="fila">
-                                            <h:outputText value="Proveedor:" style="font-weight: bold"/>
-                                            <p:inputText placeholder="RUC del Proveedor" value="#{facturasBean.rucProveedor}"
-                                                         style="width: 50%;margin-top: 5px;">
-                                                <p:ajax event="blur" update="cvProveedor razonSocialProveedor"
-                                                        process="@this cvProveedor razonSocialProveedor" 
-                                                        listener="#{facturasBean.buscarContribuyenteProveedor()}"/>
-                                            </p:inputText>
-                                            <p:inputText placeholder="CV" value="#{facturasBean.cvProveedor}"
-                                                         id="cvProveedor" size="1"
-                                                         style="width: 5%;margin-top: 5px;"/>
 
-                                            <br/>
+                                        <p:outputPanel id="totales">
+                                            <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
+                                                <p:spacer/>
+
+
+                                                <h:panelGrid columns="3">
+                                                    <h:outputText value="Exento:" style="font-weight: bold;margin-top: 10px"/>
+                                                    <h:outputText value="Gravada 5%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                    <h:outputText value="Gravada 10%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+
+                                                    <p:inputText style="margin-top: 5px;width: 90%;"
+                                                                 value="#{facturasBean.actual.exento}">
+                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
+                                                                 value="#{facturasBean.actual.gravada05}">
+                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
+                                                                 value="#{facturasBean.actual.gravada10}">
+                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+
+
+                                                    <h:outputText value="IVA 5%:" style="font-weight: bold;margin-top: 10px"/>
+                                                    <h:outputText value="IVA 10%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                    <h:outputText value="TOTAL IVA:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+
+                                                    <p:inputText style="margin-top: 5px;width: 90%;" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.iva05}">
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.iva10}"> 
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.totalIva}">
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+
+                                                    <p:spacer/>
+                                                    <h:outputText value="Gravada 5% Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                    <h:outputText value="Gravada 10% Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+
+                                                    <p:spacer/>
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.gravada05Neto}"> 
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.gravada10Neto}">
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+
+                                                    <p:spacer/>
+                                                    <h:outputText value="Total (Neto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                    <h:outputText value="Total (Bruto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+
+                                                    <p:spacer/>
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.totalNeto}"> 
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.totalBruto}">
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+                                        </p:outputPanel>
+
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <div style="display: table;width: 100%">
+                                        <div style="display: table-cell;width: 50%;text-align: left">
+                                            <p:commandButton value="Guardar" action="#{facturasBean.guardar()}" ajax="false"/>
                                         </div>
-                                        <div class="fila">
-
-                                            <p:inputText id="razonSocialProveedor"
-                                                         style="margin-top: 5px;width: 90%"
-                                                         placeholder="RAZON SOCIAL CLIENTE" value="#{facturasBean.actual.razonSocialProveedor}"/>
-
-                                            <br/>
-                                        </div>
-
-                                        <div class="fila">
-
-                                            <p:separator style="margin-top: 5px;margin-bottom: 10px;"/>
-
-                                        </div>
-
-                                        <div class="fila">
-                                            <div style="display: table;width: 100%">
-
-                                                <div style="display: table-cell;width: 15%;vertical-align: middle">
-
-                                                    <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px"/>
-                                                </div>
-                                                <div style="display: table-cell;width: 85%;vertical-align: middle">
-
-                                                    <p:inputText style="margin-bottom: 10px;width: 50%;"
-                                                                 value="#{facturasBean.actual.numero}"/>
-                                                </div>
-                                            </div>
-
-
-
-                                        </div>
-
-                                        <div class="fila">
-
-                                            <div style="display: table; margin-top: 10px;float: right;margin-right: 40px">
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Exento:" style="font-weight: bold;margin-top: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 05:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 10:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;"
-                                                                     value="#{facturasBean.actual.exento}"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada05}"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada10}"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="IVA 05:" style="font-weight: bold;margin-top: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="IVA 10:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="TOTAL IVA:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;"
-                                                                     value="#{facturasBean.actual.iva05}"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.iva10}"/> 
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.totalIva}"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 05 Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Gravada 10 Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada05Neto}"/> 
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.gravada10Neto}"/>
-                                                    </div>
-
-                                                </div>
-
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Total (Neto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <h:outputText value="Total (Bruto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    </div>
-
-                                                </div>
-                                                <div style="display: table-row">
-                                                    <div style="display: table-cell">
-
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.totalNeto}"/> 
-                                                    </div>
-                                                    <div style="display: table-cell">
-                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                     value="#{facturasBean.actual.totalBruto}"/>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <br/>
+                                        <div style="display: table-cell;width: 50%;text-align: right">
+                                            <p:commandButton value="Cancelar" action="/main/home" ajax="false" style="float: right; margin-right: 50px;"/>
                                         </div>
                                     </div>
 
 
 
-                                    <p:commandButton value="Guardar" action="#{facturasBean.guardar()}" ajax="false"/>
-                                    <p:commandButton value="Cancelar" action="#{facturasBean.limpiar()}" ajax="false" style="float: right; margin-right: 50px;"/>
+
                                 </h:form>
                             </div>
 

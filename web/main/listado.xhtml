@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions">
+
+
+
+
+    <ui:composition template="/template.xhtml">
+        <p:idleMonitor timeout="1"></p:idleMonitor>
+
+        <ui:define name="title">
+            <h:outputText value="Inicio"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h1>Listado</h1>
+            <h:form>
+                <p:dataTable id="datalist" value="#{facturasBean.findAll()}" var="f"
+                             selectionMode="single" selection="#{facturasBean.actual}"
+                             paginator="true"
+                             rowKey="#{f.id}"
+                             rows="10"
+                             paginatorPosition="bottom"
+                             paginatorAlwaysVisible="false"
+                             rowsPerPageTemplate="10,20,30,40,50"
+                             >
+
+                    <p:ajax event="rowSelect"   update="createButton  editButton"/>
+                    <p:ajax event="rowUnselect" update="createButton  editButton"/>
+
+                    <p:column>
+                        <f:facet name="header">
+                            FECHA
+                        </f:facet>
+                        <h:outputText value="#{f.fecha}">
+                            <f:convertDateTime locale="#{formato.locale}" pattern="#{formato.patronFecha}"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            RUC CLIENTE
+                        </f:facet>
+                        <h:outputText value="#{f.rucCliente}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            NOMBRE CLIENTE
+                        </f:facet>
+                        <h:outputText value="#{f.razonSocialCliente}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            TIPO IMPUESTO
+                        </f:facet>
+                        <h:outputText value="#{f.tipoImpuesto}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            LIBRO
+                        </f:facet>
+                        <h:outputText value="#{f.tipoFactura}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            TOTAL IVA
+                        </f:facet>
+                        <h:outputText value="#{f.totalIva}">
+                            <f:convertNumber locale="#{formato.locale}"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            TOTAL NETO
+                        </f:facet>
+                        <h:outputText value="#{f.totalNeto}">
+                            <f:convertNumber locale="#{formato.locale}"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                            TOTAL BRUTO
+                        </f:facet>
+                        <h:outputText value="#{f.totalBruto}">
+                            <f:convertNumber locale="#{formato.locale}"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <f:facet name="header">
+                        <p:button id="createButton" icon="ui-icon-plus"   value="Nuevo" outcome="nuevo" 
+                                  rendered="#{(request.isUserInRole('admin') or request.isUserInRole('cliente_edicion'))}"/>
+
+                        <p:button id="editButton"   icon="ui-icon-pencil" value="Editar"  disabled="#{(empty facturasBean.actual.id)}" outcome="nuevo">
+                            <f:param name="id" value="#{facturasBean.actual.id}"/>
+                        </p:button>
+                    </f:facet>
+
+                </p:dataTable>
+
+
+            
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

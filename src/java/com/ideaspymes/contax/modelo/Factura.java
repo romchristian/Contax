@@ -7,6 +7,8 @@ package com.ideaspymes.contax.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -42,7 +44,7 @@ public class Factura implements Serializable {
     private TipoImpuesto tipoImpuesto;
     @Enumerated(EnumType.STRING)
     private Clasificacion clasificacion;
-    
+    private boolean conIRP;
     private String tipoIngreso;
     private String tipoGasto;
     private String tipoInversion;
@@ -50,17 +52,25 @@ public class Factura implements Serializable {
     private String subTipoGasto;
     private String subTipoInversion;
     
-    private BigDecimal gravada05;
-    private BigDecimal gravada10;
-    private BigDecimal exento;
-    private BigDecimal iva05;
-    private BigDecimal iva10;
-    private BigDecimal gravada05Neto;
-    private BigDecimal gravada10Neto;
+    private BigDecimal gravada05 = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal gravada10= new BigDecimal(BigInteger.ZERO);
+    private BigDecimal exento= new BigDecimal(BigInteger.ZERO);
+    private BigDecimal iva05= new BigDecimal(BigInteger.ZERO);
+    private BigDecimal iva10= new BigDecimal(BigInteger.ZERO);
+    private BigDecimal gravada05Neto= new BigDecimal(BigInteger.ZERO);
+    private BigDecimal gravada10Neto= new BigDecimal(BigInteger.ZERO);
     
-    private BigDecimal totalIva;
-    private BigDecimal totalNeto;
-    private BigDecimal totalBruto;
+    private BigDecimal totalIva= new BigDecimal(BigInteger.ZERO);
+    private BigDecimal totalNeto= new BigDecimal(BigInteger.ZERO);
+    private BigDecimal totalBruto= new BigDecimal(BigInteger.ZERO);
+
+    public boolean isConIRP() {
+        return conIRP;
+    }
+
+    public void setConIRP(boolean conIRP) {
+        this.conIRP = conIRP;
+    }
     
    
 
@@ -203,6 +213,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getGravada05Neto() {
+        gravada05Neto = getGravada05().subtract(getIva05());
         return gravada05Neto;
     }
 
@@ -211,6 +222,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getGravada10Neto() {
+        gravada10Neto = getGravada10().subtract(getIva10());
         return gravada10Neto;
     }
 
@@ -219,6 +231,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalIva() {
+        totalIva = getIva05().add(getIva10());
         return totalIva;
     }
 
@@ -227,6 +240,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalNeto() {
+        totalNeto = getTotalBruto().subtract(getTotalIva());
         return totalNeto;
     }
 
@@ -235,6 +249,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalBruto() {
+        totalBruto = getExento().add(getGravada05()).add(getGravada10());
         return totalBruto;
     }
 
@@ -268,6 +283,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getIva05() {
+        iva05 = getGravada05().divide(new BigDecimal(21),0,RoundingMode.HALF_EVEN);
         return iva05;
     }
 
@@ -276,6 +292,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getIva10() {
+        iva10 = getGravada10().divide(new BigDecimal(11),0,RoundingMode.HALF_EVEN);
         return iva10;
     }
 
