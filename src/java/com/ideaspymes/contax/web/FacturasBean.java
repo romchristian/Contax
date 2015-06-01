@@ -20,6 +20,8 @@ import com.ideaspymes.contax.modelo.TipoInversion;
 import com.ideaspymes.contax.utils.JsfUtil;
 import java.io.File;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -69,6 +71,21 @@ public class FacturasBean implements Serializable {
     public void cargaDatos() {
         if (id > 0) {
             actual = ejb.find(id);
+
+            try {
+                nombreArchivoSiguiente = actual.getUrl();
+                System.out.println("Nombre Imagen: " + nombreArchivoSiguiente);
+                String[] aruc = actual.getRucCliente().split("-");
+                ruc = aruc[0];
+                cvCliente = Integer.parseInt(aruc[1]);
+
+                String[] arucProveedor = actual.getRucProveedor().split("-");
+                rucProveedor = arucProveedor[0];
+                cvProveedor = Integer.parseInt(arucProveedor[1]);
+
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -129,8 +146,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
-    
+
     public boolean isMuestraClasificacionSoloIRP() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IRP) {
@@ -245,6 +261,7 @@ public class FacturasBean implements Serializable {
         if (actual == null) {
             actual = new Factura();
         }
+
         return actual;
     }
 
@@ -253,7 +270,7 @@ public class FacturasBean implements Serializable {
     }
 
     public void buscarContribuyenteCliente() {
-        Contribuyente c = contribuyenteDAO.getContribuyente(ruc);
+        Contribuyente c = contribuyenteDAO.getContribuyente(getRuc());
         if (c != null) {
             cvCliente = c.getCodigoVerificador();
             getActual().setRazonSocialCliente(c.getRazonSocial());
@@ -262,7 +279,7 @@ public class FacturasBean implements Serializable {
     }
 
     public void buscarContribuyenteProveedor() {
-        Contribuyente c = contribuyenteDAO.getContribuyente(rucProveedor);
+        Contribuyente c = contribuyenteDAO.getContribuyente(getRucProveedor());
         if (c != null) {
             cvProveedor = c.getCodigoVerificador();
             getActual().setRazonSocialProveedor(c.getRazonSocial());
@@ -334,7 +351,7 @@ public class FacturasBean implements Serializable {
 
     public void guardar() {
         try {
-            if (actual != null) {
+            if (validar()) {
                 actual.setTipoIngreso(tipoIngresoSeleccionado == null ? null : tipoIngresoSeleccionado.getNombre());
                 actual.setTipoGasto(tipoGastoSeleccionado == null ? null : tipoGastoSeleccionado.getNombre());
                 actual.setTipoInversion(tipoInversionSeleccionado == null ? null : tipoInversionSeleccionado.getNombre());
@@ -343,8 +360,7 @@ public class FacturasBean implements Serializable {
                 actual.setSubTipoGasto(subTipoGastoSeleccionado == null ? null : subTipoGastoSeleccionado.getNombre());
                 actual.setSubTipoInversion(subTipoInversionSeleccionado == null ? null : subTipoInversionSeleccionado.getNombre());
 
-                ejb.edit(actual);
-
+                //ejb.edit(actual);
                 mover();
                 JsfUtil.addSuccessMessage("Se guardó existosamente!!");
                 actual = null;
@@ -354,6 +370,40 @@ public class FacturasBean implements Serializable {
         } catch (Exception e) {
             JsfUtil.addErrorMessage("Hubo un error al guarda! : " + e.getMessage());
         }
+    }
+
+    public boolean validar() {
+        if (actual == null) {
+            JsfUtil.addErrorMessage("No hay nada para guardar!");
+            return false;
+        }
+
+        if (actual.getRucCliente() == null || actual.getRucCliente().length() == 0) {
+            JsfUtil.addErrorMessage("No hay ruc de cliente");
+            return false;
+        }
+
+        if (actual.getRazonSocialCliente() == null || actual.getRazonSocialCliente().length() == 0) {
+            JsfUtil.addErrorMessage("No hay razon social de cliente");
+            return false;
+        }
+
+        if (actual.getTipoImpuesto() == null || actual.getTipoImpuesto().toString().compareToIgnoreCase("") == 0) {
+            JsfUtil.addErrorMessage("No hay tipo impuesto");
+            return false;
+        }
+
+        if (actual.getFecha() == null) {
+            JsfUtil.addErrorMessage("No hay fecha");
+            return false;
+        }
+
+        if (actual.getTotalBruto() == null || actual.getTotalBruto().compareTo(new BigDecimal(BigInteger.ZERO)) == 0) {
+            JsfUtil.addErrorMessage("No hay total bruto");
+            return false;
+        }
+
+        return true;
     }
 
     public void limpiar() {
@@ -373,7 +423,7 @@ public class FacturasBean implements Serializable {
 
     public void mover() {
         String path = "C:\\facturas";
-        File theDir = new File(path + "\\" + ruc);
+        File theDir = new File(path + "\\" + getRuc());
 
 // if the directory does not exist, create it
         if (!theDir.exists()) {
@@ -398,12 +448,19 @@ public class FacturasBean implements Serializable {
 
             if (afile.renameTo(new File(theDir + "\\" + afile.getName()))) {
                 System.out.println("File is moved successful!");
+                String url = getRuc() + "\\" + afile.getName();
+
+                actual.setUrl(url);
+                ejb.edit(actual);
+
                 nombreArchivoSiguiente = null;
             } else {
+                ejb.edit(actual);
                 System.out.println("File is failed to move!");
             }
 
         } catch (Exception e) {
+            ejb.edit(actual);
             e.printStackTrace();
         }
     }
@@ -478,5 +535,14 @@ public class FacturasBean implements Serializable {
         actual.setSubTipoIngreso(null);
         actual.setSubTipoGasto(null);
         actual.setSubTipoInversion(null);
+    }
+
+    public void eliminar() {
+        if (actual != null) {
+            ejb.remove(actual);
+            actual = null;
+            JsfUtil.addSuccessMessage("Eliminado Existosamente!");
+        }
+
     }
 }

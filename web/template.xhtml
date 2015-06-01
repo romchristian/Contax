@@ -17,9 +17,6 @@
 
         <h:outputStylesheet library="css" name="default.css"/>
         <h:outputStylesheet library="css" name="jsfcrud.css"/>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
-
-        
         <h:outputStylesheet library="css" name="jquery.guillotine.css"/>
         <h:outputScript library="js" name="jquery.guillotine.min.js"/>
         <h:outputStylesheet library="css" name="demo.css"/>
@@ -89,11 +86,7 @@
                 //z-index: 100000!important;
             }
 
-            div[id="formMenuUsuario:growl_container"] {
-                position:absolute;
-                top:calc(40% - 180px);
-                left:calc(50% - 170px);
-            }
+            
         </style>
     </h:head>
 
@@ -104,7 +97,7 @@
             <h:form id="formMenuUsuario">
 
 
-                <p:growl  id="growl"/>
+                
 
                 <div  style="font-size: 12pt;
                       position: absolute;
@@ -126,7 +119,7 @@
                             <p:password id="pwd2" value="#{usuariosController.selected.usuariosseguridad}" />
                         </p:panelGrid>
 
-                        <p:commandButton id="btnGuardaClave" actionListener="#{usuariosController.update}" value="Guardar" update="panelDialogCambiaPass,formMenuUsuario:growl" oncomplete="handleSubmit(args, 'DialogCambiaPass');"/>
+                        <p:commandButton id="btnGuardaClave" actionListener="#{usuariosController.update}" value="Guardar" update="panelDialogCambiaPass" oncomplete="handleSubmit(args, 'DialogCambiaPass');"/>
                         <p:commandButton value="Cancelar" onclick="DialogCambiaPass.hide()"/>
                     </p:panel>
                 </p:dialog>

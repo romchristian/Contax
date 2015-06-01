@@ -9,7 +9,7 @@
       xmlns:of="http://omnifaces.org/functions">
 
 
-    
+
 
 
     <ui:composition template="/template.xhtml">
@@ -21,7 +21,16 @@
 
         <ui:define name="body">
             <h1>Listado</h1>
-            <h:form>
+            <style type="text/css">
+                div[id="formListado:growl_container"] {
+                    position:absolute;
+                    top:calc(40% - 180px);
+                    left:calc(50% - 170px);
+                }
+            </style>
+            <h:form id="formListado">
+                <p:growl autoUpdate="true" id="growl"/>
+
                 <p:dataTable id="datalist" value="#{facturasBean.findAll()}" var="f"
                              selectionMode="single" selection="#{facturasBean.actual}"
                              paginator="true"
@@ -32,8 +41,8 @@
                              rowsPerPageTemplate="10,20,30,40,50"
                              >
 
-                    <p:ajax event="rowSelect"   update="createButton  editButton"/>
-                    <p:ajax event="rowUnselect" update="createButton  editButton"/>
+                    <p:ajax event="rowSelect"   update="createButton  editButton deleteButton"/>
+                    <p:ajax event="rowUnselect" update="createButton  editButton deleteButton"/>
 
                     <p:column>
                         <f:facet name="header">
@@ -110,13 +119,19 @@
                         <p:button id="editButton"   icon="ui-icon-pencil" value="Editar"  disabled="#{(empty facturasBean.actual.id)}" outcome="nuevo">
                             <f:param name="id" value="#{facturasBean.actual.id}"/>
                         </p:button>
+
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="Eliminar" update=":UsuarioViewForm,datalist" oncomplete="PF('UsuarioViewDialog').show()"
+                                         disabled="#{(empty facturasBean.actual.id)}"/>
                     </f:facet>
 
                 </p:dataTable>
 
 
-            
+                
+                
             </h:form>
+            
+            <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
 

@@ -51,10 +51,10 @@ public class ImagenController implements Serializable {
             try {
                 R = new FileInputStream(new File(defaultpath, "nodisponible.png"));
             } catch (FileNotFoundException ex1) {
-                Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
+               // Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
             }
 
-            Logger.getLogger(FacturasBean.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(FacturasBean.class.getName()).log(Level.SEVERE, null, ex);
 
         }
         return R;

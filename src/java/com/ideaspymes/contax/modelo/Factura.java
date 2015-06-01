@@ -65,7 +65,18 @@ public class Factura implements Serializable {
     private BigDecimal totalIva= new BigDecimal(BigInteger.ZERO);
     private BigDecimal totalNeto= new BigDecimal(BigInteger.ZERO);
     private BigDecimal totalBruto= new BigDecimal(BigInteger.ZERO);
+    
+    private String url;
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+   
     public boolean isConIRP() {
         return conIRP;
     }

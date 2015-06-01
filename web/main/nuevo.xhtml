@@ -99,17 +99,29 @@
                 .column85{
                     width: 88%;
                     text-align: left;
+                    padding-right: 10px;
                 }
 
                 .column90{
                     width: 90%;
                     text-align: left;
+                    padding-right: 10px;
                 }
 
                 .column100{
                     width: 100%;
                     text-align: left;
                 }
+                
+                
+                
+            
+                div[id="formNuevo:growl_container"] {
+                    position:absolute;
+                    top:calc(40% - 180px);
+                    left:calc(50% - 170px);
+                }
+            
             </style>
 
 
@@ -131,14 +143,15 @@
 
                                         <div class='frame'>
                                             <o:graphicImage id="myImage" styleClass="myImage" value="#{imagenController.obtNextImage(facturasBean.nombreArchivoSiguiente)}"/>
+
                                         </div>
 
-                                        <div id='controls'>
-                                            <a href='#' id='rotate_left'  title='Rotate left'><i class='fa fa-rotate-left'></i></a>
-                                            <a href='#' id='zoom_out'     title='Zoom out'><i class='fa fa-search-minus'></i></a>
-                                            <a href='#' id='fit'          title='Fit image'><i class='fa fa-arrows-alt'></i></a>
-                                            <a href='#' id='zoom_in'      title='Zoom in'><i class='fa fa-search-plus'></i></a>
-                                            <a href='#' id='rotate_right' title='Rotate right'><i class='fa fa-rotate-right'></i></a>
+                                        <div id='controls' style="background-color: white;padding-top: 10px;">
+                                            <a href='#' id='rotate_left'  title='Rotate left'><p:graphicImage library="img" name="rotate_left.png"/></a>
+                                            <a href='#' id='zoom_out'     title='Zoom out'><p:graphicImage library="img" name="zoom_out.png"/></a>
+                                            <a href='#' id='fit'          title='Fit image'><p:graphicImage library="img" name="fit.png"/></a>
+                                            <a href='#' id='zoom_in'      title='Zoom in'><p:graphicImage library="img" name="zoom_in.png"/></a>
+                                            <a href='#' id='rotate_right' title='Rotate right'><p:graphicImage library="img" name="rotate_right.png"/></a>
                                         </div>
 
 
@@ -184,9 +197,11 @@
                     <div class="ui-grid-col-4" style="height: 100%">
                         <div class="sideBar">
                             <div style="padding: 20px;width: 100%">
-                                <h:form>
+                                <h:form id="formNuevo">
+                                    
+                                    <p:growl autoUpdate="true" id="growl"/>
 
-                                    <p:growl  id="growl2"/>
+
                                     <div style="display: table;width: 100%">
 
                                         <div class="fila">
@@ -195,7 +210,7 @@
                                                 <h:outputText value="Cliente:" style="font-weight: bold"/>
                                                 <p:outputPanel>
                                                     <p:inputText placeholder="RUC del Cliente" value="#{facturasBean.ruc}"
-                                                                 style="width: 50%;margin-top: 5px;">
+                                                                 style="width: 50%;margin-top: 5px;" rendered="true">
 
                                                         <p:ajax event="blur" update="cvCliente razonSocialCliente"
                                                                 process="@this cvCliente razonSocialCliente" 
@@ -203,10 +218,10 @@
                                                     </p:inputText>
                                                     <p:inputText placeholder="CV" value="#{facturasBean.cvCliente}"
                                                                  id="cvCliente" size="1"
-                                                                 style="width: 5%;margin-top: 5px;"/>    
+                                                                 style="width: 5%;margin-top: 5px;" required="true"/>    
                                                 </p:outputPanel>
                                                 <p:spacer/>
-                                                <p:inputText id="razonSocialCliente"
+                                                <p:inputText id="razonSocialCliente" 
                                                              style="margin-top: 5px;width: 90%"
                                                              placeholder="RAZON SOCIAL CLIENTE" value="#{facturasBean.actual.razonSocialCliente}"/>
                                             </h:panelGrid>
@@ -228,7 +243,7 @@
                                                 <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
                                                     <h:outputText value="Tipo Impuesto: " style="font-weight: bold"/>
                                                     <p:selectOneMenu value="#{facturasBean.actual.tipoImpuesto}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                        <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaTipoImpuesto()}"/>
+                                                        <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos totales" listener="#{facturasBean.siCambiaTipoImpuesto()}"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
                                                         <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
                                                                        var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
@@ -242,7 +257,7 @@
                                                                  rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}">
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) growl2"
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor)"
                                                                     listener="#{facturasBean.siCambiaLibro()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="VENTAS" itemValue="VENTA"/>
@@ -252,7 +267,7 @@
 
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraSoloIvaSimplificado}" styleClass="tipoFacturaIRP">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) growl2"
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor)"
                                                                     listener="#{facturasBean.siCambiaLibro()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="VENTAS" itemValue="VENTA"/>
@@ -461,10 +476,9 @@
 
 
                                                         <p:selectOneMenu styleClass="campos" value="#{facturasBean.actual.periodo}" style="width: 110px;margin-left: 15px;" rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO)}">
-                                                            <f:selectItem itemLabel="1er Trimestre" itemValue="1er Trimestre"/>
-                                                            <f:selectItem itemLabel="2do Trimestre" itemValue="2do Trimestre"/>
-                                                            <f:selectItem itemLabel="3er Trimestre" itemValue="3er Trimestre"/>
-                                                            <f:selectItem itemLabel="4to Trimestre" itemValue="4to Trimestre"/>
+                                                            <f:selectItem itemLabel="1er Cuatri" itemValue="1er Cuatri"/>
+                                                            <f:selectItem itemLabel="2do Cuatri" itemValue="2do Cuatri"/>
+                                                            <f:selectItem itemLabel="3er Cuatri" itemValue="3er Cuatri"/>
                                                         </p:selectOneMenu>
                                                     </h:panelGrid>
 
@@ -517,79 +531,96 @@
 
                                         <p:outputPanel id="totales">
                                             <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
+
                                                 <p:spacer/>
+                                                <p:outputPanel rendered="#{facturasBean.actual.tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO}" style="margin-right: 20px">
+
+                                                    <h:panelGrid columns="3" style="padding-right: 10px">
+                                                        <h:outputText value="Exento:" style="font-weight: bold;margin-top: 10px"/>
+                                                        <h:outputText value="Gravada 5%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                        <h:outputText value="Gravada 10%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+
+                                                        <p:inputText style="margin-top: 5px;width: 90%;font-size: 12pt!important;font-weight: bold;text-align: right"
+                                                                     value="#{facturasBean.actual.exento}">
+                                                            <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px;font-size: 12pt!important;font-weight: bold;text-align: right"
+                                                                     value="#{facturasBean.actual.gravada05}">
+                                                            <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+
+                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px;font-size: 12pt!important;font-weight: bold;text-align: right"
+                                                                     value="#{facturasBean.actual.gravada10}">
+                                                            <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
 
 
-                                                <h:panelGrid columns="3">
-                                                    <h:outputText value="Exento:" style="font-weight: bold;margin-top: 10px"/>
-                                                    <h:outputText value="Gravada 5%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    <h:outputText value="Gravada 10%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                        <h:outputText value="IVA 5%:" style="font-weight: bold;margin-top: 10px"/>
+                                                        <h:outputText value="IVA 10%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                        <h:outputText value="TOTAL IVA:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
 
-                                                    <p:inputText style="margin-top: 5px;width: 90%;"
-                                                                 value="#{facturasBean.actual.exento}">
-                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                 value="#{facturasBean.actual.gravada05}">
-                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                     value="#{facturasBean.actual.iva05}">
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;font-size: 12pt!important;margin-left: 10px;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                     value="#{facturasBean.actual.iva10}"> 
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;font-size: 12pt!important;margin-left: 10px;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                     value="#{facturasBean.actual.totalIva}">
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
 
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px"
-                                                                 value="#{facturasBean.actual.gravada10}">
-                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
+                                                        <p:spacer/>
+                                                        <h:outputText value="Gravada 5% Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                        <h:outputText value="Gravada 10% Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+
+                                                        <p:spacer/>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;font-size: 12pt!important;margin-left: 10px;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                     value="#{facturasBean.actual.gravada05Neto}"> 
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;font-size: 12pt!important;margin-left: 10px;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                     value="#{facturasBean.actual.gravada10Neto}">
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+
+                                                        <p:spacer/>
+                                                        <h:outputText value="Total (Neto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                        <h:outputText value="Total (Bruto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+
+                                                        <p:spacer/>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                     value="#{facturasBean.actual.totalNeto}"> 
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+                                                        <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                     value="#{facturasBean.actual.totalBruto}">
+                                                            <f:convertNumber locale="#{formato.locale}"/>
+                                                        </p:inputText>
+
+                                                    </h:panelGrid>
+                                                </p:outputPanel>
+
+                                            </h:panelGrid>
+
+                                            <p:outputPanel rendered="#{facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO}">
+
+                                                <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
 
 
-                                                    <h:outputText value="IVA 5%:" style="font-weight: bold;margin-top: 10px"/>
-                                                    <h:outputText value="IVA 10%:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    <h:outputText value="TOTAL IVA:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-
-                                                    <p:inputText style="margin-top: 5px;width: 90%;" styleClass="calculos"
-                                                                 value="#{facturasBean.actual.iva05}">
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
-                                                                 value="#{facturasBean.actual.iva10}"> 
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
-                                                                 value="#{facturasBean.actual.totalIva}">
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
-
-                                                    <p:spacer/>
-                                                    <h:outputText value="Gravada 5% Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    <h:outputText value="Gravada 10% Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-
-                                                    <p:spacer/>
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
-                                                                 value="#{facturasBean.actual.gravada05Neto}"> 
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
-                                                                 value="#{facturasBean.actual.gravada10Neto}">
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
-
-                                                    <p:spacer/>
-                                                    <h:outputText value="Total (Neto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                    <h:outputText value="Total (Bruto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-
-                                                    <p:spacer/>
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
-                                                                 value="#{facturasBean.actual.totalNeto}"> 
-                                                        <f:convertNumber locale="#{formato.locale}"/>
-                                                    </p:inputText>
-                                                    <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px" styleClass="calculos"
+                                                    <h:outputText value="Total (Bruto):" style="font-weight: bold;"/>
+                                                    <p:inputText styleClass="calculos" style="font-size: 12pt!important;font-weight: bold;text-align: right"
                                                                  value="#{facturasBean.actual.totalBruto}">
                                                         <f:convertNumber locale="#{formato.locale}"/>
                                                     </p:inputText>
 
                                                 </h:panelGrid>
-                                            </h:panelGrid>
+                                            </p:outputPanel>
                                         </p:outputPanel>
 
                                     </div>
