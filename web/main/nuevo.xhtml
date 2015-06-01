@@ -11,6 +11,7 @@
 
 
 
+
     <ui:composition template="/template.xhtml">
 
 
@@ -143,10 +144,10 @@
 
                                     </div>
                                     <script type='text/javascript'>
-                                        
+
                                         jQuery(function () {
                                             var picture = jQuery('.myImage')
-                                            
+
                                             var camelize = function () {
                                                 var regex = /[\W_]+(.)/g
                                                 var replacer = function (match, submatch) {
@@ -156,17 +157,17 @@
                                                     return str.replace(regex, replacer)
                                                 }
                                             }()
-                                            
+
                                             picture.guillotine({eventOnChange: 'guillotinechange'})
                                             picture.guillotine('fit')
                                             jQuery('#controls a').click(function (e) {
                                                 e.preventDefault()
-                                                
+
                                                 action = camelize(this.id);
-                                                
+
                                                 picture.guillotine(action);
                                             })
-                                            
+
 //                                           
                                         })
                                     </script>
@@ -185,6 +186,7 @@
                             <div style="padding: 20px;width: 100%">
                                 <h:form>
 
+                                    <p:growl  id="growl2"/>
                                     <div style="display: table;width: 100%">
 
                                         <div class="fila">
@@ -194,6 +196,7 @@
                                                 <p:outputPanel>
                                                     <p:inputText placeholder="RUC del Cliente" value="#{facturasBean.ruc}"
                                                                  style="width: 50%;margin-top: 5px;">
+
                                                         <p:ajax event="blur" update="cvCliente razonSocialCliente"
                                                                 process="@this cvCliente razonSocialCliente" 
                                                                 listener="#{facturasBean.buscarContribuyenteCliente()}"/>
@@ -231,35 +234,90 @@
                                                                        var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
                                                     </p:selectOneMenu>
 
-                                                    <h:outputText value="Libro:" style="font-weight: bold" rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP"/>
+                                                    <h:outputText value="Libro:" style="font-weight: bold"
+                                                                  rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}"
+                                                                  styleClass="tipoFacturaIRP"/>
 
                                                     <h:panelGrid columns="2" styleClass="column100" columnClasses="column50,column50" style="margin: 0; padding: 0;"
-                                                                 rendered="#{facturasBean.muestraTipoFactura}">
+                                                                 rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}">
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor)"
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) growl2"
                                                                     listener="#{facturasBean.siCambiaLibro()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
-                                                            <f:selectItems value="#{productorEnums.obtTiposFactura()}"
-                                                                           var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
+                                                            <f:selectItem itemLabel="VENTAS" itemValue="VENTA"/>
+                                                            <f:selectItem itemLabel="COMPRAS" itemValue="COMPRA"/>
+                                                            <f:selectItem itemLabel="EXPORTACIONES" itemValue="EXPORTACIONES"/>
                                                         </p:selectOneMenu>
+
+                                                        <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                         rendered="#{facturasBean.muestraSoloIvaSimplificado}" styleClass="tipoFacturaIRP">
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) growl2"
+                                                                    listener="#{facturasBean.siCambiaLibro()}"/>
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItem itemLabel="VENTAS" itemValue="VENTA"/>
+                                                            <f:selectItem itemLabel="COMPRAS" itemValue="COMPRA"/>
+                                                        </p:selectOneMenu>
+
                                                         <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRP}" itemLabel="Con IRP?"
-                                                                                 rendered="#{facturasBean.muestraTipoFactura}">
+                                                                                 rendered="#{(facturasBean.muestraTipoFactura and facturasBean.muestraConIRP)}">
                                                             <p:ajax process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaConIRP()}"/>
                                                         </p:selectBooleanCheckbox>
                                                     </h:panelGrid>
 
 
-                                                    <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{facturasBean.muestraClasificacionIRP}" styleClass="tipoFacturaIRP"/>
+
+                                                    <h:outputText value="Ajustes:" style="font-weight: bold" 
+                                                                  rendered="#{(facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}" styleClass="tipoFacturaIRP"/>
+
+                                                    <p:selectOneMenu value="#{facturasBean.actual.tipoAjustes}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{(facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"
+                                                                     styleClass="tipoFacturaIRP">
+                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
+                                                        <f:selectItem itemLabel="--" itemValue=""/>
+                                                        <f:selectItem itemLabel="AJUSTES DE PRECIOS" itemValue="AJUSTES DE PRECIOS"/>
+                                                        <f:selectItem itemLabel="DEVOLUCIONES" itemValue="DEVOLUCIONES"/>
+                                                        <f:selectItem itemLabel="DESCUENTOS" itemValue="DESCUENTOS"/>
+
+                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                    </p:selectOneMenu>
+
+
+
+                                                    <h:outputText value="Tipo Exportación:" style="font-weight: bold" rendered="#{facturasBean.actual.tipoFactura == TipoFactura.EXPORTACIONES}" styleClass="tipoFacturaIRP"/>
+
+                                                    <p:selectOneMenu value="#{facturasBean.actual.tipoExportacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{facturasBean.actual.tipoFactura == TipoFactura.EXPORTACIONES}" styleClass="tipoFacturaIRP">
+                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
+                                                        <f:selectItem itemLabel="--" itemValue=""/>
+                                                        <f:selectItem itemLabel="AGROPECUARIAS" itemValue="AGROPECUARIAS"/>
+                                                        <f:selectItem itemLabel="OTROS" itemValue="OTROS"/>
+
+                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                    </p:selectOneMenu>
+
+
+                                                    <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{(facturasBean.muestraClasificacionIRP and facturasBean.actual.tipoFactura != TipoFactura.EXPORTACIONES)}" styleClass="tipoFacturaIRP"/>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == null)}" styleClass="tipoFacturaIRP">
+                                                                     rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == null) and not facturasBean.muestraClasificacionSoloIRPC)}" styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"
                                                                 listener="#{facturasBean.siCambiaClasificionIRP()}"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
                                                         <f:selectItem itemLabel="INGRESOS" itemValue="INGRESOS"/>
                                                         <f:selectItem itemLabel="GASTOS" itemValue="GASTOS"/>
                                                         <f:selectItem itemLabel="INVERSION" itemValue="INVERSION"/>
+                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                    </p:selectOneMenu>
+
+
+                                                    <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{facturasBean.muestraClasificacionSoloIRPC and (facturasBean.actual.tipoFactura == null)}" styleClass="tipoFacturaIRP">
+                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"
+                                                                listener="#{facturasBean.siCambiaClasificionIRP()}"/>
+                                                        <f:selectItem itemLabel="--" itemValue=""/>
+                                                        <f:selectItem itemLabel="INGRESOS" itemValue="INGRESOS"/>
+                                                        <f:selectItem itemLabel="GASTOS" itemValue="GASTOS"/>
                                                         <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
                                                     </p:selectOneMenu>
 
@@ -385,7 +443,7 @@
                                                                      rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRP or facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}"/>
 
                                                         <p:selectOneMenu value="#{facturasBean.actual.periodo}" style="width: 75px;margin-left: 15px;"
-                                                                         rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_GENERAL or facturasBean.actual.tipoImpuesto == TipoImpuesto.IRAGRO)}">
+                                                                         rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_GENERAL)}">
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="Ene" itemValue="Ene"/>
                                                             <f:selectItem itemLabel="Feb" itemValue="Feb"/>
@@ -542,7 +600,7 @@
                                             <p:commandButton value="Guardar" action="#{facturasBean.guardar()}" ajax="false"/>
                                         </div>
                                         <div style="display: table-cell;width: 50%;text-align: right">
-                                            <p:commandButton value="Cancelar" action="/main/home" ajax="false" style="float: right; margin-right: 50px;"/>
+                                            <p:commandButton value="Cancelar" action="/main/home" ajax="false" style="float: right; margin-right: 50px;" immediate="true"/>
                                         </div>
                                     </div>
 

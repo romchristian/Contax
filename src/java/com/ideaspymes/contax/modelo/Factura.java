@@ -51,6 +51,8 @@ public class Factura implements Serializable {
     private String subTipoIngreso;
     private String subTipoGasto;
     private String subTipoInversion;
+    private String tipoExportacion;
+    private String tipoAjustes;
     
     private BigDecimal gravada05 = new BigDecimal(BigInteger.ZERO);
     private BigDecimal gravada10= new BigDecimal(BigInteger.ZERO);
@@ -70,6 +72,22 @@ public class Factura implements Serializable {
 
     public void setConIRP(boolean conIRP) {
         this.conIRP = conIRP;
+    }
+
+    public String getTipoExportacion() {
+        return tipoExportacion;
+    }
+
+    public void setTipoExportacion(String tipoExportacion) {
+        this.tipoExportacion = tipoExportacion;
+    }
+
+    public String getTipoAjustes() {
+        return tipoAjustes;
+    }
+
+    public void setTipoAjustes(String tipoAjustes) {
+        this.tipoAjustes = tipoAjustes;
     }
     
    

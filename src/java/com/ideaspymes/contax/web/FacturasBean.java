@@ -65,8 +65,6 @@ public class FacturasBean implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
-    
-   
 
     public void cargaDatos() {
         if (id > 0) {
@@ -88,7 +86,27 @@ public class FacturasBean implements Serializable {
 
     public boolean isMuestraTipoFactura() {
         boolean R = false;
-        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL || getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+
+    public boolean isMuestraSoloIvaSimplificado() {
+        boolean R = false;
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+
+    public boolean isMuestraConIRP() {
+        boolean R = false;
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL) {
             R = true;
         } else {
             R = false;
@@ -104,10 +122,26 @@ public class FacturasBean implements Serializable {
         return R;
     }
 
+    public boolean isMuestraClasificacionSoloIRPC() {
+        boolean R = false;
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IRPC) {
+            R = true;
+        }
+        return R;
+    }
+    
+    
+    public boolean isMuestraClasificacionSoloIRP() {
+        boolean R = false;
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IRP) {
+            R = true;
+        }
+        return R;
+    }
+
     public boolean isMuestraIngresos() {
         boolean R;
-        if ((getActual().isConIRP())
-                && (getActual().getClasificacion() != null && getActual().getClasificacion() == Clasificacion.INGRESOS)) {
+        if ((getActual().getClasificacion() != null && getActual().getClasificacion() == Clasificacion.INGRESOS && !isMuestraClasificacionSoloIRPC())) {
             R = true;
         } else {
             R = false;
@@ -117,8 +151,7 @@ public class FacturasBean implements Serializable {
 
     public boolean isMuestraGastos() {
         boolean R;
-        if ((getActual().isConIRP())
-                && (getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.GASTOS))) {
+        if ((getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.GASTOS && !isMuestraClasificacionSoloIRPC()))) {
             R = true;
         } else {
             R = false;
@@ -128,8 +161,7 @@ public class FacturasBean implements Serializable {
 
     public boolean isMuestraInversion() {
         boolean R;
-        if ((getActual().isConIRP())
-                && (getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.INVERSION))) {
+        if ((getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.INVERSION && !isMuestraClasificacionSoloIRPC()))) {
             R = true;
         } else {
             R = false;
@@ -386,6 +418,8 @@ public class FacturasBean implements Serializable {
         actual.setSubTipoIngreso(null);
         actual.setSubTipoGasto(null);
         actual.setSubTipoInversion(null);
+        actual.setTipoExportacion(null);
+        actual.setTipoAjustes(null);
 
     }
 
@@ -397,6 +431,8 @@ public class FacturasBean implements Serializable {
         actual.setSubTipoIngreso(null);
         actual.setSubTipoGasto(null);
         actual.setSubTipoInversion(null);
+        actual.setTipoExportacion(null);
+        actual.setTipoAjustes(null);
 
     }
 
