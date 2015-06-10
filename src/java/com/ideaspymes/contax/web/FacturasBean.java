@@ -7,6 +7,12 @@ package com.ideaspymes.contax.web;
 
 import com.ideaspymes.contax.facade.ContribuyenteDAO;
 import com.ideaspymes.contax.facade.FacturaFacade;
+import com.ideaspymes.contax.facade.SubTipoGastoFacade;
+import com.ideaspymes.contax.facade.SubTipoIngresoFacade;
+import com.ideaspymes.contax.facade.SubTipoInversionFacade;
+import com.ideaspymes.contax.facade.TipoGastoFacade;
+import com.ideaspymes.contax.facade.TipoIngresoFacade;
+import com.ideaspymes.contax.facade.TipoInversionFacade;
 import com.ideaspymes.contax.modelo.Clasificacion;
 import com.ideaspymes.contax.modelo.Contribuyente;
 import com.ideaspymes.contax.modelo.Factura;
@@ -25,7 +31,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 
 import javax.inject.Named;
 
@@ -34,13 +42,28 @@ import javax.inject.Named;
  * @author cromero
  */
 @Named
-@ViewScoped
+@SessionScoped
 public class FacturasBean implements Serializable {
 
     @EJB
     private ContribuyenteDAO contribuyenteDAO;
     @EJB
     private FacturaFacade ejb;
+    @EJB
+    private TipoGastoFacade ejbTipoGastoFacade;
+    @EJB
+    private TipoIngresoFacade ejbTipoIngresoFacade;
+    @EJB
+    private TipoInversionFacade ejbTipoInversionFacade;
+    @EJB
+    private SubTipoGastoFacade ejbSubTipoGastoFacade;
+    @EJB
+    private SubTipoIngresoFacade ejbSubTipoIngresoFacade;
+    @EJB
+    private SubTipoInversionFacade ejbSubTipoInversionFacade;
+
+    @Inject
+    private ImagenController imagenController;
 
     private String ruc;
     private int cvCliente;
@@ -59,6 +82,30 @@ public class FacturasBean implements Serializable {
     private SubTipoInversion subTipoInversionSeleccionado;
     private boolean conIRP;
     private long id;
+    private boolean contextoModificacion;
+    private boolean generarAporteIPS;
+
+    public void cargaImagen() {
+        String path = "C:\\facturas";
+        final File folder = new File(path);
+        nombreArchivoSiguiente = "";
+        for (final File fileEntry : folder.listFiles()) {
+            if (!fileEntry.isDirectory()) {
+               // System.out.println("File Entry: " + fileEntry.getName());
+                nombreArchivoSiguiente = fileEntry.getName();
+            }
+        }
+        System.out.println("Imagen en bean: " + nombreArchivoSiguiente);
+        imagenController.setImagen(nombreArchivoSiguiente);
+    }
+
+    public boolean isGenerarAporteIPS() {
+        return generarAporteIPS;
+    }
+
+    public void setGenerarAporteIPS(boolean generarAporteIPS) {
+        this.generarAporteIPS = generarAporteIPS;
+    }
 
     public long getId() {
         return id;
@@ -68,12 +115,58 @@ public class FacturasBean implements Serializable {
         this.id = id;
     }
 
+    public void resfreca() {
+        if (id > 0) {
+            actual = ejb.find(id);
+            contextoModificacion = true;
+            try {
+                nombreArchivoSiguiente = actual.getUrl();
+               // System.out.println("Nombre Imagen: " + nombreArchivoSiguiente);
+                String[] aruc = actual.getRucCliente().split("-");
+                ruc = aruc[0];
+                cvCliente = Integer.parseInt(aruc[1]);
+                tipoIngresoSeleccionado = ejbTipoIngresoFacade.findNombre(actual.getTipoIngreso());
+                tipoGastoSeleccionado = ejbTipoGastoFacade.findNombre(actual.getTipoGasto());
+                tipoInversionSeleccionado = ejbTipoInversionFacade.findNombre(actual.getTipoInversion());
+                subTipoGastoSeleccionado = ejbSubTipoGastoFacade.findNombre(actual.getSubTipoGasto());
+                subTipoIngresoSeleccionado = ejbSubTipoIngresoFacade.findNombre(actual.getSubTipoIngreso());
+                subTipoInversionSeleccionado = ejbSubTipoInversionFacade.findNombre(actual.getSubTipoInversion());
+
+                String[] arucProveedor = actual.getRucProveedor().split("-");
+                rucProveedor = arucProveedor[0];
+                cvProveedor = Integer.parseInt(arucProveedor[1]);
+
+            } catch (Exception e) {
+
+            }
+            //return "nuevo.xhtml?faces-redirect=true&id=" + id;
+        } else {
+            String path = "C:\\facturas";
+            final File folder = new File(path);
+
+            nombreArchivoSiguiente = "";
+            for (final File fileEntry : folder.listFiles()) {
+                if (!fileEntry.isDirectory()) {
+                    System.out.println("File Entry: " + fileEntry.getName());
+                    nombreArchivoSiguiente = fileEntry.getName();
+                }
+            }
+            //return "nuevo.xhtml?faces-redirect=true&id=0";
+        }
+    }
+
     public void cargaDatos() {
         if (id > 0) {
             actual = ejb.find(id);
+            tipoIngresoSeleccionado = ejbTipoIngresoFacade.findNombre(actual.getTipoIngreso());
+            tipoGastoSeleccionado = ejbTipoGastoFacade.findNombre(actual.getTipoGasto());
+            tipoInversionSeleccionado = ejbTipoInversionFacade.findNombre(actual.getTipoInversion());
+            subTipoGastoSeleccionado = ejbSubTipoGastoFacade.findNombre(actual.getSubTipoGasto());
+            subTipoIngresoSeleccionado = ejbSubTipoIngresoFacade.findNombre(actual.getSubTipoIngreso());
+            subTipoInversionSeleccionado = ejbSubTipoInversionFacade.findNombre(actual.getSubTipoInversion());
 
             try {
-                nombreArchivoSiguiente = actual.getUrl();
+               // nombreArchivoSiguiente = actual.getUrl();
                 System.out.println("Nombre Imagen: " + nombreArchivoSiguiente);
                 String[] aruc = actual.getRucCliente().split("-");
                 ruc = aruc[0];
@@ -86,6 +179,17 @@ public class FacturasBean implements Serializable {
             } catch (Exception e) {
             }
 
+        } else {
+            String path = "C:\\facturas";
+//            final File folder = new File(path);
+//
+//            nombreArchivoSiguiente = "";
+//            for (final File fileEntry : folder.listFiles()) {
+//                if (!fileEntry.isDirectory()) {
+//                    System.out.println("File Entry: " + fileEntry.getName());
+//                    nombreArchivoSiguiente = fileEntry.getName();
+//                }
+//            }
         }
     }
 
@@ -111,6 +215,16 @@ public class FacturasBean implements Serializable {
         return R;
     }
 
+    public boolean isMuestraGenerarAporteIPS() {
+        boolean R = false;
+        if (tipoIngresoSeleccionado != null && tipoIngresoSeleccionado.getNombre().compareToIgnoreCase("Dependiente") == 0) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+
     public boolean isMuestraSoloIvaSimplificado() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
@@ -123,7 +237,17 @@ public class FacturasBean implements Serializable {
 
     public boolean isMuestraConIRP() {
         boolean R = false;
-        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL) {
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL || getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+
+    public boolean isMuestraConIRPC() {
+        boolean R = false;
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL || getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
             R = true;
         } else {
             R = false;
@@ -141,7 +265,7 @@ public class FacturasBean implements Serializable {
 
     public boolean isMuestraClasificacionSoloIRPC() {
         boolean R = false;
-        if (getActual().getTipoImpuesto() == TipoImpuesto.IRPC) {
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IRPC || getActual().isConIRPC()) {
             R = true;
         }
         return R;
@@ -288,20 +412,6 @@ public class FacturasBean implements Serializable {
     }
 
     public String getNombreArchivoSiguiente() {
-        if (nombreArchivoSiguiente == null) {
-
-            String path = "C:\\facturas";
-            final File folder = new File(path);
-
-            nombreArchivoSiguiente = "";
-            for (final File fileEntry : folder.listFiles()) {
-                if (!fileEntry.isDirectory()) {
-                    System.out.println("File Entry: " + fileEntry.getName());
-                    nombreArchivoSiguiente = fileEntry.getName();
-                }
-            }
-
-        }
         return nombreArchivoSiguiente;
     }
 
@@ -349,7 +459,7 @@ public class FacturasBean implements Serializable {
         this.ruc = ruc;
     }
 
-    public void guardar() {
+    public String guardar() {
         try {
             if (validar()) {
                 actual.setTipoIngreso(tipoIngresoSeleccionado == null ? null : tipoIngresoSeleccionado.getNombre());
@@ -362,13 +472,19 @@ public class FacturasBean implements Serializable {
 
                 //ejb.edit(actual);
                 mover();
+                if (generarAporteIPS) {
+                    crearAporteIPS();
+                }
+
                 JsfUtil.addSuccessMessage("Se guardó existosamente!!");
                 actual = null;
                 limpiar();
             }
 
+            return "nuevo.xhtml?faces-redirect=true&id=0";
         } catch (Exception e) {
             JsfUtil.addErrorMessage("Hubo un error al guarda! : " + e.getMessage());
+            return null;
         }
     }
 
@@ -466,6 +582,7 @@ public class FacturasBean implements Serializable {
     }
 
     public void siCambiaTipoImpuesto() {
+
         actual.setTipoFactura(null);
         actual.setConIRP(false);
         actual.setClasificacion(null);
@@ -481,6 +598,7 @@ public class FacturasBean implements Serializable {
     }
 
     public void siCambiaLibro() {
+
         actual.setClasificacion(null);
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
@@ -494,6 +612,19 @@ public class FacturasBean implements Serializable {
     }
 
     public void siCambiaConIRP() {
+
+        actual.setClasificacion(null);
+        actual.setTipoIngreso(null);
+        actual.setTipoGasto(null);
+        actual.setTipoInversion(null);
+        actual.setSubTipoIngreso(null);
+        actual.setSubTipoGasto(null);
+        actual.setSubTipoInversion(null);
+
+    }
+
+    public void siCambiaConIRPC() {
+
         actual.setClasificacion(null);
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
@@ -505,36 +636,45 @@ public class FacturasBean implements Serializable {
     }
 
     public void siCambiaClasificionIRP() {
+
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
         actual.setTipoInversion(null);
         actual.setSubTipoIngreso(null);
         actual.setSubTipoGasto(null);
         actual.setSubTipoInversion(null);
+
     }
 
     public void siCambiaTipoIngreso() {
+
+        generarAporteIPS = false;
         actual.setTipoGasto(null);
         actual.setTipoInversion(null);
         actual.setSubTipoIngreso(null);
         actual.setSubTipoGasto(null);
         actual.setSubTipoInversion(null);
+
     }
 
     public void siCambiaTipoGasto() {
+
         actual.setTipoIngreso(null);
         actual.setTipoInversion(null);
         actual.setSubTipoIngreso(null);
         actual.setSubTipoGasto(null);
         actual.setSubTipoInversion(null);
+
     }
 
     public void siCambiaTipoInversion() {
+
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
         actual.setSubTipoIngreso(null);
         actual.setSubTipoGasto(null);
         actual.setSubTipoInversion(null);
+
     }
 
     public void eliminar() {
@@ -545,4 +685,46 @@ public class FacturasBean implements Serializable {
         }
 
     }
+
+    public List<TipoIngreso> getItemsAvailableTipoIngreso() {
+        if (actual.getTipoImpuesto() == TipoImpuesto.IVA_GENERAL && actual.isConIRP()) {
+            return ejbTipoIngresoFacade.findAllNoDependiente();
+        } else {
+            return ejbTipoIngresoFacade.findAll();
+        }
+
+    }
+
+    private void crearAporteIPS() {
+        Factura f = new Factura();
+
+        f.setFecha(actual.getFecha());
+        f.setCambiaPeriodo(actual.isCambiaPeriodo());
+        f.setConIRP(actual.isConIRP());
+        f.setConIRPC(actual.isConIRPC());
+        f.setNumero(actual.getNumero());
+        f.setPeriodo(actual.getPeriodo());
+        f.setRucCliente(actual.getRucCliente());
+        f.setRazonSocialCliente(actual.getRazonSocialCliente());
+        f.setTipoImpuesto(TipoImpuesto.IRP);
+        f.setClasificacion(Clasificacion.GASTOS);
+        f.setTipoGasto("Generales");
+        f.setSubTipoGasto("Descuentos y aportes legales");
+
+        f.setGravada05(BigDecimal.ZERO);
+        f.setGravada05Neto(BigDecimal.ZERO);
+        f.setGravada10(BigDecimal.ZERO);
+        f.setGravada10Neto(BigDecimal.ZERO);
+        f.setIva05(BigDecimal.ZERO);
+        f.setIva10(BigDecimal.ZERO);
+        f.setTotalIva(BigDecimal.ZERO);
+
+        BigDecimal ips = actual.getTotalBruto().multiply(new BigDecimal(0.095));
+        f.setExento(ips);
+        f.setTotalNeto(ips);
+        f.setTotalBruto(ips);
+        ejb.edit(f);
+
+    }
+
 }

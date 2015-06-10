@@ -28,4 +28,6 @@ public class TipoGastoFacade extends AbstractFacade<TipoGasto> {
         super(TipoGasto.class);
     }
     
+    
+    
 }

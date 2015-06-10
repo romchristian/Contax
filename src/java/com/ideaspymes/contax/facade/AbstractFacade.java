@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
  * @author Christian
  */
 public abstract class AbstractFacade<T> {
+
     private Class<T> entityClass;
 
     public AbstractFacade(Class<T> entityClass) {
@@ -37,6 +38,19 @@ public abstract class AbstractFacade<T> {
         return getEntityManager().find(entityClass, id);
     }
 
+    public T findNombre(Object nombre) {
+        String consulta = "select o from " + entityClass.getSimpleName() + " o where o.nombre = :nombre";
+        T R = null;
+        try {
+            R = (T) getEntityManager().createQuery(consulta)
+                    .setParameter("nombre", nombre)
+                    .getSingleResult();
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+        }
+        return R;
+    }
+
     public List<T> findAll() {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
@@ -59,5 +73,5 @@ public abstract class AbstractFacade<T> {
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
-    
+
 }

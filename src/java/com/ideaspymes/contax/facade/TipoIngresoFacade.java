@@ -6,6 +6,7 @@
 package com.ideaspymes.contax.facade;
 
 import com.ideaspymes.contax.modelo.TipoIngreso;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,6 +27,11 @@ public class TipoIngresoFacade extends AbstractFacade<TipoIngreso> {
 
     public TipoIngresoFacade() {
         super(TipoIngreso.class);
+    }
+    
+    
+    public List<TipoIngreso> findAllNoDependiente(){
+        return em.createQuery("SELECT t from TipoIngreso t where t.nombre <> 'Dependiente'").getResultList();
     }
     
 }

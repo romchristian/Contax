@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,6 +19,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
+import sun.util.calendar.Gregorian;
 
 /**
  *
@@ -24,6 +28,7 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class Factura implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +36,10 @@ public class Factura implements Serializable {
     private String rucCliente;
     private String razonSocialCliente;
     private String numero;
-    
+
     private String rucProveedor;
     private String razonSocialProveedor;
-    
+
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fecha;
     private String periodo;
@@ -45,6 +50,7 @@ public class Factura implements Serializable {
     @Enumerated(EnumType.STRING)
     private Clasificacion clasificacion;
     private boolean conIRP;
+    private boolean conIRPC;
     private String tipoIngreso;
     private String tipoGasto;
     private String tipoInversion;
@@ -53,20 +59,56 @@ public class Factura implements Serializable {
     private String subTipoInversion;
     private String tipoExportacion;
     private String tipoAjustes;
-    
+
     private BigDecimal gravada05 = new BigDecimal(BigInteger.ZERO);
-    private BigDecimal gravada10= new BigDecimal(BigInteger.ZERO);
-    private BigDecimal exento= new BigDecimal(BigInteger.ZERO);
-    private BigDecimal iva05= new BigDecimal(BigInteger.ZERO);
-    private BigDecimal iva10= new BigDecimal(BigInteger.ZERO);
-    private BigDecimal gravada05Neto= new BigDecimal(BigInteger.ZERO);
-    private BigDecimal gravada10Neto= new BigDecimal(BigInteger.ZERO);
-    
-    private BigDecimal totalIva= new BigDecimal(BigInteger.ZERO);
-    private BigDecimal totalNeto= new BigDecimal(BigInteger.ZERO);
-    private BigDecimal totalBruto= new BigDecimal(BigInteger.ZERO);
-    
+    private BigDecimal gravada10 = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal exento = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal iva05 = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal iva10 = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal gravada05Neto = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal gravada10Neto = new BigDecimal(BigInteger.ZERO);
+
+    private BigDecimal totalIva = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal totalNeto = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal totalBruto = new BigDecimal(BigInteger.ZERO);
+    @Transient
+    private boolean cambiaPeriodo;
     private String url;
+    private String periodoAnio;
+    private String periodoMes;
+
+    public String getPeriodoMes() {
+        return periodoMes;
+    }
+
+    public void setPeriodoMes(String periodoMes) {
+        this.periodoMes = periodoMes;
+    }
+
+    public String getPeriodoAnio() {
+        return periodoAnio;
+    }
+
+    public void setPeriodoAnio(String periodoAnio) {
+
+        this.periodoAnio = periodoAnio;
+    }
+
+    public boolean isCambiaPeriodo() {
+        return cambiaPeriodo;
+    }
+
+    public void setCambiaPeriodo(boolean cambiaPeriodo) {
+        this.cambiaPeriodo = cambiaPeriodo;
+    }
+
+    public boolean isConIRPC() {
+        return conIRPC;
+    }
+
+    public void setConIRPC(boolean conIRPC) {
+        this.conIRPC = conIRPC;
+    }
 
     public String getUrl() {
         return url;
@@ -76,7 +118,6 @@ public class Factura implements Serializable {
         this.url = url;
     }
 
-   
     public boolean isConIRP() {
         return conIRP;
     }
@@ -100,8 +141,6 @@ public class Factura implements Serializable {
     public void setTipoAjustes(String tipoAjustes) {
         this.tipoAjustes = tipoAjustes;
     }
-    
-   
 
     public Long getId() {
         return id;
@@ -143,8 +182,6 @@ public class Factura implements Serializable {
         this.razonSocialProveedor = razonSocialProveedor;
     }
 
-    
-    
     public String getNumero() {
         return numero;
     }
@@ -158,14 +195,35 @@ public class Factura implements Serializable {
     }
 
     public void setFecha(Date fecha) {
+        if (fecha != null) {
+            GregorianCalendar gc = new GregorianCalendar();
+            gc.setTime(fecha);
+            setPeriodoAnio(gc.get(Calendar.YEAR) + "");
+        }
+
         this.fecha = fecha;
     }
 
     public String getPeriodo() {
+        if (getPeriodoMes() != null && getPeriodoAnio() != null) {
+            periodo = getPeriodoMes() + "-" + getPeriodoAnio();
+        } else if (getPeriodoMes() == null && getPeriodoAnio() != null) {
+            periodo = getPeriodoAnio();
+        }else if (getPeriodoMes() != null && getPeriodoAnio() == null){
+            periodo = getPeriodoMes();
+        }
+
         return periodo;
     }
 
     public void setPeriodo(String periodo) {
+         if (getPeriodoMes() != null && getPeriodoAnio() != null) {
+            periodo = getPeriodoMes() + "-" + getPeriodoAnio();
+        } else if (getPeriodoMes() == null && getPeriodoAnio() != null) {
+            periodo = getPeriodoAnio();
+        }else if (getPeriodoMes() != null && getPeriodoAnio() == null){
+            periodo = getPeriodoMes();
+        }
         this.periodo = periodo;
     }
 
@@ -286,7 +344,6 @@ public class Factura implements Serializable {
         this.totalBruto = totalBruto;
     }
 
-   
     public BigDecimal getGravada05() {
         return gravada05;
     }
@@ -312,7 +369,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getIva05() {
-        iva05 = getGravada05().divide(new BigDecimal(21),0,RoundingMode.HALF_EVEN);
+        iva05 = getGravada05().divide(new BigDecimal(21), 0, RoundingMode.HALF_EVEN);
         return iva05;
     }
 
@@ -321,7 +378,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getIva10() {
-        iva10 = getGravada10().divide(new BigDecimal(11),0,RoundingMode.HALF_EVEN);
+        iva10 = getGravada10().divide(new BigDecimal(11), 0, RoundingMode.HALF_EVEN);
         return iva10;
     }
 
@@ -329,8 +386,6 @@ public class Factura implements Serializable {
         this.iva10 = iva10;
     }
 
-    
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -355,5 +410,5 @@ public class Factura implements Serializable {
     public String toString() {
         return "com.ideaspymes.contax.modelo.Factura[ id=" + id + " ]";
     }
-    
+
 }

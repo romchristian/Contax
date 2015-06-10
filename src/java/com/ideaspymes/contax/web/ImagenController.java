@@ -25,6 +25,18 @@ import javax.inject.Named;
 public class ImagenController implements Serializable {
 
     private boolean mostrarPorDefecto;
+    
+    private String imagen;
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+    
+    
 
     public boolean isMostrarPorDefecto() {
         return mostrarPorDefecto;
@@ -44,6 +56,34 @@ public class ImagenController implements Serializable {
                 throw new Exception();
             }
             R = new FileInputStream(new File(path, nombreArchivoSiguiente));
+        } catch (Exception ex) {
+            String defaultpath = FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getRealPath("resources/img");
+            try {
+                R = new FileInputStream(new File(defaultpath, "nodisponible.png"));
+            } catch (FileNotFoundException ex1) {
+               // Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+
+            //Logger.getLogger(FacturasBean.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return R;
+    }
+    
+    
+    
+    public InputStream obtNextImage() {
+        InputStream R = null;
+        String path = "C:\\facturas";
+        try {
+
+            System.out.println("Archivo Imagen: " + imagen);
+            if (imagen == null) {
+                throw new Exception();
+            }
+            R = new FileInputStream(new File(path, imagen));
         } catch (Exception ex) {
             String defaultpath = FacesContext.getCurrentInstance()
                     .getExternalContext()

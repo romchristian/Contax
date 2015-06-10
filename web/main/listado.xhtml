@@ -39,12 +39,15 @@
                              paginatorPosition="bottom"
                              paginatorAlwaysVisible="false"
                              rowsPerPageTemplate="10,20,30,40,50"
+                           
+                             scrollable="true" scrollWidth="100%"
+                             style="font-size: 8pt!important"
                              >
 
                     <p:ajax event="rowSelect"   update="createButton  editButton deleteButton"/>
                     <p:ajax event="rowUnselect" update="createButton  editButton deleteButton"/>
 
-                    <p:column>
+                    <p:column style="width: 70px;">
                         <f:facet name="header">
                             FECHA
                         </f:facet>
@@ -53,7 +56,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column>
+                    <p:column filterBy="#{f.rucCliente}" filterMatchMode="contains" style="width: 100px;">
                         <f:facet name="header">
                             RUC CLIENTE
                         </f:facet>
@@ -61,7 +64,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column>
+                    <p:column filterBy="#{f.razonSocialCliente}" filterMatchMode="contains" style="width: 200px;">
                         <f:facet name="header">
                             NOMBRE CLIENTE
                         </f:facet>
@@ -69,7 +72,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column>
+                    <p:column filterBy="#{f.tipoImpuesto}" filterMatchMode="contains" style="width: 100px;">
                         <f:facet name="header">
                             TIPO IMPUESTO
                         </f:facet>
@@ -77,15 +80,141 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column>
+                    <p:column filterBy="#{f.tipoFactura}" filterMatchMode="contains" style="width: 100px;">
                         <f:facet name="header">
                             LIBRO
                         </f:facet>
                         <h:outputText value="#{f.tipoFactura}">
                         </h:outputText>
                     </p:column>
+                    <p:column filterBy="#{f.periodo}" filterMatchMode="contains" style="width: 100px;">
+                        <f:facet name="header">
+                            Periodo
+                        </f:facet>
+                        <h:outputText value="#{f.periodo}">
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{f.conIRP?'SI':'NO'}" filterMatchMode="contains" style="width: 50px;">
+                        <f:facet name="header">
+                            Con IRP?
+                        </f:facet>
+                        <h:outputText value="#{f.conIRP?'SI':'NO'}">
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{f.conIRPC?'SI':'NO'}" filterMatchMode="contains" style="width: 50px;">
+                        <f:facet name="header">
+                            Con IRPC?
+                        </f:facet>
+                        <h:outputText value="#{f.conIRPC?'SI':'NO'}">
+                        </h:outputText>
+                    </p:column>
 
-                    <p:column>
+                    <p:column filterBy="#{f.tipoAjustes}" filterMatchMode="contains" style="width: 200px;">
+                        <f:facet name="header">
+                            Otros (Ajus/Desc/etc)
+                        </f:facet>
+                        <h:outputText value="#{f.tipoAjustes}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column filterBy="#{f.clasificacion}" filterMatchMode="contains" style="width: 100px;">
+                        <f:facet name="header">
+                            Clasif. IRP
+                        </f:facet>
+                        <h:outputText value="#{f.clasificacion}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column filterBy="#{f.tipoIngreso}" filterMatchMode="contains" style="width: 100px;">
+                        <f:facet name="header">
+                            Tipo Ingreso
+                        </f:facet>
+                        <h:outputText value="#{f.tipoIngreso}">
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{f.subTipoIngreso}" filterMatchMode="contains" style="width: 150px;">
+                        <f:facet name="header">
+                            Sub Tipo Ingreso
+                        </f:facet>
+                        <h:outputText value="#{f.subTipoIngreso}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column filterBy="#{f.tipoGasto}" filterMatchMode="contains" style="width: 100px;">
+                        <f:facet name="header">
+                            Tipo Gastos
+                        </f:facet>
+                        <h:outputText value="#{f.tipoGasto}">
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{f.subTipoGasto}" filterMatchMode="contains" style="width: 150px;">
+                        <f:facet name="header">
+                            Sub Tipo Gasto
+                        </f:facet>
+                        <h:outputText value="#{f.subTipoGasto}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column filterBy="#{f.tipoInversion}" filterMatchMode="contains" style="width: 100px;">
+                        <f:facet name="header">
+                            Tipo Inversion
+                        </f:facet>
+                        <h:outputText value="#{f.tipoInversion}">
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{f.subTipoInversion}" filterMatchMode="contains" style="width: 150px;">
+                        <f:facet name="header">
+                            Sub Tipo Inversion
+                        </f:facet>
+                        <h:outputText value="#{f.subTipoInversion}">
+                        </h:outputText>
+                    </p:column>
+
+
+                    <p:column filterBy="#{f.rucProveedor}" filterMatchMode="contains" style="width: 100px;">
+                        <f:facet name="header">
+                            RUC PROV
+                        </f:facet>
+                        <h:outputText value="#{f.rucProveedor}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column filterBy="#{f.razonSocialProveedor}" filterMatchMode="contains" style="width: 200px;">
+                        <f:facet name="header">
+                            NOMBRE PROV
+                        </f:facet>
+                        <h:outputText value="#{f.razonSocialProveedor}">
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="width: 75px;">
+                        <f:facet name="header">
+                            EXENTO
+                        </f:facet>
+                        <h:outputText value="#{f.exento}">
+                            <f:convertNumber locale="#{formato.locale}"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="width: 75px;">
+                        <f:facet name="header">
+                            Grav. 5%
+                        </f:facet>
+                        <h:outputText value="#{f.gravada05}">
+                            <f:convertNumber locale="#{formato.locale}"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="width: 75px;">
+                        <f:facet name="header">
+                            Grav. 10%
+                        </f:facet>
+                        <h:outputText value="#{f.gravada10}">
+                            <f:convertNumber locale="#{formato.locale}"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="width: 75px;">
                         <f:facet name="header">
                             TOTAL IVA
                         </f:facet>
@@ -94,7 +223,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column>
+                    <p:column style="width: 75px;">
                         <f:facet name="header">
                             TOTAL NETO
                         </f:facet>
@@ -103,7 +232,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column>
+                    <p:column style="width: 75px;">
                         <f:facet name="header">
                             TOTAL BRUTO
                         </f:facet>
@@ -127,10 +256,10 @@
                 </p:dataTable>
 
 
-                
-                
+
+
             </h:form>
-            
+
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>

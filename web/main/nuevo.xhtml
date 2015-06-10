@@ -112,96 +112,107 @@
                     width: 100%;
                     text-align: left;
                 }
-                
-                
-                
-            
+
+
+
+
                 div[id="formNuevo:growl_container"] {
                     position:absolute;
                     top:calc(40% - 180px);
                     left:calc(50% - 170px);
                 }
-            
+
             </style>
 
 
 
-            <o:importConstants type="com.ideaspymes.contax.modelo.TipoImpuesto"/>
-            <o:importConstants type="com.ideaspymes.contax.modelo.TipoFactura"/>
-            <o:importConstants type="com.ideaspymes.contax.modelo.Clasificacion"/>
-
-            <div class="ui-grid ui-grid-responsive" style="height: 100%">
-
-                <div class="ui-grid-row" style="height: 100%">
-                    <div class="ui-grid-col-8">
-                        <div class="ui-grid ui-grid-responsive" style="height: 100%">
-                            <div class="ui-grid-row" style="height: 95%;">
-                                <div class="ui-grid-col-12" style="height: 100%;">
-
-                                    <div id='content'>
+            <h:form id="formNuevo" style="height: 100%">
+                <o:importConstants type="com.ideaspymes.contax.modelo.TipoImpuesto"/>
+                <o:importConstants type="com.ideaspymes.contax.modelo.TipoFactura"/>
+                <o:importConstants type="com.ideaspymes.contax.modelo.Clasificacion"/>
 
 
-                                        <div class='frame'>
-                                            <o:graphicImage id="myImage" styleClass="myImage" value="#{imagenController.obtNextImage(facturasBean.nombreArchivoSiguiente)}"/>
+                <p:commandButton action="#{facturasBean.resfreca()}" value="refrescar" style="position: absolute;top:calc( 1% - 10px);left:calc(7% - 20px);z-index: 3"
+                                 ajax="false"/>
+                <div class="ui-grid ui-grid-responsive" style="height: 100%">
 
-                                        </div>
-
-                                        <div id='controls' style="background-color: white;padding-top: 10px;">
-                                            <a href='#' id='rotate_left'  title='Rotate left'><p:graphicImage library="img" name="rotate_left.png"/></a>
-                                            <a href='#' id='zoom_out'     title='Zoom out'><p:graphicImage library="img" name="zoom_out.png"/></a>
-                                            <a href='#' id='fit'          title='Fit image'><p:graphicImage library="img" name="fit.png"/></a>
-                                            <a href='#' id='zoom_in'      title='Zoom in'><p:graphicImage library="img" name="zoom_in.png"/></a>
-                                            <a href='#' id='rotate_right' title='Rotate right'><p:graphicImage library="img" name="rotate_right.png"/></a>
-                                        </div>
+                    <div class="ui-grid-row" style="height: 100%">
+                        <div class="ui-grid-col-8">
+                            <div class="ui-grid ui-grid-responsive" style="height: 100%">
+                                <div class="ui-grid-row" style="height: 95%;">
+                                    <div class="ui-grid-col-12" style="height: 100%;">
 
 
+                                        <p:outputPanel id="imagen">
+
+
+
+                                            <div id='content' style="z-index: 1">
+
+
+                                                <div class='frame'>
+                                                    <o:graphicImage id="myImage" styleClass="myImage" value="#{imagenController.obtNextImage(facturasBean.nombreArchivoSiguiente)}" />
+                                                    <!--                                                    <h:graphicImage library="img" name="{facturasBean.nombreArchivoSiguiente}" id="myImage" styleClass="myImage" />-->
+                                                </div>
+
+                                                <div id='controls' style="background-color: white;padding-top: 10px;">
+                                                    <a href='#' id='rotate_left'  title='Rotate left'><p:graphicImage library="img" name="rotate_left.png"/></a>
+                                                    <a href='#' id='zoom_out'     title='Zoom out'><p:graphicImage library="img" name="zoom_out.png"/></a>
+                                                    <a href='#' id='fit'          title='Fit image'><p:graphicImage library="img" name="fit.png"/></a>
+                                                    <a href='#' id='zoom_in'      title='Zoom in'><p:graphicImage library="img" name="zoom_in.png"/></a>
+                                                    <a href='#' id='rotate_right' title='Rotate right'><p:graphicImage library="img" name="rotate_right.png"/></a>
+                                                </div>
+
+
+                                            </div>
+                                            <script type='text/javascript'>
+
+                                                jQuery(function () {
+                                                    var picture = jQuery('.myImage');
+
+
+                                                    var camelize = function () {
+                                                        var regex = /[\W_]+(.)/g
+                                                        var replacer = function (match, submatch) {
+                                                            return submatch.toUpperCase()
+                                                        }
+                                                        return function (str) {
+                                                            return str.replace(regex, replacer)
+                                                        }
+                                                    }()
+
+                                                    picture.guillotine({eventOnChange: 'guillotinechange'})
+                                                    picture.guillotine('fit')
+                                                    jQuery('#controls a').click(function (e) {
+                                                        e.preventDefault()
+
+                                                        action = camelize(this.id);
+
+                                                        picture.guillotine(action);
+                                                    })
+
+                                                    //                                           
+                                                })
+                                            </script>
+                                        </p:outputPanel>
                                     </div>
-                                    <script type='text/javascript'>
-
-                                        jQuery(function () {
-                                            var picture = jQuery('.myImage')
-
-                                            var camelize = function () {
-                                                var regex = /[\W_]+(.)/g
-                                                var replacer = function (match, submatch) {
-                                                    return submatch.toUpperCase()
-                                                }
-                                                return function (str) {
-                                                    return str.replace(regex, replacer)
-                                                }
-                                            }()
-
-                                            picture.guillotine({eventOnChange: 'guillotinechange'})
-                                            picture.guillotine('fit')
-                                            jQuery('#controls a').click(function (e) {
-                                                e.preventDefault()
-
-                                                action = camelize(this.id);
-
-                                                picture.guillotine(action);
-                                            })
-
-//                                           
-                                        })
-                                    </script>
                                 </div>
+
                             </div>
+
+
+
 
                         </div>
 
+                        <div class="ui-grid-col-4" style="height: 100%">
+                            <div class="sideBar">
+                                <div style="padding: 20px;width: 100%">
 
 
-
-                    </div>
-
-                    <div class="ui-grid-col-4" style="height: 100%">
-                        <div class="sideBar">
-                            <div style="padding: 20px;width: 100%">
-                                <h:form id="formNuevo">
-                                    
                                     <p:growl autoUpdate="true" id="growl"/>
 
-
+                                    <p:focus/>
                                     <div style="display: table;width: 100%">
 
                                         <div class="fila">
@@ -253,7 +264,7 @@
                                                                   rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}"
                                                                   styleClass="tipoFacturaIRP"/>
 
-                                                    <h:panelGrid columns="2" styleClass="column100" columnClasses="column50,column50" style="margin: 0; padding: 0;"
+                                                    <h:panelGrid columns="3" styleClass="column100" columnClasses="column50,column20,column20" style="margin: 0; padding: 0;"
                                                                  rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}">
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
@@ -262,7 +273,7 @@
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="VENTAS" itemValue="VENTA"/>
                                                             <f:selectItem itemLabel="COMPRAS" itemValue="COMPRA"/>
-                                                            <f:selectItem itemLabel="EXPORTACIONES" itemValue="EXPORTACIONES"/>
+
                                                         </p:selectOneMenu>
 
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
@@ -274,35 +285,38 @@
                                                             <f:selectItem itemLabel="COMPRAS" itemValue="COMPRA"/>
                                                         </p:selectOneMenu>
 
-                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRP}" itemLabel="Con IRP?"
-                                                                                 rendered="#{(facturasBean.muestraTipoFactura and facturasBean.muestraConIRP)}">
+                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRP}" itemLabel="IRP?"
+                                                                                 rendered="#{(facturasBean.muestraConIRP)}">
                                                             <p:ajax process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaConIRP()}"/>
+                                                        </p:selectBooleanCheckbox>
+
+                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRPC}" itemLabel="IRPC?"
+                                                                                 rendered="#{(facturasBean.muestraConIRPC)}">
+                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaConIRPC()}"/>
                                                         </p:selectBooleanCheckbox>
                                                     </h:panelGrid>
 
 
 
-                                                    <h:outputText value="Ajustes:" style="font-weight: bold" 
-                                                                  rendered="#{(facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}" styleClass="tipoFacturaIRP"/>
+                                                    <h:outputText value="Otros:" style="font-weight: bold" 
+                                                                  rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
+                                                                  styleClass="tipoFacturaIRP"/>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.tipoAjustes}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{(facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"
+                                                                     rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
                                                                      styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
-                                                        <f:selectItem itemLabel="AJUSTES DE PRECIOS" itemValue="AJUSTES DE PRECIOS"/>
-                                                        <f:selectItem itemLabel="DEVOLUCIONES" itemValue="DEVOLUCIONES"/>
-                                                        <f:selectItem itemLabel="DESCUENTOS" itemValue="DESCUENTOS"/>
-
-                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                        <f:selectItem itemLabel="AJUSTES/DEVOLUCIONES/DESCUENTOS" itemValue="AJUSTES/DEVOLUCIONES/DESCUENTOS"/>
+                                                        <f:selectItem itemLabel="EXPORTACIONES/IMPORTACIONES" itemValue="EXPORTACIONES/IMPORTACIONES"/>
                                                     </p:selectOneMenu>
 
 
 
-                                                    <h:outputText value="Tipo Exportación:" style="font-weight: bold" rendered="#{facturasBean.actual.tipoFactura == TipoFactura.EXPORTACIONES}" styleClass="tipoFacturaIRP"/>
+                                                    <h:outputText value="Tipo Exportación:" style="font-weight: bold" rendered="#{facturasBean.actual.tipoAjustes == 'EXPORTACIONES/IMPORTACIONES'}" styleClass="tipoFacturaIRP"/>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.tipoExportacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{facturasBean.actual.tipoFactura == TipoFactura.EXPORTACIONES}" styleClass="tipoFacturaIRP">
+                                                                     rendered="#{facturasBean.actual.tipoAjustes == 'EXPORTACIONES/IMPORTACIONES'}" styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
                                                         <f:selectItem itemLabel="AGROPECUARIAS" itemValue="AGROPECUARIAS"/>
@@ -312,7 +326,7 @@
                                                     </p:selectOneMenu>
 
 
-                                                    <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{(facturasBean.muestraClasificacionIRP and facturasBean.actual.tipoFactura != TipoFactura.EXPORTACIONES)}" styleClass="tipoFacturaIRP"/>
+                                                    <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{(facturasBean.muestraClasificacionIRP or facturasBean.muestraClasificacionSoloIRPC)}" styleClass="tipoFacturaIRP"/>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                      rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == null) and not facturasBean.muestraClasificacionSoloIRPC)}" styleClass="tipoFacturaIRP">
@@ -327,7 +341,7 @@
 
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{facturasBean.muestraClasificacionSoloIRPC and (facturasBean.actual.tipoFactura == null)}" styleClass="tipoFacturaIRP">
+                                                                     rendered="#{facturasBean.muestraClasificacionSoloIRPC}" styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"
                                                                 listener="#{facturasBean.siCambiaClasificionIRP()}"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
@@ -378,8 +392,9 @@
                                                             <p:ajax process="@this" event="change" update="subTipoIngreso tipos"
                                                                     listener="#{facturasBean.siCambiaTipoIngreso()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
-                                                            <f:selectItems value="#{tipoIngresoController.itemsAvailableSelectOne}"/>
+                                                            <f:selectItems value="#{facturasBean.itemsAvailableTipoIngreso}"/>
                                                         </p:selectOneMenu>
+
                                                         <p:selectOneMenu 
                                                             rendered="#{facturasBean.muestraIngresos}"
                                                             id="subTipoIngreso"
@@ -387,6 +402,12 @@
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItems value="#{facturasBean.itemsSubTipoIngreso}"/>
                                                         </p:selectOneMenu>
+
+
+                                                        <p:selectBooleanCheckbox value="#{facturasBean.generarAporteIPS}" itemLabel="Generar Aporte IPS?" style="margin-left: 10px"
+                                                                                 rendered="#{(facturasBean.muestraGenerarAporteIPS)}">
+
+                                                        </p:selectBooleanCheckbox>
                                                     </p:outputPanel>
 
                                                     <h:outputText value="Tipo Gastos:" style="font-weight: bold"
@@ -451,13 +472,14 @@
 
                                                 <p:outputPanel id="periodos" style="text-align: left;margin: 0px;padding: 0px;"> 
 
-                                                    <h:panelGrid columns="3">
-                                                        <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy"/>
-                                                        <h:outputText value="Periodo:" style="font-weight: bold;margin-left: 15px;"/>
-                                                        <p:inputText value="#{facturasBean.actual.periodo}"
-                                                                     rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRP or facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}"/>
+                                                    <h:panelGrid columns="4">
+                                                        <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy">
+                                                            <p:ajax process="@this" update="periodoAnio" event="blur"/>
+                                                        </p:calendar>
+                                                        <h:outputText value="Periodo a declarar:" style="font-weight: bold;margin-left: 15px;"/>
 
-                                                        <p:selectOneMenu value="#{facturasBean.actual.periodo}" style="width: 75px;margin-left: 15px;"
+
+                                                        <p:selectOneMenu value="#{facturasBean.actual.periodoMes}" style="width: 75px;margin-left: 15px;"
                                                                          rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_GENERAL)}">
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="Ene" itemValue="Ene"/>
@@ -475,11 +497,42 @@
                                                         </p:selectOneMenu>
 
 
-                                                        <p:selectOneMenu styleClass="campos" value="#{facturasBean.actual.periodo}" style="width: 110px;margin-left: 15px;" rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO)}">
+                                                        <p:selectOneMenu value="#{facturasBean.actual.periodoMes}" style="width: 75px;margin-left: 15px;"
+                                                                         rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC and facturasBean.actual.cambiaPeriodo)}">
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItem itemLabel="Ene" itemValue="Ene"/>
+                                                            <f:selectItem itemLabel="Feb" itemValue="Feb"/>
+                                                            <f:selectItem itemLabel="Mar" itemValue="Mar"/>
+                                                            <f:selectItem itemLabel="Abr" itemValue="Abr"/>
+                                                            <f:selectItem itemLabel="May" itemValue="May"/>
+                                                            <f:selectItem itemLabel="Jun" itemValue="Jun"/>
+                                                            <f:selectItem itemLabel="Jul" itemValue="Jul"/>
+                                                            <f:selectItem itemLabel="Ago" itemValue="Ago"/>
+                                                            <f:selectItem itemLabel="Sep" itemValue="Sep"/>
+                                                            <f:selectItem itemLabel="Oct" itemValue="Oct"/>
+                                                            <f:selectItem itemLabel="Nov" itemValue="Nov"/>
+                                                            <f:selectItem itemLabel="Dic" itemValue="Dic"/>
+                                                        </p:selectOneMenu>
+
+
+                                                        <p:selectOneMenu styleClass="campos" value="#{facturasBean.actual.periodoMes}" style="width: 110px;margin-left: 15px;" rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO)}">
                                                             <f:selectItem itemLabel="1er Cuatri" itemValue="1er Cuatri"/>
                                                             <f:selectItem itemLabel="2do Cuatri" itemValue="2do Cuatri"/>
                                                             <f:selectItem itemLabel="3er Cuatri" itemValue="3er Cuatri"/>
                                                         </p:selectOneMenu>
+
+                                                        <p:selectOneMenu styleClass="campos" value="#{facturasBean.actual.periodoMes}" style="width: 110px;margin-left: 15px;" rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC and not(facturasBean.actual.cambiaPeriodo))}">
+                                                            <f:selectItem itemLabel="1er Cuatri" itemValue="1er Cuatri"/>
+                                                            <f:selectItem itemLabel="2do Cuatri" itemValue="2do Cuatri"/>
+                                                            <f:selectItem itemLabel="3er Cuatri" itemValue="3er Cuatri"/>
+                                                        </p:selectOneMenu>
+
+                                                        <p:inputText value="#{facturasBean.actual.periodoAnio}" placeholder="Año" id="periodoAnio" size="4"/>
+
+                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.cambiaPeriodo}" itemLabel="Mensual?"
+                                                                                 rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}">
+                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos"/>
+                                                        </p:selectBooleanCheckbox>
                                                     </h:panelGrid>
 
 
@@ -627,25 +680,27 @@
                                     <br/>
                                     <br/>
                                     <div style="display: table;width: 100%">
-                                        <div style="display: table-cell;width: 50%;text-align: left">
+                                        <div style="display: table-cell;width: 50%;text-align: left;vertical-align: middle">
                                             <p:commandButton value="Guardar" action="#{facturasBean.guardar()}" ajax="false"/>
                                         </div>
-                                        <div style="display: table-cell;width: 50%;text-align: right">
+                                        <div style="display: table-cell;width: 25%;text-align: right;vertical-align: middle">
+                                            <p:button value="Listado" outcome="/main/listado" style="float: right; margin-right: 50px;"/>
+                                        </div>
+                                        <div style="display: table-cell;width: 25%;text-align: right;vertical-align: middle">
                                             <p:commandButton value="Cancelar" action="/main/home" ajax="false" style="float: right; margin-right: 50px;" immediate="true"/>
                                         </div>
                                     </div>
 
+                                </div>
 
-
-
-                                </h:form>
                             </div>
-
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
+            </h:form>
+
+
         </ui:define>
     </ui:composition>
 
