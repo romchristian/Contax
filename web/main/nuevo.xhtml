@@ -132,7 +132,7 @@
                 <o:importConstants type="com.ideaspymes.contax.modelo.Clasificacion"/>
 
 
-                <p:commandButton action="#{facturasBean.resfreca()}" value="refrescar" style="position: absolute;top:calc( 1% - 10px);left:calc(7% - 20px);z-index: 3"
+                <p:commandButton action="#{facturasBean.resfreca()}" value="Traer Imagen" style="position: absolute;top:calc( 1% - 10px);left:calc(7% - 20px);z-index: 3"
                                  ajax="false"/>
                 <div class="ui-grid ui-grid-responsive" style="height: 100%">
 
@@ -253,12 +253,20 @@
                                             <p:outputPanel id="tipoFacturaIRP">
                                                 <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
                                                     <h:outputText value="Tipo Impuesto: " style="font-weight: bold"/>
-                                                    <p:selectOneMenu value="#{facturasBean.actual.tipoImpuesto}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                        <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos totales" listener="#{facturasBean.siCambiaTipoImpuesto()}"/>
-                                                        <f:selectItem itemLabel="--" itemValue=""/>
-                                                        <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
-                                                                       var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
-                                                    </p:selectOneMenu>
+                                                    <p:outputPanel>
+                                                        <p:selectOneMenu value="#{facturasBean.actual.tipoImpuesto}" style="margin-top: 5px;margin-bottom: 5px;">
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos totales" listener="#{facturasBean.siCambiaTipoImpuesto()}"/>
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
+                                                                           var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
+                                                        </p:selectOneMenu>
+                                                        <p:spacer width="20"/>
+                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.cambiaPeriodo}" itemLabel="Mensual?"
+                                                                                 rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}">
+                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos"/>
+                                                        </p:selectBooleanCheckbox>
+                                                    </p:outputPanel>
+
 
                                                     <h:outputText value="Libro:" style="font-weight: bold"
                                                                   rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}"
@@ -389,7 +397,7 @@
                                                     <p:outputPanel rendered="#{facturasBean.muestraIngresos}">
                                                         <p:selectOneMenu value="#{facturasBean.tipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraIngresos}">
-                                                            <p:ajax process="@this" event="change" update="subTipoIngreso tipos"
+                                                            <p:ajax process="@this" event="change" update="subTipoIngreso tipos totales"
                                                                     listener="#{facturasBean.siCambiaTipoIngreso()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItems value="#{facturasBean.itemsAvailableTipoIngreso}"/>
@@ -465,6 +473,9 @@
                                         </div>
 
                                         <div class="fila">
+                                            <h:outputText value="Periodo a declarar:" style="font-weight: bold;position: relative;left: calc(50% - 30px)"/>
+                                        </div>
+                                        <div class="fila">
 
 
                                             <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
@@ -472,11 +483,11 @@
 
                                                 <p:outputPanel id="periodos" style="text-align: left;margin: 0px;padding: 0px;"> 
 
-                                                    <h:panelGrid columns="4">
+                                                    <h:panelGrid columns="3">
                                                         <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy">
                                                             <p:ajax process="@this" update="periodoAnio" event="blur"/>
                                                         </p:calendar>
-                                                        <h:outputText value="Periodo a declarar:" style="font-weight: bold;margin-left: 15px;"/>
+                                                        
 
 
                                                         <p:selectOneMenu value="#{facturasBean.actual.periodoMes}" style="width: 75px;margin-left: 15px;"
@@ -529,19 +540,16 @@
 
                                                         <p:inputText value="#{facturasBean.actual.periodoAnio}" placeholder="Año" id="periodoAnio" size="4"/>
 
-                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.cambiaPeriodo}" itemLabel="Mensual?"
-                                                                                 rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}">
-                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos"/>
-                                                        </p:selectBooleanCheckbox>
+
                                                     </h:panelGrid>
 
 
 
                                                 </p:outputPanel>
 
-                                                <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px"/>
+                                                <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
                                                 <p:inputText style="margin-bottom: 10px;width: 50%;"
-                                                             value="#{facturasBean.actual.numero}"/>
+                                                             value="#{facturasBean.actual.numero}" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
 
 
                                                 <p:outputPanel styleClass="proveedor">
@@ -586,7 +594,7 @@
                                             <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
 
                                                 <p:spacer/>
-                                                <p:outputPanel rendered="#{facturasBean.actual.tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO}" style="margin-right: 20px">
+                                                <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO and not(facturasBean.muestraGenerarAporteIPS))}" style="margin-right: 20px">
 
                                                     <h:panelGrid columns="3" style="padding-right: 10px">
                                                         <h:outputText value="Exento:" style="font-weight: bold;margin-top: 10px"/>
@@ -661,7 +669,7 @@
 
                                             </h:panelGrid>
 
-                                            <p:outputPanel rendered="#{facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO}">
+                                            <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO or (facturasBean.muestraGenerarAporteIPS))}">
 
                                                 <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
 
