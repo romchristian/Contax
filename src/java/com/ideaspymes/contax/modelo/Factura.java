@@ -75,7 +75,7 @@ public class Factura implements Serializable {
     private boolean cambiaPeriodo;
     private String url;
     private String periodoAnio;
-    private String periodoMes;
+    private String periodoMes;  
 
     public String getPeriodoMes() {
         return periodoMes;
@@ -209,7 +209,7 @@ public class Factura implements Serializable {
             periodo = getPeriodoMes() + "-" + getPeriodoAnio();
         } else if (getPeriodoMes() == null && getPeriodoAnio() != null) {
             periodo = getPeriodoAnio();
-        }else if (getPeriodoMes() != null && getPeriodoAnio() == null){
+        } else if (getPeriodoMes() != null && getPeriodoAnio() == null) {
             periodo = getPeriodoMes();
         }
 
@@ -217,11 +217,11 @@ public class Factura implements Serializable {
     }
 
     public void setPeriodo(String periodo) {
-         if (getPeriodoMes() != null && getPeriodoAnio() != null) {
+        if (getPeriodoMes() != null && getPeriodoAnio() != null) {
             periodo = getPeriodoMes() + "-" + getPeriodoAnio();
         } else if (getPeriodoMes() == null && getPeriodoAnio() != null) {
             periodo = getPeriodoAnio();
-        }else if (getPeriodoMes() != null && getPeriodoAnio() == null){
+        } else if (getPeriodoMes() != null && getPeriodoAnio() == null) {
             periodo = getPeriodoMes();
         }
         this.periodo = periodo;

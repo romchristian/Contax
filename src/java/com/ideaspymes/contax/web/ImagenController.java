@@ -5,16 +5,20 @@
  */
 package com.ideaspymes.contax.web;
 
+import com.ideaspymes.contax.utils.ArchivoUtil;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
 import javax.inject.Named;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -25,7 +29,7 @@ import javax.inject.Named;
 public class ImagenController implements Serializable {
 
     private boolean mostrarPorDefecto;
-    
+
     private String imagen;
 
     public String getImagen() {
@@ -35,8 +39,6 @@ public class ImagenController implements Serializable {
     public void setImagen(String imagen) {
         this.imagen = imagen;
     }
-    
-    
 
     public boolean isMostrarPorDefecto() {
         return mostrarPorDefecto;
@@ -48,7 +50,7 @@ public class ImagenController implements Serializable {
 
     public InputStream obtNextImage(String nombreArchivoSiguiente) {
         InputStream R = null;
-        String path = "C:\\facturas";
+        String path = ArchivoUtil.PATH;
         try {
 
             System.out.println("Archivo: " + nombreArchivoSiguiente);
@@ -63,20 +65,17 @@ public class ImagenController implements Serializable {
             try {
                 R = new FileInputStream(new File(defaultpath, "nodisponible.png"));
             } catch (FileNotFoundException ex1) {
-               // Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
+                // Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
             }
 
             //Logger.getLogger(FacturasBean.class.getName()).log(Level.SEVERE, null, ex);
-
         }
         return R;
     }
-    
-    
-    
+
     public InputStream obtNextImage() {
         InputStream R = null;
-        String path = "C:\\facturas";
+        String path = ArchivoUtil.PATH;
         try {
 
             System.out.println("Archivo Imagen: " + imagen);
@@ -91,13 +90,39 @@ public class ImagenController implements Serializable {
             try {
                 R = new FileInputStream(new File(defaultpath, "nodisponible.png"));
             } catch (FileNotFoundException ex1) {
-               // Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
+                // Logger.getLogger(ImagenController.class.getName()).log(Level.SEVERE, null, ex1);
             }
 
             //Logger.getLogger(FacturasBean.class.getName()).log(Level.SEVERE, null, ex);
-
         }
         return R;
+    }
+
+    public StreamedContent obtSiguienteImagen() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        String path = ArchivoUtil.PATH;
+
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+
+            return new DefaultStreamedContent();
+        } else {
+
+            String nombreImagen = context.getExternalContext().getRequestParameterMap().get("nombreAchivo");
+            System.out.println("Nombre Archivo : " + nombreImagen);
+            System.out.println("Imagen : " + imagen);
+
+            if (imagen != null && imagen.length() > 0) {
+                FileInputStream fis = new FileInputStream(new File(path, imagen));
+                return new DefaultStreamedContent(fis);
+            } else {
+                String defaultpath = FacesContext.getCurrentInstance()
+                        .getExternalContext()
+                        .getRealPath("resources/img");
+                FileInputStream fis = new FileInputStream(new File(defaultpath, "nodisponible.png"));
+                return new DefaultStreamedContent(fis);
+            }
+
+        }
     }
 
 }

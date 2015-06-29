@@ -31,6 +31,8 @@
             <h:form id="formListado">
                 <p:growl autoUpdate="true" id="growl"/>
 
+                <p:remoteCommand actionListener="#{facturasBean.updateSum()}" name="refreshFooter" update="@(.totales)"/>
+                
                 <p:dataTable id="datalist" value="#{facturasBean.findAll()}" var="f"
                              selectionMode="single" selection="#{facturasBean.actual}"
                              paginator="true"
@@ -39,13 +41,15 @@
                              paginatorPosition="bottom"
                              paginatorAlwaysVisible="false"
                              rowsPerPageTemplate="10,20,30,40,50"
-                           
+                             filteredValue="#{facturasBean.filteredValues}"
                              scrollable="true" scrollWidth="100%"
                              style="font-size: 8pt!important"
                              >
 
                     <p:ajax event="rowSelect"   update="createButton  editButton deleteButton"/>
                     <p:ajax event="rowUnselect" update="createButton  editButton deleteButton"/>
+                    
+                    
 
                     <p:column style="width: 70px;">
                         <f:facet name="header">
@@ -194,6 +198,13 @@
                         <h:outputText value="#{f.exento}">
                             <f:convertNumber locale="#{formato.locale}"/>
                         </h:outputText>
+                        <f:facet name="footer">
+                            <p:outputPanel styleClass="totales">
+                                <h:outputText value="#{facturasBean.totalExento}">
+                                    <f:convertNumber locale="#{formato.locale}"/>
+                                </h:outputText>
+                            </p:outputPanel>
+                        </f:facet>
                     </p:column>
 
                     <p:column style="width: 75px;">
@@ -203,6 +214,13 @@
                         <h:outputText value="#{f.gravada05}">
                             <f:convertNumber locale="#{formato.locale}"/>
                         </h:outputText>
+                        <f:facet name="footer">
+                            <p:outputPanel styleClass="totales">
+                                <h:outputText value="#{facturasBean.totalGravada05}">
+                                    <f:convertNumber locale="#{formato.locale}"/>
+                                </h:outputText>
+                            </p:outputPanel>
+                        </f:facet>
                     </p:column>
 
                     <p:column style="width: 75px;">
@@ -212,6 +230,13 @@
                         <h:outputText value="#{f.gravada10}">
                             <f:convertNumber locale="#{formato.locale}"/>
                         </h:outputText>
+                        <f:facet name="footer">
+                            <p:outputPanel styleClass="totales">
+                                <h:outputText value="#{facturasBean.totalGravada10}">
+                                    <f:convertNumber locale="#{formato.locale}"/>
+                                </h:outputText>
+                            </p:outputPanel>
+                        </f:facet>
                     </p:column>
 
                     <p:column style="width: 75px;">
@@ -221,6 +246,13 @@
                         <h:outputText value="#{f.totalIva}">
                             <f:convertNumber locale="#{formato.locale}"/>
                         </h:outputText>
+                        <f:facet name="footer">
+                            <p:outputPanel styleClass="totales">
+                                <h:outputText value="#{facturasBean.totalIva}">
+                                    <f:convertNumber locale="#{formato.locale}"/>
+                                </h:outputText>
+                            </p:outputPanel>
+                        </f:facet>
                     </p:column>
 
                     <p:column style="width: 75px;">
@@ -230,16 +262,32 @@
                         <h:outputText value="#{f.totalNeto}">
                             <f:convertNumber locale="#{formato.locale}"/>
                         </h:outputText>
+                        <f:facet name="footer">
+                            <p:outputPanel styleClass="totales">
+                                <h:outputText value="#{facturasBean.totalNeto}">
+                                    <f:convertNumber locale="#{formato.locale}"/>
+                                </h:outputText>
+                            </p:outputPanel>
+                        </f:facet>
                     </p:column>
 
-                    <p:column style="width: 75px;">
+                    <p:column style="width: 75px;" styleClass="totales">
                         <f:facet name="header">
                             TOTAL BRUTO
                         </f:facet>
                         <h:outputText value="#{f.totalBruto}">
                             <f:convertNumber locale="#{formato.locale}"/>
                         </h:outputText>
+                        <f:facet name="footer">
+                            <p:outputPanel styleClass="totales">
+                                <h:outputText value="#{facturasBean.totalBruto}" id="totalBruto">
+                                    <f:convertNumber locale="#{formato.locale}"/>
+                                </h:outputText>
+                            </p:outputPanel>
+                        </f:facet>
                     </p:column>
+
+
 
                     <f:facet name="header">
                         <p:button id="createButton" icon="ui-icon-plus"   value="Nuevo" outcome="nuevo" 
@@ -251,8 +299,13 @@
 
                         <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="Eliminar" update=":UsuarioViewForm,datalist" oncomplete="PF('UsuarioViewDialog').show()"
                                          disabled="#{(empty facturasBean.actual.id)}"/>
+                        
+                        <p:commandButton icon="ui-icon-refresh"  value="Actualizar Totales" update="@(.totales)" actionListener="#{facturasBean.updateSum()}"/>
                     </f:facet>
 
+
+
+                 
                 </p:dataTable>
 
 

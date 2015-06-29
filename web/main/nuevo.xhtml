@@ -151,8 +151,10 @@
 
 
                                                 <div class='frame'>
-                                                    <o:graphicImage id="myImage" styleClass="myImage" value="#{imagenController.obtNextImage(facturasBean.nombreArchivoSiguiente)}" />
-                                                    <!--                                                    <h:graphicImage library="img" name="{facturasBean.nombreArchivoSiguiente}" id="myImage" styleClass="myImage" />-->
+                                                    <!--                                                    <o:graphicImage id="myImage" styleClass="myImage" value="{imagenController.obtNextImage(facturasBean.nombreArchivoSiguiente)}" />-->
+                                                    <p:graphicImage value="#{imagenController.obtSiguienteImagen()}" id="myImage" styleClass="myImage">
+                                                        <f:param name="nombreArchivo" value="#{facturasBean.nombreArchivoSiguiente}"/>
+                                                    </p:graphicImage>
                                                 </div>
 
                                                 <div id='controls' style="background-color: white;padding-top: 10px;">
@@ -255,7 +257,7 @@
                                                     <h:outputText value="Tipo Impuesto: " style="font-weight: bold"/>
                                                     <p:outputPanel>
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoImpuesto}" style="margin-top: 5px;margin-bottom: 5px;">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos totales" listener="#{facturasBean.siCambiaTipoImpuesto()}"/>
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos totales @(.numeroFact)" listener="#{facturasBean.siCambiaTipoImpuesto()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
                                                                            var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
@@ -276,7 +278,7 @@
                                                                  rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}">
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor)"
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) @(.numeroFact)"
                                                                     listener="#{facturasBean.siCambiaLibro()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="VENTAS" itemValue="VENTA"/>
@@ -286,7 +288,7 @@
 
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraSoloIvaSimplificado}" styleClass="tipoFacturaIRP">
-                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor)"
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) @(.numeroFact)"
                                                                     listener="#{facturasBean.siCambiaLibro()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="VENTAS" itemValue="VENTA"/>
@@ -295,12 +297,12 @@
 
                                                         <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRP}" itemLabel="IRP?"
                                                                                  rendered="#{(facturasBean.muestraConIRP)}">
-                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaConIRP()}"/>
+                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos @(.numeroFact)" listener="#{facturasBean.siCambiaConIRP()}"/>
                                                         </p:selectBooleanCheckbox>
 
                                                         <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRPC}" itemLabel="IRPC?"
                                                                                  rendered="#{(facturasBean.muestraConIRPC)}">
-                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos" listener="#{facturasBean.siCambiaConIRPC()}"/>
+                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos @(.numeroFact)" listener="#{facturasBean.siCambiaConIRPC()}"/>
                                                         </p:selectBooleanCheckbox>
                                                     </h:panelGrid>
 
@@ -397,7 +399,7 @@
                                                     <p:outputPanel rendered="#{facturasBean.muestraIngresos}">
                                                         <p:selectOneMenu value="#{facturasBean.tipoIngresoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraIngresos}">
-                                                            <p:ajax process="@this" event="change" update="subTipoIngreso tipos totales"
+                                                            <p:ajax process="@this" event="change" update="subTipoIngreso tipos totales @(.numeroFact)"
                                                                     listener="#{facturasBean.siCambiaTipoIngreso()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItems value="#{facturasBean.itemsAvailableTipoIngreso}"/>
@@ -424,7 +426,7 @@
                                                     <p:outputPanel rendered="#{facturasBean.muestraGastos}">
                                                         <p:selectOneMenu value="#{facturasBean.tipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraGastos}">
-                                                            <p:ajax process="@this" event="change" update="subTipoGasto tipos"
+                                                            <p:ajax process="@this" event="change" update="subTipoGasto tipos @(.numeroFact)"
                                                                     listener="#{facturasBean.siCambiaTipoGasto()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItems value="#{tipoGastoController.itemsAvailableSelectOne}"/>
@@ -444,7 +446,7 @@
                                                     <p:outputPanel rendered="#{facturasBean.muestraInversion}">
                                                         <p:selectOneMenu value="#{facturasBean.tipoInversionSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraInversion}">
-                                                            <p:ajax process="@this" event="change" update="subTipoInversion tipos"
+                                                            <p:ajax process="@this" event="change" update="subTipoInversion tipos @(.numeroFact)"
                                                                     listener="#{facturasBean.siCambiaTipoInversion()}"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItems value="#{tipoInversionController.itemsAvailableSelectOne}"/>
@@ -473,21 +475,28 @@
                                         </div>
 
                                         <div class="fila">
-                                            <h:outputText value="Periodo a declarar:" style="font-weight: bold;position: relative;left: calc(50% - 30px)"/>
+
                                         </div>
                                         <div class="fila">
 
 
                                             <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
+
+
                                                 <h:outputText value="Fecha:" style="font-weight: bold"/>
+
+                                                <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy">
+                                                    <p:ajax process="@this" update="periodos" event="blur"/>
+                                                </p:calendar>
+
+                                                <h:outputText value="Periodo a declarar:" style="font-weight: bold;"/>
+
 
                                                 <p:outputPanel id="periodos" style="text-align: left;margin: 0px;padding: 0px;"> 
 
                                                     <h:panelGrid columns="3">
-                                                        <p:calendar value="#{facturasBean.actual.fecha}" locale="es" pattern="dd/MM/yyyy">
-                                                            <p:ajax process="@this" update="periodoAnio" event="blur"/>
-                                                        </p:calendar>
-                                                        
+
+
 
 
                                                         <p:selectOneMenu value="#{facturasBean.actual.periodoMes}" style="width: 75px;margin-left: 15px;"
@@ -547,9 +556,37 @@
 
                                                 </p:outputPanel>
 
-                                                <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
-                                                <p:inputText style="margin-bottom: 10px;width: 50%;"
-                                                             value="#{facturasBean.actual.numero}" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
+
+                                                <p:outputPanel styleClass="numeroFact">
+                                                    <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
+                                                </p:outputPanel>
+
+
+
+
+                                                <p:outputPanel styleClass="numeroFact">
+
+
+                                                    <h:panelGrid columns="5" rendered="#{not facturasBean.muestraGenerarAporteIPS}">
+                                                        <p:inputText value="#{facturasBean.codEst}" size="3" style="font-size: 12pt; font-weight: bold; max-width: 30px;text-align: right" maxlength="3" 
+                                                                     binding="#{codEstablecimiento}"
+                                                                     id="codEstablecimiento"/>
+                                                        <h:outputText value=" - " style="font-size: 12pt; font-weight: bold;"/>
+                                                        <p:inputText value="#{facturasBean.codSuc}" size="3" style="font-size: 12pt; font-weight: bold;max-width: 30px;text-align: right" maxlength="3" 
+                                                                     binding="#{puntoExpedicion}"
+                                                                     id="puntoExpedicion"/>
+                                                        <h:outputText value=" - " style="font-size: 12pt; font-weight: bold;"/>
+                                                        <p:inputText value="#{facturasBean.numeroFact}" size="7" style="font-size: 12pt; font-weight: bold;text-align: right" maxlength="7"
+                                                                     id="numero">
+
+                                                            <p:ajax event="blur" update="codEstablecimiento,puntoExpedicion,numero" process="codEstablecimiento,puntoExpedicion,numero"/>
+                                                        </p:inputText>
+                                                    </h:panelGrid>
+                                                </p:outputPanel>
+                                                <p:spacer></p:spacer>
+
+                                                <!--                                                <p:inputText style="margin-bottom: 10px;width: 50%;"
+                                                                                                             value="{facturasBean.actual.numero}" rendered="{not facturasBean.muestraGenerarAporteIPS}"/>-->
 
 
                                                 <p:outputPanel styleClass="proveedor">
@@ -588,6 +625,11 @@
 
                                         </div>
 
+                                        <div class="fila">
+
+                                            <p:separator style="margin-top: 5px;margin-bottom: 10px;"/>
+
+                                        </div>
 
 
                                         <p:outputPanel id="totales">
