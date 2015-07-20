@@ -14,7 +14,7 @@
             <h:form id="UsuarioViewForm">
                 <h:panelGroup id="display">
                     <h3>¿Desea eliminar?</h3>
-                    <p:commandButton  icon="ui-icon-trash"  value="Eliminar" actionListener="#{facturasBean.eliminar()}" update=":formListado:datalist"
+                    <p:commandButton  icon="ui-icon-trash"  value="Eliminar" actionListener="#{facturasBean.eliminar()}" update=":formListado:datalist" 
                                       oncomplete="PF('UsuarioViewDialog').hide()"/>
                     <p:commandButton value="Cancelar" onclick="UsuarioViewDialog.hide()"/>
                 </h:panelGroup>

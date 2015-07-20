@@ -148,6 +148,7 @@ public class FacturasBean implements Serializable {
     public List<Factura> getFilteredValues() {
         if (filteredValues == null) {
             filteredValues = new ArrayList<>();
+            filteredValues.addAll(findAll());
         }
         return filteredValues;
     }
@@ -358,6 +359,18 @@ public class FacturasBean implements Serializable {
     public boolean isMuestraGenerarAporteIPS() {
         boolean R = false;
         if (tipoIngresoSeleccionado != null && tipoIngresoSeleccionado.getNombre().compareToIgnoreCase("Dependiente") == 0) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+    
+    
+    
+    public boolean isMuestraPlazoAnio() {
+        boolean R = false;
+        if (subTipoGastoSeleccionado != null && subTipoGastoSeleccionado.getNombre().compareToIgnoreCase("Colocaciones en ahorro y bonos") == 0) {
             R = true;
         } else {
             R = false;
@@ -872,7 +885,7 @@ public class FacturasBean implements Serializable {
         if (actual != null) {
             ejb.remove(actual);
             actual = null;
-            JsfUtil.addSuccessMessage("Eliminado Existosamente!");
+            JsfUtil.addSuccessMessage("Eliminado Exitosamente!");
         }
         
     }

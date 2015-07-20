@@ -435,6 +435,7 @@
                                                             rendered="#{facturasBean.muestraGastos}"
                                                             id="subTipoGasto"
                                                             value="#{facturasBean.subTipoGastoSeleccionado}" style="margin-top: 5px;margin-bottom: 5px;">
+                                                            <p:ajax process="@this" event="change" update="@(.plazosAnios)"/>
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItems value="#{facturasBean.itemsSubTipoGasto}"/>
                                                         </p:selectOneMenu>
@@ -557,11 +558,22 @@
                                                 </p:outputPanel>
 
 
+                                                <!--p:outputPanel styleClass="plazosAnios" rendered="{facturasBean.muestraPlazoAnio}">
+                                                    <h:outputText value="Plazos en años:" style="font-weight: bold;margin-bottom: 5px" rendered="#{facturasBean.muestraPlazoAnio}"/>
+                                                </p:outputPanel>
+                                                <p:outputPanel styleClass="plazosAnios" rendered="{facturasBean.muestraPlazoAnio}">
+                                                    <h:inputText value="{facturasBean.actual.plazoAnios}" style="font-size: 12pt; font-weight: bold;max-width: 30px;text-align: right" maxlength="3" 
+                                                             rendered="{facturasBean.muestraPlazoAnio}"/>
+                                                </p:outputPanel-->
+                                                
+                                                
+
+
+
+
                                                 <p:outputPanel styleClass="numeroFact">
                                                     <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
                                                 </p:outputPanel>
-
-
 
 
                                                 <p:outputPanel styleClass="numeroFact">

@@ -9,9 +9,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -75,7 +77,30 @@ public class Factura implements Serializable {
     private boolean cambiaPeriodo;
     private String url;
     private String periodoAnio;
-    private String periodoMes;  
+    private String periodoMes;
+    private Integer plazoAnios;
+    
+    @Transient
+    private String fechaString;
+
+    public String getFechaString() {
+        if (fecha != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "py"));
+            fechaString = sdf.format(fecha);
+
+        }
+        return fechaString;
+    }
+
+    public Integer getPlazoAnios() {
+        return plazoAnios;
+    }
+
+    public void setPlazoAnios(Integer plazoAnios) {
+        this.plazoAnios = plazoAnios;
+    }
+    
+    
 
     public String getPeriodoMes() {
         return periodoMes;
