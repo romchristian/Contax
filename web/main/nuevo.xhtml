@@ -295,45 +295,47 @@
                                                             <f:selectItem itemLabel="COMPRAS" itemValue="COMPRA"/>
                                                         </p:selectOneMenu>
 
-                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRP}" itemLabel="IRP?"
-                                                                                 rendered="#{(facturasBean.muestraConIRP)}">
-                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos @(.numeroFact)" listener="#{facturasBean.siCambiaConIRP()}"/>
-                                                        </p:selectBooleanCheckbox>
-
-                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.conIRPC}" itemLabel="IRPC?"
-                                                                                 rendered="#{(facturasBean.muestraConIRPC)}">
-                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos @(.numeroFact)" listener="#{facturasBean.siCambiaConIRPC()}"/>
-                                                        </p:selectBooleanCheckbox>
+                                                       
                                                     </h:panelGrid>
 
 
 
-                                                    <h:outputText value="Otros:" style="font-weight: bold" 
+                                                    <h:outputText value="Clasificación:" style="font-weight: bold" 
                                                                   rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
                                                                   styleClass="tipoFacturaIRP"/>
 
-                                                    <p:selectOneMenu value="#{facturasBean.actual.tipoAjustes}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                    <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                      rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
                                                                      styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
-                                                        <f:selectItem itemLabel="AJUSTES/DEVOLUCIONES/DESCUENTOS" itemValue="AJUSTES/DEVOLUCIONES/DESCUENTOS"/>
-                                                        <f:selectItem itemLabel="EXPORTACIONES/IMPORTACIONES" itemValue="EXPORTACIONES/IMPORTACIONES"/>
+                                                        <f:selectItem itemLabel="Ventas" itemValue="Ventas"/>
+                                                        <f:selectItem itemLabel="Exportaciones" itemValue="Exportaciones"/>
+                                                        <f:selectItem itemLabel="Descuentos, devolucionesy Operaciones incobrables" itemValue="Descuentos otorgados, devoluciones recibidas por Ventas ya declaradas y Operaciones incobrables"/>
+                                                        
                                                     </p:selectOneMenu>
+                                                    
+                                                    
+                                                    <h:outputText value="Tipo Documento:" style="font-weight: bold" 
+                                                                  rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
+                                                                  styleClass="tipoFacturaIRP"/>
 
-
-
-                                                    <h:outputText value="Tipo Exportación:" style="font-weight: bold" rendered="#{facturasBean.actual.tipoAjustes == 'EXPORTACIONES/IMPORTACIONES'}" styleClass="tipoFacturaIRP"/>
-
-                                                    <p:selectOneMenu value="#{facturasBean.actual.tipoExportacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{facturasBean.actual.tipoAjustes == 'EXPORTACIONES/IMPORTACIONES'}" styleClass="tipoFacturaIRP">
+                                                    <p:selectOneMenu value="#{facturasBean.actual.tipodocumento}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
+                                                                     styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
-                                                        <f:selectItem itemLabel="AGROPECUARIAS" itemValue="AGROPECUARIAS"/>
-                                                        <f:selectItem itemLabel="OTROS" itemValue="OTROS"/>
-
-                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
+                                                        <f:selectItem itemLabel="TICKET" itemValue="TICKET"/>
+                                                        <f:selectItem itemLabel="FACTURA" itemValue="FACTURA"/>
+                                                        <f:selectItem itemLabel="BOLETA DE VENTA" itemValue="BOLETA DE VENTA"/>
+                                                        <f:selectItem itemLabel="NOTA DE CRÉDITO" itemValue="NOTA DE CRÉDITO"/>
+                                                        
                                                     </p:selectOneMenu>
+
+
+
+
+                                                  
 
 
                                                     <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{(facturasBean.muestraClasificacionIRP or facturasBean.muestraClasificacionSoloIRPC)}" styleClass="tipoFacturaIRP"/>
@@ -556,10 +558,10 @@
 
 
                                                 </p:outputPanel>
-
+                                                <p:spacer/>
 
                                                 <!--p:outputPanel styleClass="plazosAnios" rendered="{facturasBean.muestraPlazoAnio}">
-                                                    <h:outputText value="Plazos en años:" style="font-weight: bold;margin-bottom: 5px" rendered="#{facturasBean.muestraPlazoAnio}"/>
+                                                    <h:outputText value="Plazos en años:" style="font-weight: bold;margin-bottom: 5px" rendered="{facturasBean.muestraPlazoAnio}"/>
                                                 </p:outputPanel>
                                                 <p:outputPanel styleClass="plazosAnios" rendered="{facturasBean.muestraPlazoAnio}">
                                                     <h:inputText value="{facturasBean.actual.plazoAnios}" style="font-size: 12pt; font-weight: bold;max-width: 30px;text-align: right" maxlength="3" 

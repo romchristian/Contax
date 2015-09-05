@@ -434,7 +434,7 @@ public class FacturasBean implements Serializable {
     
     public boolean isMuestraIngresos() {
         boolean R;
-        if ((getActual().getClasificacion() != null && getActual().getClasificacion() == Clasificacion.INGRESOS && !isMuestraClasificacionSoloIRPC())) {
+        if ((getActual().getClasificacion() != null && getActual().getClasificacion().equals(Clasificacion.INGRESOS.toString())  && !isMuestraClasificacionSoloIRPC())) {
             R = true;
         } else {
             R = false;
@@ -444,7 +444,7 @@ public class FacturasBean implements Serializable {
     
     public boolean isMuestraGastos() {
         boolean R;
-        if ((getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.GASTOS && !isMuestraClasificacionSoloIRPC()))) {
+        if ((getActual().getClasificacion() != null && (getActual().getClasificacion().equals(Clasificacion.GASTOS.toString()) && !isMuestraClasificacionSoloIRPC()))) {
             R = true;
         } else {
             R = false;
@@ -454,7 +454,7 @@ public class FacturasBean implements Serializable {
     
     public boolean isMuestraInversion() {
         boolean R;
-        if ((getActual().getClasificacion() != null && (getActual().getClasificacion() == Clasificacion.INVERSION && !isMuestraClasificacionSoloIRPC()))) {
+        if ((getActual().getClasificacion() != null && (getActual().getClasificacion().equals(Clasificacion.INVERSION.toString()) && !isMuestraClasificacionSoloIRPC()))) {
             R = true;
         } else {
             R = false;
@@ -911,7 +911,7 @@ public class FacturasBean implements Serializable {
         f.setRucCliente(actual.getRucCliente());
         f.setRazonSocialCliente(actual.getRazonSocialCliente());
         f.setTipoImpuesto(TipoImpuesto.IRP);
-        f.setClasificacion(Clasificacion.GASTOS);
+        f.setClasificacion("GASTOS");
         f.setTipoGasto("Generales");
         f.setSubTipoGasto("Descuentos y aportes legales");
         

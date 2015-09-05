@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -49,8 +50,7 @@ public class Factura implements Serializable {
     private TipoFactura tipoFactura;
     @Enumerated(EnumType.STRING)
     private TipoImpuesto tipoImpuesto;
-    @Enumerated(EnumType.STRING)
-    private Clasificacion clasificacion;
+    private String clasificacion;
     private boolean conIRP;
     private boolean conIRPC;
     private String tipoIngreso;
@@ -79,7 +79,24 @@ public class Factura implements Serializable {
     private String periodoAnio;
     private String periodoMes;
     private Integer plazoAnios;
-    
+
+    @Column(name = "subclasificacion")
+    private String subclasificacion;
+    @Column(name = "tipodocumento")
+    private String tipodocumento;
+    @Column(name = "exportaciones")
+    private BigInteger exportaciones;
+    @Column(name = "nogravadoyexonerado")
+    private BigInteger nogravadoyexonerado;
+    @Column(name = "gravados")
+    private BigInteger gravados;
+    @Column(name = "inscriptoeniva")
+    private String inscriptoeniva;
+    @Column(name = "nrotimbrado")
+    private Integer nrotimbrado;
+    @Column(name = "provienebienesgananciales")
+    private Boolean provienebienesgananciales;
+
     @Transient
     private String fechaString;
 
@@ -99,8 +116,6 @@ public class Factura implements Serializable {
     public void setPlazoAnios(Integer plazoAnios) {
         this.plazoAnios = plazoAnios;
     }
-    
-    
 
     public String getPeriodoMes() {
         return periodoMes;
@@ -268,14 +283,15 @@ public class Factura implements Serializable {
         this.tipoImpuesto = tipoImpuesto;
     }
 
-    public Clasificacion getClasificacion() {
+    public String getClasificacion() {
         return clasificacion;
     }
 
-    public void setClasificacion(Clasificacion clasificacion) {
+    public void setClasificacion(String clasificacion) {
         this.clasificacion = clasificacion;
     }
 
+    
     public String getTipoIngreso() {
         return tipoIngreso;
     }
@@ -407,6 +423,73 @@ public class Factura implements Serializable {
         return iva10;
     }
 
+    public String getSubclasificacion() {
+        return subclasificacion;
+    }
+
+    public void setSubclasificacion(String subclasificacion) {
+        this.subclasificacion = subclasificacion;
+    }
+
+    public String getTipodocumento() {
+        return tipodocumento;
+    }
+
+    public void setTipodocumento(String tipodocumento) {
+        this.tipodocumento = tipodocumento;
+    }
+
+    public BigInteger getExportaciones() {
+        return exportaciones;
+    }
+
+    public void setExportaciones(BigInteger exportaciones) {
+        this.exportaciones = exportaciones;
+    }
+
+    public BigInteger getNogravadoyexonerado() {
+        return nogravadoyexonerado;
+    }
+
+    public void setNogravadoyexonerado(BigInteger nogravadoyexonerado) {
+        this.nogravadoyexonerado = nogravadoyexonerado;
+    }
+
+    public BigInteger getGravados() {
+        return gravados;
+    }
+
+    public void setGravados(BigInteger gravados) {
+        this.gravados = gravados;
+    }
+
+    public String getInscriptoeniva() {
+        return inscriptoeniva;
+    }
+
+    public void setInscriptoeniva(String inscriptoeniva) {
+        this.inscriptoeniva = inscriptoeniva;
+    }
+
+    public Integer getNrotimbrado() {
+        return nrotimbrado;
+    }
+
+    public void setNrotimbrado(Integer nrotimbrado) {
+        this.nrotimbrado = nrotimbrado;
+    }
+
+    public Boolean getProvienebienesgananciales() {
+        return provienebienesgananciales;
+    }
+
+    public void setProvienebienesgananciales(Boolean provienebienesgananciales) {
+        this.provienebienesgananciales = provienebienesgananciales;
+    }
+
+    
+    
+    
     public void setIva10(BigDecimal iva10) {
         this.iva10 = iva10;
     }
