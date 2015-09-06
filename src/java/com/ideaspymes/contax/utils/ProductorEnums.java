@@ -5,7 +5,7 @@
 package com.ideaspymes.contax.utils;
 
 import com.ideaspymes.contax.modelo.Clasificacion;
-import com.ideaspymes.contax.modelo.TipoFactura;
+import com.ideaspymes.contax.modelo.Libro;
 import com.ideaspymes.contax.modelo.TipoImpuesto;
 import java.io.Serializable;
 import javax.enterprise.context.ApplicationScoped;
@@ -31,10 +31,10 @@ public class ProductorEnums implements Serializable {
     }
     
     public SelectItem[] obtTiposFactura() {
-        SelectItem[] R = new SelectItem[TipoFactura.values().length];
-        TipoFactura[] lista = TipoFactura.values();
+        SelectItem[] R = new SelectItem[Libro.values().length];
+        Libro[] lista = Libro.values();
         for (int i = 0; i < lista.length; i++) {
-            TipoFactura e = lista[i];
+            Libro e = lista[i];
             R[i] = new SelectItem(e, e.toString());
         }
         return R;

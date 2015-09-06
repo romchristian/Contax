@@ -11,11 +11,11 @@
     <class>com.ideaspymes.contax.modelo.TipoInversion</class>
     <class>com.ideaspymes.contax.modelo.Grupo</class>
     <class>com.ideaspymes.contax.modelo.Usuario</class>
+    
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
     </properties>
   </persistence-unit>
-  
   <persistence-unit name="RucsPU" transaction-type="JTA">
     <jta-data-source>RUCDS</jta-data-source>
     <class>com.ideaspymes.contax.modelo.Contribuyente</class>

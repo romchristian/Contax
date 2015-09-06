@@ -11,7 +11,6 @@
 
 
 
-
     <ui:composition template="/template.xhtml">
 
 
@@ -128,7 +127,7 @@
 
             <h:form id="formNuevo" style="height: 100%">
                 <o:importConstants type="com.ideaspymes.contax.modelo.TipoImpuesto"/>
-                <o:importConstants type="com.ideaspymes.contax.modelo.TipoFactura"/>
+                <o:importConstants type="com.ideaspymes.contax.modelo.Libro"/>
                 <o:importConstants type="com.ideaspymes.contax.modelo.Clasificacion"/>
 
 
@@ -262,20 +261,19 @@
                                                             <f:selectItems value="#{productorEnums.obtTiposImpuestos()}"
                                                                            var="e" itemLabel="#{e.value}" itemValue="#{e}"/>
                                                         </p:selectOneMenu>
-                                                        <p:spacer width="20"/>
-                                                        <p:selectBooleanCheckbox value="#{facturasBean.actual.cambiaPeriodo}" itemLabel="Mensual?"
-                                                                                 rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}">
-                                                            <p:ajax process="@this" update="tipoFacturaIRP periodos tipos"/>
-                                                        </p:selectBooleanCheckbox>
+
+
                                                     </p:outputPanel>
 
 
                                                     <h:outputText value="Libro:" style="font-weight: bold"
-                                                                  rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}"
+                                                                  rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado or facturasBean.muestraClasificacionSoloIRPC)}"
                                                                   styleClass="tipoFacturaIRP"/>
 
                                                     <h:panelGrid columns="3" styleClass="column100" columnClasses="column50,column20,column20" style="margin: 0; padding: 0;"
-                                                                 rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado)}">
+                                                                 rendered="#{(facturasBean.muestraTipoFactura or facturasBean.muestraSoloIvaSimplificado or facturasBean.muestraClasificacionSoloIRPC)}">
+
+
                                                         <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                          rendered="#{facturasBean.muestraTipoFactura}" styleClass="tipoFacturaIRP">
                                                             <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) @(.numeroFact)"
@@ -295,50 +293,64 @@
                                                             <f:selectItem itemLabel="COMPRAS" itemValue="COMPRA"/>
                                                         </p:selectOneMenu>
 
-                                                       
+
+                                                        <p:selectOneMenu value="#{facturasBean.actual.tipoFactura}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                         rendered="#{facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC }" styleClass="tipoFacturaIRP">
+                                                            <p:ajax event="change" process="@this" update="tipoFacturaIRP periodos tipos @(.proveedor) @(.numeroFact)"
+                                                                    listener="#{facturasBean.siCambiaLibro()}"/>
+                                                            <f:selectItem itemLabel="--" itemValue=""/>
+                                                            <f:selectItem itemLabel="GASTOS SIN CRÉDITO FISCAL" itemValue="GASTOS_SIN_CREDITO_FISCAL"/>
+                                                        </p:selectOneMenu>
+
+
                                                     </h:panelGrid>
 
 
 
+                                                    <h:outputText value="Inscripto en IVA:" style="font-weight: bold" 
+                                                                  rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}" 
+                                                                  styleClass="tipoFacturaIRP"/>
+
+                                                    <p:selectOneMenu value="#{facturasBean.actual.inscriptoeniva}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
+                                                                     rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}" 
+                                                                     styleClass="tipoFacturaIRP">
+                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor) periodos"/>
+                                                        <f:selectItems value="#{facturasBean.itemsInscriptoEnIva}"/>
+                                                    </p:selectOneMenu>
+
+
                                                     <h:outputText value="Clasificación:" style="font-weight: bold" 
-                                                                  rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
+                                                                  rendered="#{((facturasBean.actual.tipoFactura == Libro.VENTA or facturasBean.actual.tipoFactura == Libro.COMPRA))}" 
                                                                   styleClass="tipoFacturaIRP"/>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
+                                                                     rendered="#{((facturasBean.actual.tipoFactura == Libro.VENTA or facturasBean.actual.tipoFactura == Libro.COMPRA))}" 
                                                                      styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
-                                                        <f:selectItem itemLabel="--" itemValue=""/>
-                                                        <f:selectItem itemLabel="Ventas" itemValue="Ventas"/>
-                                                        <f:selectItem itemLabel="Exportaciones" itemValue="Exportaciones"/>
-                                                        <f:selectItem itemLabel="Descuentos, devolucionesy Operaciones incobrables" itemValue="Descuentos otorgados, devoluciones recibidas por Ventas ya declaradas y Operaciones incobrables"/>
-                                                        
+                                                        <f:selectItems value="#{facturasBean.itemsClasificacion}"/>
+
                                                     </p:selectOneMenu>
-                                                    
-                                                    
+
+
                                                     <h:outputText value="Tipo Documento:" style="font-weight: bold" 
-                                                                  rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
+                                                                  rendered="#{((facturasBean.actual.tipoFactura == Libro.VENTA or facturasBean.actual.tipoFactura == Libro.COMPRA or facturasBean.actual.tipoFactura == Libro.GASTOS_SIN_CREDITO_FISCAL))}" 
                                                                   styleClass="tipoFacturaIRP"/>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.tipodocumento}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{((facturasBean.actual.tipoFactura == TipoFactura.VENTA or facturasBean.actual.tipoFactura == TipoFactura.COMPRA) and not(facturasBean.muestraSoloIvaSimplificado))}" 
+                                                                     rendered="#{((facturasBean.actual.tipoFactura == Libro.VENTA or facturasBean.actual.tipoFactura == Libro.COMPRA  or facturasBean.actual.tipoFactura == Libro.GASTOS_SIN_CREDITO_FISCAL) )}" 
                                                                      styleClass="tipoFacturaIRP">
-                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"/>
-                                                        <f:selectItem itemLabel="--" itemValue=""/>
-                                                        <f:selectItem itemLabel="TICKET" itemValue="TICKET"/>
-                                                        <f:selectItem itemLabel="FACTURA" itemValue="FACTURA"/>
-                                                        <f:selectItem itemLabel="BOLETA DE VENTA" itemValue="BOLETA DE VENTA"/>
-                                                        <f:selectItem itemLabel="NOTA DE CRÉDITO" itemValue="NOTA DE CRÉDITO"/>
-                                                        
+                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor , .numeroFact)"/>
+                                                        <f:selectItems value="#{facturasBean.itemsTipoDocumento}"/>
+
                                                     </p:selectOneMenu>
 
 
 
 
-                                                  
 
 
-                                                    <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{(facturasBean.muestraClasificacionIRP or facturasBean.muestraClasificacionSoloIRPC)}" styleClass="tipoFacturaIRP"/>
+
+                                                    <h:outputText value="Clasificación IRP:" style="font-weight: bold" rendered="#{(facturasBean.muestraClasificacionIRP)}" styleClass="tipoFacturaIRP"/>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                      rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == null) and not facturasBean.muestraClasificacionSoloIRPC)}" styleClass="tipoFacturaIRP">
@@ -352,18 +364,10 @@
                                                     </p:selectOneMenu>
 
 
-                                                    <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{facturasBean.muestraClasificacionSoloIRPC}" styleClass="tipoFacturaIRP">
-                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor)"
-                                                                listener="#{facturasBean.siCambiaClasificionIRP()}"/>
-                                                        <f:selectItem itemLabel="--" itemValue=""/>
-                                                        <f:selectItem itemLabel="INGRESOS" itemValue="INGRESOS"/>
-                                                        <f:selectItem itemLabel="GASTOS" itemValue="GASTOS"/>
-                                                        <!--                                                        <f:selectItems value="{productorEnums.obtClasificacionesIRP()}"/>-->
-                                                    </p:selectOneMenu>
+
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == TipoFactura.VENTA ))}" styleClass="tipoFacturaIRP">
+                                                                     rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == Libro.VENTA ))}" styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update="tipoFacturaIRP tipos"
                                                                 listener="#{facturasBean.siCambiaClasificionIRP()}"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
@@ -373,7 +377,7 @@
                                                     </p:selectOneMenu>
 
                                                     <p:selectOneMenu value="#{facturasBean.actual.clasificacion}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
-                                                                     rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == TipoFactura.COMPRA ))}" styleClass="tipoFacturaIRP">
+                                                                     rendered="#{(facturasBean.muestraClasificacionIRP and (facturasBean.actual.tipoFactura == Libro.COMPRA ))}" styleClass="tipoFacturaIRP">
                                                         <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos"
                                                                 listener="#{facturasBean.siCambiaClasificionIRP()}"/>
                                                         <f:selectItem itemLabel="--" itemValue=""/>
@@ -521,7 +525,7 @@
 
 
                                                         <p:selectOneMenu value="#{facturasBean.actual.periodoMes}" style="width: 75px;margin-left: 15px;"
-                                                                         rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC and facturasBean.actual.cambiaPeriodo)}">
+                                                                         rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC and facturasBean.actual.inscriptoeniva == 'GENERAL')}">
                                                             <f:selectItem itemLabel="--" itemValue=""/>
                                                             <f:selectItem itemLabel="Ene" itemValue="Ene"/>
                                                             <f:selectItem itemLabel="Feb" itemValue="Feb"/>
@@ -544,7 +548,7 @@
                                                             <f:selectItem itemLabel="3er Cuatri" itemValue="3er Cuatri"/>
                                                         </p:selectOneMenu>
 
-                                                        <p:selectOneMenu styleClass="campos" value="#{facturasBean.actual.periodoMes}" style="width: 110px;margin-left: 15px;" rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC and not(facturasBean.actual.cambiaPeriodo))}">
+                                                        <p:selectOneMenu styleClass="campos" value="#{facturasBean.actual.periodoMes}" style="width: 110px;margin-left: 15px;" rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC and  facturasBean.actual.inscriptoeniva == 'SIMPLIFICADO')}">
                                                             <f:selectItem itemLabel="1er Cuatri" itemValue="1er Cuatri"/>
                                                             <f:selectItem itemLabel="2do Cuatri" itemValue="2do Cuatri"/>
                                                             <f:selectItem itemLabel="3er Cuatri" itemValue="3er Cuatri"/>
@@ -567,21 +571,21 @@
                                                     <h:inputText value="{facturasBean.actual.plazoAnios}" style="font-size: 12pt; font-weight: bold;max-width: 30px;text-align: right" maxlength="3" 
                                                              rendered="{facturasBean.muestraPlazoAnio}"/>
                                                 </p:outputPanel-->
-                                                
-                                                
+
+
 
 
 
 
                                                 <p:outputPanel styleClass="numeroFact">
-                                                    <h:outputText value="Nro Factura:" style="font-weight: bold;margin-bottom: 5px" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
+                                                    <h:outputText value="Nro Documento:" style="font-weight: bold;margin-bottom: 5px" rendered="#{not facturasBean.muestraGenerarAporteIPS}"/>
                                                 </p:outputPanel>
 
 
                                                 <p:outputPanel styleClass="numeroFact">
 
 
-                                                    <h:panelGrid columns="5" rendered="#{not facturasBean.muestraGenerarAporteIPS}">
+                                                    <h:panelGrid columns="5" rendered="#{not (facturasBean.muestraGenerarAporteIPS) and not(facturasBean.ticket)}">
                                                         <p:inputText value="#{facturasBean.codEst}" size="3" style="font-size: 12pt; font-weight: bold; max-width: 30px;text-align: right" maxlength="3" 
                                                                      binding="#{codEstablecimiento}"
                                                                      id="codEstablecimiento"/>
@@ -596,6 +600,14 @@
                                                             <p:ajax event="blur" update="codEstablecimiento,puntoExpedicion,numero" process="codEstablecimiento,puntoExpedicion,numero"/>
                                                         </p:inputText>
                                                     </h:panelGrid>
+
+
+                                                    <p:inputText value="#{facturasBean.numeroFact}" size="12" style="font-size: 12pt; font-weight: bold;text-align: right" maxlength="7"
+
+                                                                 rendered="#{facturasBean.ticket}">
+
+                                                        <p:ajax event="blur" update="codEstablecimiento,puntoExpedicion,numero" process="codEstablecimiento,puntoExpedicion,numero"/>
+                                                    </p:inputText>
                                                 </p:outputPanel>
                                                 <p:spacer></p:spacer>
 
@@ -604,16 +616,16 @@
 
 
                                                 <p:outputPanel styleClass="proveedor">
-                                                    <h:outputText value="Proveedor:" style="font-weight: bold"
-                                                                  rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"/>
+                                                    <h:outputText value="Comprador/Proveedor:" style="font-weight: bold"
+                                                                  rendered="#{facturasBean.mostrarProveedor}"/>
                                                 </p:outputPanel>
 
 
 
                                                 <p:outputPanel styleClass="proveedor">
-                                                    <p:inputText placeholder="RUC del Proveedor" value="#{facturasBean.rucProveedor}"
+                                                    <p:inputText placeholder="RUC del Comprador/Proveedor" value="#{facturasBean.rucProveedor}"
                                                                  style="width: 50%;margin-top: 5px;"
-                                                                 rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}">
+                                                                 rendered="#{facturasBean.mostrarProveedor}">
                                                         <p:ajax event="blur" update="cvProveedor razonSocialProveedor"
                                                                 process="@this cvProveedor razonSocialProveedor" 
                                                                 listener="#{facturasBean.buscarContribuyenteProveedor()}"/>
@@ -621,7 +633,7 @@
                                                     <p:inputText placeholder="CV" value="#{facturasBean.cvProveedor}"
                                                                  id="cvProveedor" size="1"
                                                                  style="width: 5%;margin-top: 5px;"
-                                                                 rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"/>
+                                                                 rendered="#{facturasBean.mostrarProveedor}"/>
                                                 </p:outputPanel>
 
                                                 <p:outputPanel styleClass="proveedor">
@@ -630,8 +642,8 @@
                                                 <p:outputPanel styleClass="proveedor">
                                                     <p:inputText id="razonSocialProveedor"
                                                                  style="margin-top: 5px;width: 90%"
-                                                                 placeholder="RAZON SOCIAL PROVEEDOR" value="#{facturasBean.actual.razonSocialProveedor}"
-                                                                 rendered="#{(facturasBean.actual.clasificacion == Clasificacion.GASTOS or facturasBean.actual.clasificacion == Clasificacion.INVERSION or facturasBean.actual.tipoFactura == TipoFactura.COMPRA)}"/>
+                                                                 placeholder="RAZON SOCIAL COMPRADOR/PROVEEDOR" value="#{facturasBean.actual.razonSocialProveedor}"
+                                                                 rendered="#{facturasBean.mostrarProveedor}"/>
                                                 </p:outputPanel>
 
                                             </h:panelGrid>
@@ -650,7 +662,7 @@
                                             <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
 
                                                 <p:spacer/>
-                                                <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO and not(facturasBean.muestraGenerarAporteIPS))}" style="margin-right: 20px">
+                                                <p:outputPanel rendered="#{((facturasBean.actual.tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO and facturasBean.actual.tipoImpuesto != TipoImpuesto.IRPC)  and not(facturasBean.muestraGenerarAporteIPS))}" style="margin-right: 20px">
 
                                                     <h:panelGrid columns="3" style="padding-right: 10px">
                                                         <h:outputText value="Exento:" style="font-weight: bold;margin-top: 10px"/>
@@ -707,8 +719,8 @@
                                                         </p:inputText>
 
                                                         <p:spacer/>
-                                                        <h:outputText value="Total (Neto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
-                                                        <h:outputText value="Total (Bruto):" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                        <h:outputText value="Total Neto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
+                                                        <h:outputText value="Total Bruto:" style="font-weight: bold;margin-top: 10px;margin-left: 10px"/>
 
                                                         <p:spacer/>
                                                         <p:inputText style="margin-top: 5px;width: 90%;margin-left: 10px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
@@ -725,12 +737,12 @@
 
                                             </h:panelGrid>
 
-                                            <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO or (facturasBean.muestraGenerarAporteIPS))}">
+                                            <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC or (facturasBean.muestraGenerarAporteIPS))}">
 
                                                 <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
 
 
-                                                    <h:outputText value="Total (Bruto):" style="font-weight: bold;"/>
+                                                    <h:outputText value="Total Bruto:" style="font-weight: bold;"/>
                                                     <p:inputText styleClass="calculos" style="font-size: 12pt!important;font-weight: bold;text-align: right"
                                                                  value="#{facturasBean.actual.totalBruto}">
                                                         <f:convertNumber locale="#{formato.locale}"/>
@@ -738,6 +750,46 @@
 
                                                 </h:panelGrid>
                                             </p:outputPanel>
+
+
+                                            <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO)}">
+
+                                                <h:panelGrid columns="3" styleClass="column100" columnClasses="column15, column15,column15">
+
+                                                    
+                                                    
+                                                    <p:spacer/>
+                                                    <h:outputText value="Total Bruto:" style="font-weight: bold;"/>
+                                                    <p:spacer/>
+                                                    
+                                                    <p:spacer/>
+                                                    
+                                                    <p:inputText styleClass="calculos" style="font-size: 12pt!important;font-weight: bold;text-align: right"
+                                                                 value="#{facturasBean.actual.totalBruto}">
+                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:spacer/>
+                                                    
+                                                    <p:spacer/>
+                                                    <h:outputText value="Total IVA:" style="font-weight: bold;margin-top: 10px;"/>
+                                                    <h:outputText value="Total Neto:" style="font-weight: bold;margin-top: 10px;"/>
+                                                    
+                                                    <p:spacer/>
+                                                    <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.totalIva}">
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+
+                                                    
+                                                    <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.totalNeto}"> 
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+
+                                                </h:panelGrid>
+                                            </p:outputPanel>
+
                                         </p:outputPanel>
 
                                     </div>

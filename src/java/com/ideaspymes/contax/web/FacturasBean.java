@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 
@@ -45,7 +46,7 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class FacturasBean implements Serializable {
-    
+
     @EJB
     private ContribuyenteDAO contribuyenteDAO;
     @EJB
@@ -62,30 +63,30 @@ public class FacturasBean implements Serializable {
     private SubTipoIngresoFacade ejbSubTipoIngresoFacade;
     @EJB
     private SubTipoInversionFacade ejbSubTipoInversionFacade;
-    
+
     @Inject
     private ImagenController imagenController;
-    
+
     private String ruc;
     private int cvCliente;
     private String rucProveedor;
     private int cvProveedor;
     private String nombreArchivoSiguiente;
     private Factura actual;
-    
+
     private TipoIngreso tipoIngresoSeleccionado;
     private SubTipoIngreso subTipoIngresoSeleccionado;
-    
+
     private TipoGasto tipoGastoSeleccionado;
     private SubTipoGasto subTipoGastoSeleccionado;
-    
+
     private TipoInversion tipoInversionSeleccionado;
     private SubTipoInversion subTipoInversionSeleccionado;
     private boolean conIRP;
     private long id;
     private boolean contextoModificacion;
     private boolean generarAporteIPS;
-    
+
     private String codEst;
     private String codSuc;
     private String numeroFact;
@@ -96,55 +97,55 @@ public class FacturasBean implements Serializable {
     private BigDecimal totalIva = BigDecimal.ZERO;
     private BigDecimal totalNeto = BigDecimal.ZERO;
     private BigDecimal totalBruto = BigDecimal.ZERO;
-    
+
     public BigDecimal getTotalExento() {
         return totalExento;
     }
-    
+
     public void setTotalExento(BigDecimal totalExento) {
         this.totalExento = totalExento;
     }
-    
+
     public BigDecimal getTotalGravada05() {
         return totalGravada05;
     }
-    
+
     public void setTotalGravada05(BigDecimal totalGravada05) {
         this.totalGravada05 = totalGravada05;
     }
-    
+
     public BigDecimal getTotalGravada10() {
         return totalGravada10;
     }
-    
+
     public void setTotalGravada10(BigDecimal totalGravada10) {
         this.totalGravada10 = totalGravada10;
     }
-    
+
     public BigDecimal getTotalIva() {
         return totalIva;
     }
-    
+
     public void setTotalIva(BigDecimal totalIva) {
         this.totalIva = totalIva;
     }
-    
+
     public BigDecimal getTotalNeto() {
         return totalNeto;
     }
-    
+
     public void setTotalNeto(BigDecimal totalNeto) {
         this.totalNeto = totalNeto;
     }
-    
+
     public BigDecimal getTotalBruto() {
         return totalBruto;
     }
-    
+
     public void setTotalBruto(BigDecimal totalBruto) {
         this.totalBruto = totalBruto;
     }
-    
+
     public List<Factura> getFilteredValues() {
         if (filteredValues == null) {
             filteredValues = new ArrayList<>();
@@ -152,11 +153,11 @@ public class FacturasBean implements Serializable {
         }
         return filteredValues;
     }
-    
+
     public void setFilteredValues(List<Factura> filteredValues) {
         this.filteredValues = filteredValues;
     }
-    
+
     public void updateSum() {
         System.out.println("HOLA");
         if (filteredValues != null) {
@@ -167,7 +168,7 @@ public class FacturasBean implements Serializable {
             totalIva = BigDecimal.ZERO;
             totalNeto = BigDecimal.ZERO;
             totalBruto = BigDecimal.ZERO;
-            
+
             for (Factura f : filteredValues) {
                 System.out.println("HOLA f : " + f.getTotalBruto());
                 totalExento = totalExento.add(f.getExento() != null ? f.getExento() : BigDecimal.ZERO);
@@ -180,32 +181,32 @@ public class FacturasBean implements Serializable {
             System.out.println("Total Bruto : " + totalBruto);
         }
     }
-    
+
     public String getCodEst() {
         return codEst;
     }
-    
+
     public void setCodEst(String codEst) {
-        
+
         this.codEst = getCodFormat(codEst);
     }
-    
+
     public String getCodSuc() {
         return codSuc;
     }
-    
+
     public void setCodSuc(String codSuc) {
         this.codSuc = getCodFormat(codSuc);
     }
-    
+
     public String getNumeroFact() {
         return numeroFact;
     }
-    
+
     public void setNumeroFact(String numeroFact) {
         this.numeroFact = getNumeroFactFormat(numeroFact);
     }
-    
+
     public void cargaImagen() {
         String path = ArchivoUtil.PATH;
         final File folder = new File(path);
@@ -219,23 +220,23 @@ public class FacturasBean implements Serializable {
         //System.out.println("Imagen en bean: " + nombreArchivoSiguiente);
         imagenController.setImagen(nombreArchivoSiguiente);
     }
-    
+
     public boolean isGenerarAporteIPS() {
         return generarAporteIPS;
     }
-    
+
     public void setGenerarAporteIPS(boolean generarAporteIPS) {
         this.generarAporteIPS = generarAporteIPS;
     }
-    
+
     public long getId() {
         return id;
     }
-    
+
     public void setId(long id) {
         this.id = id;
     }
-    
+
     public void resfreca() {
         if (id > 0) {
             actual = ejb.find(id);
@@ -253,19 +254,19 @@ public class FacturasBean implements Serializable {
                 subTipoGastoSeleccionado = ejbSubTipoGastoFacade.findNombre(actual.getSubTipoGasto());
                 subTipoIngresoSeleccionado = ejbSubTipoIngresoFacade.findNombre(actual.getSubTipoIngreso());
                 subTipoInversionSeleccionado = ejbSubTipoInversionFacade.findNombre(actual.getSubTipoInversion());
-                
+
                 String[] arucProveedor = actual.getRucProveedor().split("-");
                 rucProveedor = arucProveedor[0];
                 cvProveedor = Integer.parseInt(arucProveedor[1]);
-                
+
             } catch (Exception e) {
-                
+
             }
             //return "nuevo.xhtml?faces-redirect=true&id=" + id;
         } else {
             String path = ArchivoUtil.PATH;
             final File folder = new File(path);
-            
+
             nombreArchivoSiguiente = "";
             for (final File fileEntry : folder.listFiles()) {
                 if (!fileEntry.isDirectory()) {
@@ -273,12 +274,12 @@ public class FacturasBean implements Serializable {
                     nombreArchivoSiguiente = fileEntry.getName();
                 }
             }
-            
+
             imagenController.setImagen(nombreArchivoSiguiente);
             //return "nuevo.xhtml?faces-redirect=true&id=0";
         }
     }
-    
+
     public void cargaDatos() {
         if (id > 0) {
             actual = ejb.find(id);
@@ -288,11 +289,11 @@ public class FacturasBean implements Serializable {
             subTipoGastoSeleccionado = ejbSubTipoGastoFacade.findNombre(actual.getSubTipoGasto());
             subTipoIngresoSeleccionado = ejbSubTipoIngresoFacade.findNombre(actual.getSubTipoIngreso());
             subTipoInversionSeleccionado = ejbSubTipoInversionFacade.findNombre(actual.getSubTipoInversion());
-            
+
             try {
                 //nombreArchivoSiguiente = actual.getUrl();
                 imagenController.setImagen(null);
-                
+
                 if (actual.getNumero() != null) {
                     String[] anumero = actual.getNumero().split("-");
                     if (anumero.length == 3) {
@@ -303,22 +304,22 @@ public class FacturasBean implements Serializable {
                         numeroFact = anumero[0];
                     }
                 }
-                
+
                 System.out.println("Nombre Imagen: " + nombreArchivoSiguiente);
-                
+
                 String[] aruc = actual.getRucCliente().split("-");
                 ruc = aruc[0];
                 cvCliente = Integer.parseInt(aruc[1]);
-                
+
                 String[] arucProveedor = actual.getRucProveedor().split("-");
                 rucProveedor = arucProveedor[0];
                 cvProveedor = Integer.parseInt(arucProveedor[1]);
-                
+
             } catch (Exception e) {
             }
-            
+
         }
-        
+
         imagenController.setImagen(null);
 //            else {
 //            String path = ArchivoUtil.PATH;
@@ -333,19 +334,19 @@ public class FacturasBean implements Serializable {
 //            }
 //        }
     }
-    
+
     public List<Factura> findAll() {
         return ejb.findAll();
     }
-    
+
     public boolean isConIRP() {
         return conIRP;
     }
-    
+
     public void setConIRP(boolean conIRP) {
         this.conIRP = conIRP;
     }
-    
+
     public boolean isMuestraTipoFactura() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL) {
@@ -355,7 +356,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraGenerarAporteIPS() {
         boolean R = false;
         if (tipoIngresoSeleccionado != null && tipoIngresoSeleccionado.getNombre().compareToIgnoreCase("Dependiente") == 0) {
@@ -365,9 +366,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
-    
-    
+
     public boolean isMuestraPlazoAnio() {
         boolean R = false;
         if (subTipoGastoSeleccionado != null && subTipoGastoSeleccionado.getNombre().compareToIgnoreCase("Colocaciones en ahorro y bonos") == 0) {
@@ -377,7 +376,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraSoloIvaSimplificado() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
@@ -387,7 +386,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraConIRP() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL || getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
@@ -397,7 +396,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraConIRPC() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IVA_GENERAL || getActual().getTipoImpuesto() == TipoImpuesto.IVA_SIMPLIFICADO) {
@@ -407,15 +406,15 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraClasificacionIRP() {
         boolean R = false;
-        if (getActual().getTipoImpuesto() == TipoImpuesto.IRP || getActual().getTipoImpuesto() == TipoImpuesto.IRPC || getActual().isConIRP()) {
+        if (getActual().getTipoImpuesto() == TipoImpuesto.IRP) {
             R = true;
         }
         return R;
     }
-    
+
     public boolean isMuestraClasificacionSoloIRPC() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IRPC || getActual().isConIRPC()) {
@@ -423,7 +422,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraClasificacionSoloIRP() {
         boolean R = false;
         if (getActual().getTipoImpuesto() == TipoImpuesto.IRP) {
@@ -431,17 +430,17 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraIngresos() {
         boolean R;
-        if ((getActual().getClasificacion() != null && getActual().getClasificacion().equals(Clasificacion.INGRESOS.toString())  && !isMuestraClasificacionSoloIRPC())) {
+        if ((getActual().getClasificacion() != null && getActual().getClasificacion().equals(Clasificacion.INGRESOS.toString()) && !isMuestraClasificacionSoloIRPC())) {
             R = true;
         } else {
             R = false;
         }
         return R;
     }
-    
+
     public boolean isMuestraGastos() {
         boolean R;
         if ((getActual().getClasificacion() != null && (getActual().getClasificacion().equals(Clasificacion.GASTOS.toString()) && !isMuestraClasificacionSoloIRPC()))) {
@@ -451,7 +450,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public boolean isMuestraInversion() {
         boolean R;
         if ((getActual().getClasificacion() != null && (getActual().getClasificacion().equals(Clasificacion.INVERSION.toString()) && !isMuestraClasificacionSoloIRPC()))) {
@@ -461,7 +460,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public List<SubTipoIngreso> getItemsSubTipoIngreso() {
         List<SubTipoIngreso> R = new ArrayList<>();
         if (tipoIngresoSeleccionado != null) {
@@ -469,7 +468,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public List<SubTipoGasto> getItemsSubTipoGasto() {
         List<SubTipoGasto> R = new ArrayList<>();
         if (tipoGastoSeleccionado != null) {
@@ -477,7 +476,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public List<SubTipoInversion> getItemsSubTipoInversion() {
         List<SubTipoInversion> R = new ArrayList<>();
         if (tipoInversionSeleccionado != null) {
@@ -485,67 +484,67 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     public TipoIngreso getTipoIngresoSeleccionado() {
         return tipoIngresoSeleccionado;
     }
-    
+
     public void setTipoIngresoSeleccionado(TipoIngreso tipoIngresoSeleccionado) {
         this.tipoIngresoSeleccionado = tipoIngresoSeleccionado;
     }
-    
+
     public SubTipoIngreso getSubTipoIngresoSeleccionado() {
         return subTipoIngresoSeleccionado;
     }
-    
+
     public void setSubTipoIngresoSeleccionado(SubTipoIngreso subTipoIngresoSeleccionado) {
         this.subTipoIngresoSeleccionado = subTipoIngresoSeleccionado;
     }
-    
+
     public TipoGasto getTipoGastoSeleccionado() {
         return tipoGastoSeleccionado;
     }
-    
+
     public void setTipoGastoSeleccionado(TipoGasto tipoGastoSeleccionado) {
         this.tipoGastoSeleccionado = tipoGastoSeleccionado;
     }
-    
+
     public SubTipoGasto getSubTipoGastoSeleccionado() {
         return subTipoGastoSeleccionado;
     }
-    
+
     public void setSubTipoGastoSeleccionado(SubTipoGasto subTipoGastoSeleccionado) {
         this.subTipoGastoSeleccionado = subTipoGastoSeleccionado;
     }
-    
+
     public TipoInversion getTipoInversionSeleccionado() {
         return tipoInversionSeleccionado;
     }
-    
+
     public void setTipoInversionSeleccionado(TipoInversion tipoInversionSeleccionado) {
         this.tipoInversionSeleccionado = tipoInversionSeleccionado;
     }
-    
+
     public SubTipoInversion getSubTipoInversionSeleccionado() {
         return subTipoInversionSeleccionado;
     }
-    
+
     public void setSubTipoInversionSeleccionado(SubTipoInversion subTipoInversionSeleccionado) {
         this.subTipoInversionSeleccionado = subTipoInversionSeleccionado;
     }
-    
+
     public Factura getActual() {
         if (actual == null) {
             actual = new Factura();
         }
-        
+
         return actual;
     }
-    
+
     public void setActual(Factura actual) {
         this.actual = actual;
     }
-    
+
     public void buscarContribuyenteCliente() {
         Contribuyente c = contribuyenteDAO.getContribuyente(getRuc());
         if (c != null) {
@@ -554,7 +553,7 @@ public class FacturasBean implements Serializable {
             getActual().setRucCliente(c.getRuc() + "-" + c.getCodigoVerificador());
         }
     }
-    
+
     public void buscarContribuyenteProveedor() {
         Contribuyente c = contribuyenteDAO.getContribuyente(getRucProveedor());
         if (c != null) {
@@ -563,62 +562,62 @@ public class FacturasBean implements Serializable {
             getActual().setRucProveedor(c.getRuc() + "-" + c.getCodigoVerificador());
         }
     }
-    
+
     public String getNombreArchivoSiguiente() {
         return nombreArchivoSiguiente;
     }
-    
+
     public void setNombreArchivoSiguiente(String nombreArchivoSiguiente) {
         this.nombreArchivoSiguiente = nombreArchivoSiguiente;
     }
-    
+
     public ContribuyenteDAO getContribuyenteDAO() {
         return contribuyenteDAO;
     }
-    
+
     public void setContribuyenteDAO(ContribuyenteDAO contribuyenteDAO) {
         this.contribuyenteDAO = contribuyenteDAO;
     }
-    
+
     public int getCvCliente() {
         return cvCliente;
     }
-    
+
     public void setCvCliente(int cvCliente) {
         this.cvCliente = cvCliente;
     }
-    
+
     public String getRucProveedor() {
         return rucProveedor;
     }
-    
+
     public void setRucProveedor(String rucProveedor) {
         this.rucProveedor = rucProveedor;
     }
-    
+
     public int getCvProveedor() {
         return cvProveedor;
     }
-    
+
     public void setCvProveedor(int cvProveedor) {
         this.cvProveedor = cvProveedor;
     }
-    
+
     public String getRuc() {
         return ruc;
     }
-    
+
     public void setRuc(String ruc) {
         this.ruc = ruc;
     }
-    
+
     public String guardar() {
         try {
             if (validar()) {
                 actual.setTipoIngreso(tipoIngresoSeleccionado == null ? null : tipoIngresoSeleccionado.getNombre());
                 actual.setTipoGasto(tipoGastoSeleccionado == null ? null : tipoGastoSeleccionado.getNombre());
                 actual.setTipoInversion(tipoInversionSeleccionado == null ? null : tipoInversionSeleccionado.getNombre());
-                
+
                 actual.setSubTipoIngreso(subTipoIngresoSeleccionado == null ? null : subTipoIngresoSeleccionado.getNombre());
                 actual.setSubTipoGasto(subTipoGastoSeleccionado == null ? null : subTipoGastoSeleccionado.getNombre());
                 actual.setSubTipoInversion(subTipoInversionSeleccionado == null ? null : subTipoInversionSeleccionado.getNombre());
@@ -629,7 +628,7 @@ public class FacturasBean implements Serializable {
                 if (codSuc != null) {
                     numero += codSuc + "-";
                 }
-                
+
                 if (numeroFact != null) {
                     numero += numeroFact;
                 }
@@ -639,53 +638,53 @@ public class FacturasBean implements Serializable {
                 if (generarAporteIPS) {
                     crearAporteIPS();
                 }
-                
+
                 JsfUtil.addSuccessMessage("Se guardó existosamente!!");
                 actual = null;
                 limpiar();
             }
-            
+
             return "nuevo.xhtml?faces-redirect=true&id=0";
         } catch (Exception e) {
             JsfUtil.addErrorMessage("Hubo un error al guarda! : " + e.getMessage());
             return null;
         }
     }
-    
+
     public boolean validar() {
         if (actual == null) {
             JsfUtil.addErrorMessage("No hay nada para guardar!");
             return false;
         }
-        
+
         if (actual.getRucCliente() == null || actual.getRucCliente().length() == 0) {
             JsfUtil.addErrorMessage("No hay ruc de cliente");
             return false;
         }
-        
+
         if (actual.getRazonSocialCliente() == null || actual.getRazonSocialCliente().length() == 0) {
             JsfUtil.addErrorMessage("No hay razon social de cliente");
             return false;
         }
-        
+
         if (actual.getTipoImpuesto() == null || actual.getTipoImpuesto().toString().compareToIgnoreCase("") == 0) {
             JsfUtil.addErrorMessage("No hay tipo impuesto");
             return false;
         }
-        
+
         if (actual.getFecha() == null) {
             JsfUtil.addErrorMessage("No hay fecha");
             return false;
         }
-        
+
         if (actual.getTotalBruto() == null || actual.getTotalBruto().compareTo(new BigDecimal(BigInteger.ZERO)) == 0) {
             JsfUtil.addErrorMessage("No hay total bruto");
             return false;
         }
-        
+
         return true;
     }
-    
+
     public void limpiar() {
         actual = null;
         tipoGastoSeleccionado = null;
@@ -704,7 +703,7 @@ public class FacturasBean implements Serializable {
         numeroFact = null;
         imagenController.setImagen(null);
     }
-    
+
     public void mover() {
         String path = ArchivoUtil.PATH;
         File theDir = new File(path + "\\" + getRuc());
@@ -713,7 +712,7 @@ public class FacturasBean implements Serializable {
         if (!theDir.exists()) {
             System.out.println("creating directory: " + theDir);
             boolean result = false;
-            
+
             try {
                 theDir.mkdir();
                 result = true;
@@ -724,33 +723,33 @@ public class FacturasBean implements Serializable {
                 System.out.println("DIR created");
             }
         }
-        
+
         try {
             String archivoActual = nombreArchivoSiguiente;
-            
+
             File afile = new File(path + "\\" + archivoActual);
-            
+
             if (afile.renameTo(new File(theDir + "\\" + afile.getName()))) {
                 System.out.println("File is moved successful!");
                 String url = getRuc() + "\\" + afile.getName();
-                
+
                 actual.setUrl(url);
                 ejb.edit(actual);
-                
+
                 nombreArchivoSiguiente = null;
             } else {
                 ejb.edit(actual);
                 System.out.println("File is failed to move!");
             }
-            
+
         } catch (Exception e) {
             ejb.edit(actual);
             e.printStackTrace();
         }
     }
-    
+
     public void siCambiaTipoImpuesto() {
-        
+
         actual.setTipoFactura(null);
         actual.setConIRP(false);
         actual.setClasificacion(null);
@@ -768,11 +767,11 @@ public class FacturasBean implements Serializable {
         subTipoGastoSeleccionado = null;
         subTipoIngresoSeleccionado = null;
         subTipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void siCambiaLibro() {
-        
+
         actual.setClasificacion(null);
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
@@ -788,11 +787,11 @@ public class FacturasBean implements Serializable {
         subTipoGastoSeleccionado = null;
         subTipoIngresoSeleccionado = null;
         subTipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void siCambiaConIRP() {
-        
+
         actual.setClasificacion(null);
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
@@ -806,11 +805,11 @@ public class FacturasBean implements Serializable {
         subTipoGastoSeleccionado = null;
         subTipoIngresoSeleccionado = null;
         subTipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void siCambiaConIRPC() {
-        
+
         actual.setClasificacion(null);
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
@@ -824,11 +823,11 @@ public class FacturasBean implements Serializable {
         subTipoGastoSeleccionado = null;
         subTipoIngresoSeleccionado = null;
         subTipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void siCambiaClasificionIRP() {
-        
+
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
         actual.setTipoInversion(null);
@@ -838,11 +837,11 @@ public class FacturasBean implements Serializable {
         tipoGastoSeleccionado = null;
         tipoIngresoSeleccionado = null;
         tipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void siCambiaTipoIngreso() {
-        
+
         generarAporteIPS = false;
         actual.setTipoGasto(null);
         actual.setTipoInversion(null);
@@ -852,11 +851,11 @@ public class FacturasBean implements Serializable {
         subTipoGastoSeleccionado = null;
         subTipoIngresoSeleccionado = null;
         subTipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void siCambiaTipoGasto() {
-        
+
         actual.setTipoIngreso(null);
         actual.setTipoInversion(null);
         actual.setSubTipoIngreso(null);
@@ -865,11 +864,11 @@ public class FacturasBean implements Serializable {
         subTipoGastoSeleccionado = null;
         subTipoIngresoSeleccionado = null;
         subTipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void siCambiaTipoInversion() {
-        
+
         actual.setTipoIngreso(null);
         actual.setTipoGasto(null);
         actual.setSubTipoIngreso(null);
@@ -878,30 +877,30 @@ public class FacturasBean implements Serializable {
         subTipoGastoSeleccionado = null;
         subTipoIngresoSeleccionado = null;
         subTipoInversionSeleccionado = null;
-        
+
     }
-    
+
     public void eliminar() {
         if (actual != null) {
             ejb.remove(actual);
             actual = null;
             JsfUtil.addSuccessMessage("Eliminado Exitosamente!");
         }
-        
+
     }
-    
+
     public List<TipoIngreso> getItemsAvailableTipoIngreso() {
         if (actual.getTipoImpuesto() == TipoImpuesto.IVA_GENERAL && actual.isConIRP()) {
             return ejbTipoIngresoFacade.findAllNoDependiente();
         } else {
             return ejbTipoIngresoFacade.findAll();
         }
-        
+
     }
-    
+
     private void crearAporteIPS() {
         Factura f = new Factura();
-        
+
         f.setFecha(actual.getFecha());
         f.setCambiaPeriodo(actual.isCambiaPeriodo());
         f.setConIRP(actual.isConIRP());
@@ -914,7 +913,7 @@ public class FacturasBean implements Serializable {
         f.setClasificacion("GASTOS");
         f.setTipoGasto("Generales");
         f.setSubTipoGasto("Descuentos y aportes legales");
-        
+
         f.setGravada05(BigDecimal.ZERO);
         f.setGravada05Neto(BigDecimal.ZERO);
         f.setGravada10(BigDecimal.ZERO);
@@ -922,15 +921,15 @@ public class FacturasBean implements Serializable {
         f.setIva05(BigDecimal.ZERO);
         f.setIva10(BigDecimal.ZERO);
         f.setTotalIva(BigDecimal.ZERO);
-        
+
         BigDecimal ips = actual.getTotalBruto().multiply(new BigDecimal(0.095));
         f.setExento(ips);
         f.setTotalNeto(ips);
         f.setTotalBruto(ips);
         ejb.edit(f);
-        
+
     }
-    
+
     private String getCodFormat(String cod) {
         String R = "";
         if (cod != null) {
@@ -944,7 +943,7 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
     private String getNumeroFactFormat(String cod) {
         String R = "";
         if (cod != null) {
@@ -966,5 +965,168 @@ public class FacturasBean implements Serializable {
         }
         return R;
     }
-    
+
+    public SelectItem[] getItemsLibro() {
+        List<String> valores = new ArrayList<>();
+        switch (getActual().getTipoImpuesto()) {
+            case IVA_GENERAL:
+                valores.add("VENTAS");
+                valores.add("COMPRAS");
+                break;
+            case IRPC:
+                valores.add("GASTOS SIN CRÉDITO FISCAL");
+                break;
+        }
+        return JsfUtil.getSelectItems(valores, true);
+    }
+
+    public SelectItem[] getItemsInscriptoEnIva() {
+        List<String> valores = new ArrayList<>();
+        switch (getActual().getTipoImpuesto()) {
+
+            case IRPC:
+                valores.add("GENERAL");
+                valores.add("SIMPLIFICADO");
+                break;
+        }
+        return JsfUtil.getSelectItems(valores, true);
+    }
+
+    public SelectItem[] getItemsClasificacion() {
+        List<String> valores = new ArrayList<>();
+
+        switch (getActual().getTipoImpuesto()) {
+            case IVA_GENERAL:
+                switch (getActual().getTipoFactura()) {
+                    case VENTA:
+                        valores.add("Ventas");
+                        valores.add("Exportaciones Agropecuarias");
+                        valores.add("Exportaciones Otros");
+                        valores.add("Descuentos, Devoluciones y operaciones incobrables");
+                        break;
+                    case COMPRA:
+                        valores.add("Relac. directa a Gravadas");
+                        valores.add("Relac. indista a Gravadas o Exoneradas");
+                        valores.add("Relac. a Exoneradas");
+                        valores.add("Descuentos, Devoluciones y operaciones incobrables");
+                        break;
+                }
+                break;
+                
+                 case IVA_SIMPLIFICADO:
+                switch (getActual().getTipoFactura()) {
+                    case VENTA:
+                        valores.add("Ventas Inc. IVA y Exentas");
+                        valores.add("Descuentos, Devoluciones y operaciones incobrables");
+                        break;
+                    case COMPRA:
+                        valores.add("Compras Inc. IVA y Exentas");
+                        valores.add("Descuentos, Devoluciones y operaciones incobrables");
+                        break;
+                }
+                break;
+        }
+
+        return JsfUtil.getSelectItems(valores, true);
+    }
+
+    public SelectItem[] getItemsTipoDocumento() {
+        List<String> valores = new ArrayList<>();
+
+        switch (getActual().getTipoImpuesto()) {
+            case IVA_GENERAL:
+                switch (getActual().getTipoFactura()) {
+                    case VENTA:
+                        if (getActual().getClasificacion() != null) {
+                            if (getActual().getClasificacion().equals("Ventas") || getActual().getClasificacion().equals("Exportaciones Agropecuarias")
+                                    || getActual().getClasificacion().equals("Exportaciones Otros")) {
+                                valores.add("TICKET");
+                                valores.add("FACTURA");
+                                valores.add("BOLETA DE VENTA");
+                            } else if (getActual().getClasificacion().equals("Descuentos, Devoluciones y operaciones incobrables")) {
+                                valores.add("NOTA DE CRÉDITO");
+                            }
+                        }
+                        break;
+                    case COMPRA:
+                        if (getActual().getClasificacion() != null) {
+                            if (getActual().getClasificacion().equals("Relac. directa a Gravadas") || getActual().getClasificacion().equals("Relac. indista a Gravadas o Exoneradas")
+                                    || getActual().getClasificacion().equals("Relac. a Exoneradas")) {
+                                valores.add("FACTURA");
+                                valores.add("BOLETA DE VENTA");
+                            } else if (getActual().getClasificacion().equals("Descuentos, Devoluciones y operaciones incobrables")) {
+                                valores.add("NOTA DE DÉBITO");
+                            }
+                        }
+                        break;
+
+                }
+                break;
+            case IRPC:
+                valores.add("AUTOFACTURA");
+                valores.add("BOLETOS DE TRANSPORTE");
+                valores.add("BOLETOS EN GENERAL");
+                valores.add("RECIBO DE DINERO");
+                break;
+
+             case IVA_SIMPLIFICADO:
+                switch (getActual().getTipoFactura()) {
+                    case VENTA:
+                        if (getActual().getClasificacion() != null) {
+                            if (getActual().getClasificacion().equals("Ventas Inc. IVA y Exentas")) {
+                                valores.add("TICKET");
+                                valores.add("FACTURA");
+                                valores.add("BOLETA DE VENTA");
+                            } else if (getActual().getClasificacion().equals("Descuentos, Devoluciones y operaciones incobrables")) {
+                                valores.add("NOTA DE CRÉDITO");
+                            }
+                        }
+                        break;
+                    case COMPRA:
+                        if (getActual().getClasificacion() != null) {
+                            if (getActual().getClasificacion().equals("Compras Inc. IVA y Exentas")) {
+                                valores.add("TICKET");
+                                valores.add("FACTURA");
+                                valores.add("BOLETA DE VENTA");
+                            } else if (getActual().getClasificacion().equals("Descuentos, Devoluciones y operaciones incobrables")) {
+                                valores.add("NOTA DE DÉBITO");
+                            }
+                        }
+                        break;
+
+                }
+                break;
+
+        }
+
+        return JsfUtil.getSelectItems(valores, true);
+    }
+
+    public boolean isTicket() {
+        boolean R = false;
+        if (getActual().getTipodocumento() != null) {
+            if (getActual().getTipodocumento().equals("TICKET")
+                    || getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
+                    || getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
+                    || getActual().getTipodocumento().equals("RECIBO DE DINERO")) {
+                R = true;
+            }
+        }
+
+        return R;
+    }
+
+    public boolean isMostrarProveedor() {
+        boolean R = true;
+        if (getActual().getTipodocumento() != null) {
+            if (getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
+                    || getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
+                    || getActual().getTipodocumento().equals("RECIBO DE DINERO")) {
+                R = false;
+            }
+        }
+
+        return R;
+    }
+
 }

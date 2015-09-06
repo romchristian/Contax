@@ -9,6 +9,6 @@ package com.ideaspymes.contax.modelo;
  *
  * @author Christian
  */
-public enum TipoFactura {
-    VENTA,COMPRA,EXPORTACIONES
+public enum Libro {
+    VENTA,COMPRA,EXPORTACIONES,GASTOS_SIN_CREDITO_FISCAL
 }

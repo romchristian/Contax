@@ -47,7 +47,7 @@ public class Factura implements Serializable {
     private Date fecha;
     private String periodo;
     @Enumerated(EnumType.STRING)
-    private TipoFactura tipoFactura;
+    private Libro tipoFactura;
     @Enumerated(EnumType.STRING)
     private TipoImpuesto tipoImpuesto;
     private String clasificacion;
@@ -267,11 +267,11 @@ public class Factura implements Serializable {
         this.periodo = periodo;
     }
 
-    public TipoFactura getTipoFactura() {
+    public Libro getTipoFactura() {
         return tipoFactura;
     }
 
-    public void setTipoFactura(TipoFactura tipoFactura) {
+    public void setTipoFactura(Libro tipoFactura) {
         this.tipoFactura = tipoFactura;
     }
 
@@ -359,7 +359,13 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalIva() {
-        totalIva = getIva05().add(getIva10());
+        if(tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO){
+            
+            totalIva = totalBruto.multiply(new BigDecimal(0.073));
+        }else{
+            totalIva = getIva05().add(getIva10());
+        }
+        
         return totalIva;
     }
 
@@ -377,7 +383,10 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalBruto() {
-        totalBruto = getExento().add(getGravada05()).add(getGravada10());
+        if(tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO){
+            totalBruto = getExento().add(getGravada05()).add(getGravada10());
+        }
+        
         return totalBruto;
     }
 
