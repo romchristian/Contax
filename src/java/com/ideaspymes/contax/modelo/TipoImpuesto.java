@@ -15,7 +15,7 @@ public enum TipoImpuesto {
     IRP("IRP"),
     IRPC("IRPC"),
     IVA_SIMPLIFICADO("IVA SIMPLIFICADO");
-    
+        
 
     private final String value;
 

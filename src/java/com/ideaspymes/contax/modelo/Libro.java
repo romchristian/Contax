@@ -10,5 +10,5 @@ package com.ideaspymes.contax.modelo;
  * @author Christian
  */
 public enum Libro {
-    VENTA,COMPRA,EXPORTACIONES,GASTOS_SIN_CREDITO_FISCAL
+    VENTA,COMPRA,EXPORTACIONES,GASTOS_SIN_CREDITO_FISCAL,INGRESOS,EGRESOS,INVERSIONES
 }

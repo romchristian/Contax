@@ -16,6 +16,7 @@ import com.ideaspymes.contax.facade.TipoInversionFacade;
 import com.ideaspymes.contax.modelo.Clasificacion;
 import com.ideaspymes.contax.modelo.Contribuyente;
 import com.ideaspymes.contax.modelo.Factura;
+import com.ideaspymes.contax.modelo.Libro;
 import com.ideaspymes.contax.modelo.SubTipoGasto;
 import com.ideaspymes.contax.modelo.SubTipoIngreso;
 import com.ideaspymes.contax.modelo.SubTipoInversion;
@@ -359,7 +360,19 @@ public class FacturasBean implements Serializable {
 
     public boolean isMuestraGenerarAporteIPS() {
         boolean R = false;
-        if (tipoIngresoSeleccionado != null && tipoIngresoSeleccionado.getNombre().compareToIgnoreCase("Dependiente") == 0) {
+        if (getActual().getClasificacion()!= null && getActual().getClasificacion().compareToIgnoreCase("Rentas del Trabajo") == 0) {
+            R = true;
+        } else {
+            R = false;
+        }
+        return R;
+    }
+    
+    
+    public boolean isMuestraProvieneBienesGananciales() {
+        boolean R = false;
+        if (getActual().getClasificacion()!= null && !(getActual().getClasificacion().compareToIgnoreCase("Rentas del Trabajo") == 0) 
+                && getActual().getTipoFactura() == Libro.INGRESOS) {
             R = true;
         } else {
             R = false;
@@ -1012,8 +1025,8 @@ public class FacturasBean implements Serializable {
                         break;
                 }
                 break;
-                
-                 case IVA_SIMPLIFICADO:
+
+            case IVA_SIMPLIFICADO:
                 switch (getActual().getTipoFactura()) {
                     case VENTA:
                         valores.add("Ventas Inc. IVA y Exentas");
@@ -1022,6 +1035,51 @@ public class FacturasBean implements Serializable {
                     case COMPRA:
                         valores.add("Compras Inc. IVA y Exentas");
                         valores.add("Descuentos, Devoluciones y operaciones incobrables");
+                        break;
+                }
+                break;
+
+            case IRP:
+                switch (getActual().getTipoFactura()) {
+                    case INGRESOS:
+                        valores.add("Rentas del Trabajo");
+                        valores.add("Utilidades");
+                        valores.add("Venta de inmuebles, títulos, acciones y cuotas y cesión de derechos");
+                        valores.add("Intereses, comisiones, rendimientos y otros ingresos de capitales mobiliarios");
+                        valores.add("Otros ingresos");
+                        break;
+                    case EGRESOS:
+                        valores.add("Descuentos y/o aportes legales");
+                        valores.add("Donaciones realizadas en el ejercicio. (No debe superar el 20% de la Renta Neta)");
+                        valores.add("Gastos personales y familiares en el exterior");
+                        valores.add("Colocación de depósitos de ahorro en entidades bancarias, financieras, cooperativas; inversiones o en fondos privados de jubilaciones");
+                        valores.add("Capitalización de excedentes, retornos e intereses y cuotas o aportes en entidades exoneradas por Ley");
+                        valores.add("Gastos de las Sociedades Simples en el país");
+                        valores.add("Gastos de las Sociedades Simples en el exterior");
+                        valores.add("Intereses, comisiones y recargos por la obtención de préstamos y financiaciones");
+                        valores.add("Costo por la enajenación o transferencia de inmuebles, cesión de derechos, venta de títulos, acciones o cuotas de capital, regalías y otros similares");
+                        valores.add("Otros gastos no mencionados en los incisos anteriores, debidamente documentados");
+                        break;
+                    case INVERSIONES:
+                        valores.add("Muebles para oficina o el hogar");
+                        valores.add("Útiles y enseres");
+                        valores.add("Electrodomésticos y equipos electrónicos");
+                        valores.add("Joyas, alhajas y similares, en metales y piedras preciosas");
+                        valores.add("Obras de arte en cuadros, esculturas y similares");
+                        valores.add("Herramientas, instrumentos y equipos");
+                        valores.add("Equipos de informática");
+                        valores.add("Automóviles, camionetas, camiones, remolques o acoplados y similares");
+                        valores.add("Motocicletas, motonetas, cuaciclones, bicicletas y similares");
+                        valores.add("Restantes bienes similares");
+                        valores.add("Aviones, Avionetas, helicópteros y similares");
+                        valores.add("Instalaciones de tierra, material de vuelo y demas bienes similares");
+                        valores.add("Embarcaciones en general, tales como barcos, remolcadores, lanchas, chatas y similares");
+                        valores.add("Canoas, botes y demás bienes");
+                        valores.add("Adquisición de Inmuebles");
+                        valores.add("Contrucciones o mejoras de inmuebles propios o arrendados");
+                        valores.add("Bienes incorporales");
+                        valores.add("Adquisicion de derechos, titulos, acciones, cuotas de capital de sociedad y similares");
+                        valores.add("Los restantes bienes no contemplados en los incisos precedentes");
                         break;
                 }
                 break;
@@ -1069,7 +1127,7 @@ public class FacturasBean implements Serializable {
                 valores.add("RECIBO DE DINERO");
                 break;
 
-             case IVA_SIMPLIFICADO:
+            case IVA_SIMPLIFICADO:
                 switch (getActual().getTipoFactura()) {
                     case VENTA:
                         if (getActual().getClasificacion() != null) {
@@ -1097,11 +1155,69 @@ public class FacturasBean implements Serializable {
                 }
                 break;
 
+            case IRP:
+                switch (getActual().getTipoFactura()) {
+                    case INGRESOS:
+                        if (getActual().getClasificacion() != null) {
+                            valores.add("FACTURA CONTADO");
+                            valores.add("FACTURA CREDITO");
+                            valores.add("AUTOFACTURA");
+                            valores.add("LIQUIDACIÓN DE SALARIO");
+                            valores.add("RECIBO DE DINERO");
+                        }
+                        break;
+                    case EGRESOS:
+                        if (getActual().getClasificacion() != null) {
+                            valores.add("TICKET");
+                            valores.add("BOLETOS DE TRANSPORTE");
+                            valores.add("BOLETOS EN GENERAL");
+                            valores.add("LIQUIDACIÓN DE SALARIO");
+                            valores.add("FACTURA CONTADO");
+                            valores.add("FACTURA CREDITO");
+                            valores.add("AUTOFACTURA");
+                            valores.add("BOLETA DE VENTA");
+                        }
+                        break;
+
+                    case INVERSIONES:
+                        if (getActual().getClasificacion() != null) {
+                            valores.add("TICKET");
+                            valores.add("RECIBOS DE DINERO");
+                            valores.add("LIQUIDACIÓN DE SALARIO");
+                            valores.add("FACTURA CONTADO");
+                            valores.add("FACTURA CREDITO");
+                            valores.add("AUTOFACTURA");
+                            valores.add("BOLETA DE VENTA");
+                            valores.add("ESCRITURA PÚBLICA");
+                        }
+                        break;
+
+                }
+                break;
+
         }
 
         return JsfUtil.getSelectItems(valores, true);
     }
 
+    
+    public boolean isMuestraNroUnico() {
+        boolean R = false;
+        if (getActual().getTipodocumento() != null) {
+            if (getActual().getTipodocumento().equals("TICKET")
+                    || getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
+                    || getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
+                    || getActual().getTipodocumento().equals("RECIBO DE DINERO")
+                    || getActual().getTipodocumento().equals("LIQUIDACIÓN DE SALARIO")
+                    || getActual().getTipodocumento().equals("ESCRITURA PÚBLICA")) {
+
+                R = true;
+            }
+        }
+
+        return R;
+    }
+    
     public boolean isTicket() {
         boolean R = false;
         if (getActual().getTipodocumento() != null) {
@@ -1119,9 +1235,12 @@ public class FacturasBean implements Serializable {
     public boolean isMostrarProveedor() {
         boolean R = true;
         if (getActual().getTipodocumento() != null) {
-            if (getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
+            
+            if (getActual().getTipoImpuesto() != TipoImpuesto.IRP  && (getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
                     || getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
-                    || getActual().getTipodocumento().equals("RECIBO DE DINERO")) {
+                    || getActual().getTipodocumento().equals("RECIBO DE DINERO"))) {
+                R = false;
+            }else if(getActual().getTipoImpuesto() == TipoImpuesto.IRP && getActual().getTipodocumento().equals("LIQUIDACIÓN DE SALARIO")){
                 R = false;
             }
         }

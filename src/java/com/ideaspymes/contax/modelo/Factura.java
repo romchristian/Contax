@@ -88,6 +88,8 @@ public class Factura implements Serializable {
     private BigInteger exportaciones;
     @Column(name = "nogravadoyexonerado")
     private BigInteger nogravadoyexonerado;
+    @Column(name = "montopagado")
+    private BigInteger montopagado;
     @Column(name = "gravados")
     private BigInteger gravados;
     @Column(name = "inscriptoeniva")
@@ -494,6 +496,14 @@ public class Factura implements Serializable {
 
     public void setProvienebienesgananciales(Boolean provienebienesgananciales) {
         this.provienebienesgananciales = provienebienesgananciales;
+    }
+
+    public BigInteger getMontopagado() {
+        return montopagado;
+    }
+
+    public void setMontopagado(BigInteger montopagado) {
+        this.montopagado = montopagado;
     }
 
     
