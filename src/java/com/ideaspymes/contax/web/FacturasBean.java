@@ -1162,7 +1162,7 @@ public class FacturasBean implements Serializable {
                             valores.add("FACTURA CONTADO");
                             valores.add("FACTURA CREDITO");
                             valores.add("AUTOFACTURA");
-                            valores.add("LIQUIDACIÓN DE SALARIO");
+                            valores.add("LIQUIDACION DE SALARIO");
                             valores.add("RECIBO DE DINERO");
                         }
                         break;
@@ -1171,7 +1171,7 @@ public class FacturasBean implements Serializable {
                             valores.add("TICKET");
                             valores.add("BOLETOS DE TRANSPORTE");
                             valores.add("BOLETOS EN GENERAL");
-                            valores.add("LIQUIDACIÓN DE SALARIO");
+                            valores.add("LIQUIDACION DE SALARIO");
                             valores.add("FACTURA CONTADO");
                             valores.add("FACTURA CREDITO");
                             valores.add("AUTOFACTURA");
@@ -1183,7 +1183,7 @@ public class FacturasBean implements Serializable {
                         if (getActual().getClasificacion() != null) {
                             valores.add("TICKET");
                             valores.add("RECIBOS DE DINERO");
-                            valores.add("LIQUIDACIÓN DE SALARIO");
+                            valores.add("LIQUIDACION DE SALARIO");
                             valores.add("FACTURA CONTADO");
                             valores.add("FACTURA CREDITO");
                             valores.add("AUTOFACTURA");
@@ -1208,8 +1208,28 @@ public class FacturasBean implements Serializable {
                     || getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
                     || getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
                     || getActual().getTipodocumento().equals("RECIBO DE DINERO")
-                    || getActual().getTipodocumento().equals("LIQUIDACIÓN DE SALARIO")
+                    || getActual().getTipodocumento().equals("LIQUIDACION DE SALARIO")
                     || getActual().getTipodocumento().equals("ESCRITURA PÚBLICA")) {
+
+                R = true;
+            }
+        }
+
+        return R;
+    }
+    
+    
+    
+    public boolean isMuestraNroTimbrado() {
+        boolean R = false;
+        if (getActual().getTipodocumento() != null) {
+            if ( getActual().getTipoImpuesto()==TipoImpuesto.IRP &&
+                    ( !getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
+                    && !getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
+                    && !getActual().getTipodocumento().equals("RECIBO DE DINERO")
+                    && !getActual().getTipodocumento().equals("LIQUIDACION DE SALARIO")
+                    && !getActual().getTipodocumento().equals("ESCRITURA PÚBLICA"))
+                    ) {
 
                 R = true;
             }

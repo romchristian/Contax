@@ -97,7 +97,7 @@ public class Factura implements Serializable {
     @Column(name = "nrotimbrado")
     private Integer nrotimbrado;
     @Column(name = "provienebienesgananciales")
-    private Boolean provienebienesgananciales;
+    private Boolean provienebienesgananciales = false;
 
     @Transient
     private String fechaString;
@@ -364,7 +364,10 @@ public class Factura implements Serializable {
         if(tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO){
             
             totalIva = totalBruto.multiply(new BigDecimal(0.073));
-        }else{
+        }else if(tipoImpuesto == TipoImpuesto.IRP){
+            totalIva = BigDecimal.ZERO;
+        }
+        else{
             totalIva = getIva05().add(getIva10());
         }
         
@@ -385,7 +388,7 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalBruto() {
-        if(tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO){
+        if(tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO && tipoImpuesto != TipoImpuesto.IRP){
             totalBruto = getExento().add(getGravada05()).add(getGravada10());
         }
         
@@ -459,6 +462,11 @@ public class Factura implements Serializable {
     }
 
     public BigInteger getNogravadoyexonerado() {
+        if(tipoImpuesto == TipoImpuesto.IRP && provienebienesgananciales){
+            nogravadoyexonerado = getTotalBruto().multiply(new BigDecimal(0.5)).toBigInteger();
+        }else if(tipoImpuesto == TipoImpuesto.IRP){
+            nogravadoyexonerado = getTotalBruto().subtract(new BigDecimal(getGravados().doubleValue())).toBigInteger();
+        }
         return nogravadoyexonerado;
     }
 
@@ -467,6 +475,11 @@ public class Factura implements Serializable {
     }
 
     public BigInteger getGravados() {
+        if(provienebienesgananciales){
+            gravados = getTotalBruto().multiply(new BigDecimal(0.5)).toBigInteger();
+        }else if(tipoImpuesto == TipoImpuesto.IRP){
+            gravados = getTotalBruto().toBigInteger();
+        }
         return gravados;
     }
 
@@ -498,7 +511,13 @@ public class Factura implements Serializable {
         this.provienebienesgananciales = provienebienesgananciales;
     }
 
+    
     public BigInteger getMontopagado() {
+        if(tipoImpuesto == TipoImpuesto.IRP && tipodocumento != null && tipodocumento.compareTo("FACTURA CREDITO")==0){
+            montopagado = new BigInteger("0");
+        }else{
+            montopagado = getTotalBruto().toBigInteger();
+        }
         return montopagado;
     }
 
@@ -536,6 +555,21 @@ public class Factura implements Serializable {
     @Override
     public String toString() {
         return "com.ideaspymes.contax.modelo.Factura[ id=" + id + " ]";
+    }
+
+    public boolean isAplicaIva() {
+        boolean R = true;
+        if(
+                tipodocumento != null && tipodocumento.compareTo("TICKET")==0
+                && tipodocumento.compareTo("FACTURA CONTADO")==0
+                 && tipodocumento.compareTo("FACTURA")==0
+                && tipodocumento.compareTo("FACTURA CREDITO")==0
+                && tipodocumento.compareTo("BOLETA DE VENTA")==0
+                && tipodocumento.compareTo("ESCRITURA PÚBLICA")==0){
+            
+            R = false;
+        }
+        return R;
     }
 
 }
