@@ -393,7 +393,7 @@
                                                                      panelStyle="width:180px"
                                                                      rendered="#{(facturasBean.actual.tipoFactura == Libro.EGRESOS)}" 
                                                                      styleClass="tipoFacturaIRP">
-                                                        <p:ajax event="change" process="@this " update="tipoFacturaIRP tipos @(.proveedor)"/>
+                                                        <p:ajax event="change" process="@this" update="tipoFacturaIRP tipos @(.proveedor)"/>
                                                         <f:selectItem itemValue="--" itemLabel=""/>
                                                         <f:selectItem itemValue="Directos (Para producir Renta Gravada)" itemLabel="Directos (Para producir Renta Gravada)"/>
                                                         <f:selectItem itemValue="Indirectos" itemLabel="Indirectos"/>
@@ -409,7 +409,7 @@
                                                     <p:selectOneMenu value="#{facturasBean.actual.tipodocumento}" style="margin-top: 5px;width: 80%;margin-bottom: 5px;"
                                                                      rendered="#{((facturasBean.actual.tipoFactura == Libro.VENTA or facturasBean.actual.tipoFactura == Libro.COMPRA  or facturasBean.actual.tipoFactura == Libro.GASTOS_SIN_CREDITO_FISCAL or facturasBean.actual.tipoFactura == Libro.INGRESOS or facturasBean.actual.tipoFactura == Libro.EGRESOS or facturasBean.actual.tipoFactura == Libro.INVERSIONES) )}" 
                                                                      styleClass="tipoFacturaIRP">
-                                                        <p:ajax event="change" process="@this " update=" tipoFacturaIRP tipos @(.proveedor ,.numeroFact)"/>
+                                                        <p:ajax event="change" process="@this" update=" tipoFacturaIRP tipos totales @(.proveedor ,.numeroFact, .calculos)"/>
                                                         <f:selectItems value="#{facturasBean.itemsTipoDocumento}"/>
 
                                                     </p:selectOneMenu>
@@ -631,7 +631,7 @@
                                         </div>
 
 
-                                        <p:outputPanel id="totales">
+                                        <p:outputPanel id="totales" styleClass="calculos">
                                             <h:panelGrid columns="2" styleClass="column100" columnClasses="column15,column85">
 
                                                 <p:spacer/>
@@ -710,7 +710,7 @@
 
                                             </h:panelGrid>
 
-                                            <p:outputPanel rendered="#{((facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC and facturasBean.actual.tipoImpuesto != TipoImpuesto.IRP) or (facturasBean.muestraGenerarAporteIPS))}">
+                                            <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRPC)}">
 
                                                 <h:panelGrid columns="2" styleClass="column100" columnClasses="column15, column85">
 
@@ -764,9 +764,7 @@
                                             </p:outputPanel>
 
 
-
-
-                                            <p:outputPanel rendered="#{(facturasBean.actual.tipoImpuesto == TipoImpuesto.IRP)}">
+                                            <p:outputPanel rendered="#{((facturasBean.actual.tipoImpuesto == TipoImpuesto.IRP) and not(facturasBean.actual.aplicaIva))}" styleClass="calculos">
 
                                                 <h:panelGrid columns="3" styleClass="column100" columnClasses="column10, column10,column10">
 
@@ -785,22 +783,89 @@
                                                     <p:spacer/>
                                                     <p:spacer/>
 
-                                                    <h:outputText value="Total IVA:" style="font-weight: bold;margin-top: 10px;"/>
+                                                    
+
+
+                                                    <h:outputText value="Monto Pagado/Cobrado:" style="font-weight: bold;margin-top: 10px;"/>
+                                                    <p:spacer/>
+                                                    <p:spacer/>
+
+
+
+                                                    
+
+
+                                                    <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.montopagado}"> 
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:spacer/>
+                                                    <p:spacer/>
+
+
+
+
+
+                                                    <h:outputText value="Gravados:" style="font-weight: bold;margin-top: 10px;"/>
+                                                    <h:outputText value="No Gravados y Exonerados:" style="font-weight: bold;margin-top: 10px;"/>
+                                                    <p:spacer/>
+
+                                                    <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.gravados}"> 
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
+                                                                 value="#{facturasBean.actual.nogravadoyexonerado}"> 
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:spacer/>
+
+
+                                                </h:panelGrid>
+                                            </p:outputPanel>
+                                            
+                                            
+                                            <p:outputPanel rendered="#{((facturasBean.actual.tipoImpuesto == TipoImpuesto.IRP) and (facturasBean.actual.aplicaIva))}" styleClass="calculos">
+
+                                                <h:panelGrid columns="3" styleClass="column100" columnClasses="column10, column10,column10">
+
+
+
+
+                                                    <h:outputText value="Total Bruto:" style="font-weight: bold;"/>
+                                                    <p:spacer/>
+                                                    <p:spacer/>
+
+                                                    <p:inputText styleClass="calculos" style="font-size: 12pt!important;font-weight: bold;text-align: right"
+                                                                 value="#{facturasBean.actual.totalBruto}">
+                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                        <f:convertNumber locale="#{formato.locale}"/>
+                                                    </p:inputText>
+                                                    <p:spacer/>
+                                                    <p:spacer/>
+
+                                                    <h:outputText value="Total IVA:" style="font-weight: bold;margin-top: 10px;" rendered="#{(facturasBean.actual.aplicaIva)}"/>
+
+
                                                     <h:outputText value="Monto Pagado/Cobrado:" style="font-weight: bold;margin-top: 10px;"/>
                                                     <p:spacer/>
 
 
 
                                                     <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
-                                                                 value="#{facturasBean.actual.totalIva}"
-                                                                 disabled="#{not(facturasBean.actual.aplicaIva)}">
+                                                                 value="#{facturasBean.actual.totalIva}">
+
                                                         <f:convertNumber locale="#{formato.locale}"/>
                                                     </p:inputText>
+
+
                                                     <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
                                                                  value="#{facturasBean.actual.montopagado}"> 
                                                         <f:convertNumber locale="#{formato.locale}"/>
                                                     </p:inputText>
                                                     <p:spacer/>
+
+
 
 
 

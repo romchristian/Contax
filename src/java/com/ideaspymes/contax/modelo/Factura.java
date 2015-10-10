@@ -558,16 +558,16 @@ public class Factura implements Serializable {
     }
 
     public boolean isAplicaIva() {
-        boolean R = true;
+        boolean R = false;
         if(
-                tipodocumento != null && tipodocumento.compareTo("TICKET")==0
-                && tipodocumento.compareTo("FACTURA CONTADO")==0
-                 && tipodocumento.compareTo("FACTURA")==0
-                && tipodocumento.compareTo("FACTURA CREDITO")==0
-                && tipodocumento.compareTo("BOLETA DE VENTA")==0
-                && tipodocumento.compareTo("ESCRITURA PÚBLICA")==0){
+                tipodocumento != null && (tipodocumento.compareTo("TICKET")==0
+                || tipodocumento.compareTo("FACTURA CONTADO")==0
+                 || tipodocumento.compareTo("FACTURA")==0
+                || tipodocumento.compareTo("FACTURA CREDITO")==0
+                || tipodocumento.compareTo("BOLETA DE VENTA")==0
+                || tipodocumento.compareTo("ESCRITURA PÚBLICA")==0)){
             
-            R = false;
+            R = true;
         }
         return R;
     }
