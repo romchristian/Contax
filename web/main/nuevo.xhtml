@@ -838,7 +838,7 @@
 
                                                     <p:inputText styleClass="calculos" style="font-size: 12pt!important;font-weight: bold;text-align: right"
                                                                  value="#{facturasBean.actual.totalBruto}">
-                                                        <p:ajax event="blur" process="@this" update="@(.calculos)"/>
+                                                        <p:ajax event="blur" process="@this @(.calculos)" update="@(.calculos)"/>
                                                         <f:convertNumber locale="#{formato.locale}"/>
                                                     </p:inputText>
                                                     <p:spacer/>
@@ -854,7 +854,7 @@
 
                                                     <p:inputText style="margin-top: 5px;font-size: 12pt!important;font-weight: bold;text-align: right" styleClass="calculos"
                                                                  value="#{facturasBean.actual.totalIva}">
-
+                                                        <p:ajax event="blur" process="@this" update="@this"/>
                                                         <f:convertNumber locale="#{formato.locale}"/>
                                                     </p:inputText>
 

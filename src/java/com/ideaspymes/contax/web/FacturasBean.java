@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -96,8 +97,26 @@ public class FacturasBean implements Serializable {
     private BigDecimal totalGravada05 = BigDecimal.ZERO;
     private BigDecimal totalGravada10 = BigDecimal.ZERO;
     private BigDecimal totalIva = BigDecimal.ZERO;
+    private BigDecimal totalIva05 = BigDecimal.ZERO;
+    private BigDecimal totalIva10 = BigDecimal.ZERO;
     private BigDecimal totalNeto = BigDecimal.ZERO;
     private BigDecimal totalBruto = BigDecimal.ZERO;
+
+    public BigDecimal getTotalIva05() {
+        return totalIva05;
+    }
+
+    public void setTotalIva05(BigDecimal totalIva05) {
+        this.totalIva05 = totalIva05;
+    }
+
+    public BigDecimal getTotalIva10() {
+        return totalIva10;
+    }
+
+    public void setTotalIva10(BigDecimal totalIva10) {
+        this.totalIva10 = totalIva10;
+    }
 
     public BigDecimal getTotalExento() {
         return totalExento;
@@ -167,6 +186,8 @@ public class FacturasBean implements Serializable {
             totalGravada05 = BigDecimal.ZERO;
             totalGravada10 = BigDecimal.ZERO;
             totalIva = BigDecimal.ZERO;
+            totalIva05 = BigDecimal.ZERO;
+            totalIva10 = BigDecimal.ZERO;
             totalNeto = BigDecimal.ZERO;
             totalBruto = BigDecimal.ZERO;
 
@@ -176,6 +197,8 @@ public class FacturasBean implements Serializable {
                 totalGravada05 = totalGravada05.add(f.getGravada05() != null ? f.getGravada05() : BigDecimal.ZERO);
                 totalGravada10 = totalGravada10.add(f.getGravada10() != null ? f.getGravada10() : BigDecimal.ZERO);
                 totalIva = totalIva.add(f.getTotalIva() != null ? f.getTotalIva() : BigDecimal.ZERO);
+                totalIva05 = totalIva05.add(f.getIva05()!= null ? f.getIva05() : BigDecimal.ZERO);
+                totalIva10 = totalIva10.add(f.getIva10()!= null ? f.getIva10() : BigDecimal.ZERO);
                 totalNeto = totalNeto.add(f.getTotalNeto() != null ? f.getTotalNeto() : BigDecimal.ZERO);
                 totalBruto = totalBruto.add(f.getTotalBruto() != null ? f.getTotalBruto() : BigDecimal.ZERO);
             }
@@ -360,18 +383,17 @@ public class FacturasBean implements Serializable {
 
     public boolean isMuestraGenerarAporteIPS() {
         boolean R = false;
-        if (getActual().getClasificacion()!= null && getActual().getClasificacion().compareToIgnoreCase("Rentas del Trabajo") == 0) {
+        if (getActual().getClasificacion() != null && getActual().getClasificacion().compareToIgnoreCase("Rentas del Trabajo") == 0) {
             R = true;
         } else {
             R = false;
         }
         return R;
     }
-    
-    
+
     public boolean isMuestraProvieneBienesGananciales() {
         boolean R = false;
-        if (getActual().getClasificacion()!= null && !(getActual().getClasificacion().compareToIgnoreCase("Rentas del Trabajo") == 0) 
+        if (getActual().getClasificacion() != null && !(getActual().getClasificacion().compareToIgnoreCase("Rentas del Trabajo") == 0)
                 && getActual().getTipoFactura() == Libro.INGRESOS) {
             R = true;
         } else {
@@ -740,11 +762,15 @@ public class FacturasBean implements Serializable {
         try {
             String archivoActual = nombreArchivoSiguiente;
 
+            SecureRandom random = new SecureRandom();
+            String hash = new BigInteger(130, random).toString(32);
+
             File afile = new File(path + "\\" + archivoActual);
 
-            if (afile.renameTo(new File(theDir + "\\" + afile.getName()))) {
+            String nuevoNombre = afile.getName().replace(".jpg", "_" + hash + ".jpg");
+            if (afile.renameTo(new File(theDir + "\\" + nuevoNombre))) {
                 System.out.println("File is moved successful!");
-                String url = getRuc() + "\\" + afile.getName();
+                String url = getRuc() + "\\" + nuevoNombre;
 
                 actual.setUrl(url);
                 ejb.edit(actual);
@@ -1051,6 +1077,7 @@ public class FacturasBean implements Serializable {
                     case EGRESOS:
                         valores.add("Descuentos y/o aportes legales");
                         valores.add("Donaciones realizadas en el ejercicio. (No debe superar el 20% de la Renta Neta)");
+                        valores.add("Gastos personales y familiares en el país");
                         valores.add("Gastos personales y familiares en el exterior");
                         valores.add("Colocación de depósitos de ahorro en entidades bancarias, financieras, cooperativas; inversiones o en fondos privados de jubilaciones");
                         valores.add("Capitalización de excedentes, retornos e intereses y cuotas o aportes en entidades exoneradas por Ley");
@@ -1200,7 +1227,6 @@ public class FacturasBean implements Serializable {
         return JsfUtil.getSelectItems(valores, true);
     }
 
-    
     public boolean isMuestraNroUnico() {
         boolean R = false;
         if (getActual().getTipodocumento() != null) {
@@ -1217,19 +1243,16 @@ public class FacturasBean implements Serializable {
 
         return R;
     }
-    
-    
-    
+
     public boolean isMuestraNroTimbrado() {
         boolean R = false;
         if (getActual().getTipodocumento() != null) {
-            if ( getActual().getTipoImpuesto()==TipoImpuesto.IRP &&
-                    ( !getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
+            if (getActual().getTipoImpuesto() == TipoImpuesto.IRP
+                    && (!getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
                     && !getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
                     && !getActual().getTipodocumento().equals("RECIBO DE DINERO")
                     && !getActual().getTipodocumento().equals("LIQUIDACION DE SALARIO")
-                    && !getActual().getTipodocumento().equals("ESCRITURA PÚBLICA"))
-                    ) {
+                    && !getActual().getTipodocumento().equals("ESCRITURA PÚBLICA"))) {
 
                 R = true;
             }
@@ -1237,7 +1260,7 @@ public class FacturasBean implements Serializable {
 
         return R;
     }
-    
+
     public boolean isTicket() {
         boolean R = false;
         if (getActual().getTipodocumento() != null) {
@@ -1255,12 +1278,12 @@ public class FacturasBean implements Serializable {
     public boolean isMostrarProveedor() {
         boolean R = true;
         if (getActual().getTipodocumento() != null) {
-            
-            if (getActual().getTipoImpuesto() != TipoImpuesto.IRP  && (getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
+
+            if (getActual().getTipoImpuesto() != TipoImpuesto.IRP && (getActual().getTipodocumento().equals("BOLETOS DE TRANSPORTE")
                     || getActual().getTipodocumento().equals("BOLETOS EN GENERAL")
                     || getActual().getTipodocumento().equals("RECIBO DE DINERO"))) {
                 R = false;
-            }else if(getActual().getTipoImpuesto() == TipoImpuesto.IRP && getActual().getTipodocumento().equals("LIQUIDACIÓN DE SALARIO")){
+            } else if (getActual().getTipoImpuesto() == TipoImpuesto.IRP && getActual().getTipodocumento().equals("LIQUIDACIÓN DE SALARIO")) {
                 R = false;
             }
         }

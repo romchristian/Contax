@@ -293,7 +293,6 @@ public class Factura implements Serializable {
         this.clasificacion = clasificacion;
     }
 
-    
     public String getTipoIngreso() {
         return tipoIngreso;
     }
@@ -361,16 +360,16 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalIva() {
-        if(tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO){
-            
-            totalIva = totalBruto.multiply(new BigDecimal(0.073));
-        }else if(tipoImpuesto == TipoImpuesto.IRP){
-            totalIva = BigDecimal.ZERO;
+        if (totalIva == null || totalIva.compareTo(BigDecimal.ZERO) == 0) {
+            if (tipoImpuesto == TipoImpuesto.IVA_SIMPLIFICADO) {
+
+                totalIva = totalBruto.multiply(new BigDecimal(0.073));
+            } else if (tipoImpuesto == TipoImpuesto.IRP && totalIva == null) {
+                totalIva = BigDecimal.ZERO;
+            } else {
+                totalIva = getIva05().add(getIva10());
+            }
         }
-        else{
-            totalIva = getIva05().add(getIva10());
-        }
-        
         return totalIva;
     }
 
@@ -388,10 +387,10 @@ public class Factura implements Serializable {
     }
 
     public BigDecimal getTotalBruto() {
-        if(tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO && tipoImpuesto != TipoImpuesto.IRP){
+        if (tipoImpuesto != TipoImpuesto.IVA_SIMPLIFICADO && tipoImpuesto != TipoImpuesto.IRP) {
             totalBruto = getExento().add(getGravada05()).add(getGravada10());
         }
-        
+
         return totalBruto;
     }
 
@@ -462,9 +461,9 @@ public class Factura implements Serializable {
     }
 
     public BigInteger getNogravadoyexonerado() {
-        if(tipoImpuesto == TipoImpuesto.IRP && provienebienesgananciales){
+        if (tipoImpuesto == TipoImpuesto.IRP && provienebienesgananciales) {
             nogravadoyexonerado = getTotalBruto().multiply(new BigDecimal(0.5)).toBigInteger();
-        }else if(tipoImpuesto == TipoImpuesto.IRP){
+        } else if (tipoImpuesto == TipoImpuesto.IRP) {
             nogravadoyexonerado = getTotalBruto().subtract(new BigDecimal(getGravados().doubleValue())).toBigInteger();
         }
         return nogravadoyexonerado;
@@ -475,9 +474,9 @@ public class Factura implements Serializable {
     }
 
     public BigInteger getGravados() {
-        if(provienebienesgananciales){
+        if (provienebienesgananciales) {
             gravados = getTotalBruto().multiply(new BigDecimal(0.5)).toBigInteger();
-        }else if(tipoImpuesto == TipoImpuesto.IRP){
+        } else if (tipoImpuesto == TipoImpuesto.IRP) {
             gravados = getTotalBruto().toBigInteger();
         }
         return gravados;
@@ -511,11 +510,10 @@ public class Factura implements Serializable {
         this.provienebienesgananciales = provienebienesgananciales;
     }
 
-    
     public BigInteger getMontopagado() {
-        if(tipoImpuesto == TipoImpuesto.IRP && tipodocumento != null && tipodocumento.compareTo("FACTURA CREDITO")==0){
+        if (tipoImpuesto == TipoImpuesto.IRP && tipodocumento != null && tipodocumento.compareTo("FACTURA CREDITO") == 0) {
             montopagado = new BigInteger("0");
-        }else{
+        } else {
             montopagado = getTotalBruto().toBigInteger();
         }
         return montopagado;
@@ -525,9 +523,6 @@ public class Factura implements Serializable {
         this.montopagado = montopagado;
     }
 
-    
-    
-    
     public void setIva10(BigDecimal iva10) {
         this.iva10 = iva10;
     }
@@ -559,14 +554,13 @@ public class Factura implements Serializable {
 
     public boolean isAplicaIva() {
         boolean R = false;
-        if(
-                tipodocumento != null && (tipodocumento.compareTo("TICKET")==0
-                || tipodocumento.compareTo("FACTURA CONTADO")==0
-                 || tipodocumento.compareTo("FACTURA")==0
-                || tipodocumento.compareTo("FACTURA CREDITO")==0
-                || tipodocumento.compareTo("BOLETA DE VENTA")==0
-                || tipodocumento.compareTo("ESCRITURA PÚBLICA")==0)){
-            
+        if (tipodocumento != null && (tipodocumento.compareTo("TICKET") == 0
+                || tipodocumento.compareTo("FACTURA CONTADO") == 0
+                || tipodocumento.compareTo("FACTURA") == 0
+                || tipodocumento.compareTo("FACTURA CREDITO") == 0
+                || tipodocumento.compareTo("BOLETA DE VENTA") == 0
+                || tipodocumento.compareTo("ESCRITURA PÚBLICA") == 0)) {
+
             R = true;
         }
         return R;
